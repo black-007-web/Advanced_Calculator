@@ -1,18 +1,26 @@
-const express = require('express');
-const axios = require('axios');
-const cors = require('cors');
+const express = require("express");
+const axios = require("axios");
+const cors = require("cors");
+const path = require("path");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors()); // allow requests from frontend
 
-// Currency conversion endpoint
-app.get('/convert', async (req, res) => {
+// ✅ Serve static landing page
+app.use(express.static(path.join(__dirname, "public")));
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// ✅ Currency conversion endpoint
+app.get("/convert", async (req, res) => {
   const { from, to, amount } = req.query;
 
   if (!from || !to || isNaN(amount)) {
-    return res.status(400).json({ error: 'Invalid query parameters' });
+    return res.status(400).json({ error: "Invalid query parameters" });
   }
 
   try {
@@ -21,15 +29,18 @@ app.get('/convert', async (req, res) => {
     const rates = resp.data.rates;
 
     if (!rates[to]) {
-      return res.status(400).json({ error: 'Target currency not supported' });
+      return res.status(400).json({ error: "Target currency not supported" });
     }
 
     const convertedAmount = parseFloat(amount) * rates[to];
     res.json({ conversion_result: convertedAmount });
   } catch (err) {
-    console.error('Currency API error:', err.message);
-    res.status(500).json({ error: 'Conversion failed' });
+    console.error("Currency API error:", err.message);
+    res.status(500).json({ error: "Conversion failed" });
   }
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
+});
+
