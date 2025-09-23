@@ -1,58 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Arithmetical Calculator</title>
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="./styles.css" />
+  <!-- Favicon and Tab Styling -->
+  <link rel="icon" href="calculator.png" type="image/png" />
+  <meta name="theme-color" content="#00ffd5" />
+
+  <!-- Fonts and Styles -->
+  <link rel="stylesheet" href="styles.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 </head>
 <body>
   <div class="container">
-    <header class="site-header">
-      <h1>🧮 Arithmetical Calculator</h1>
-      <p>Scientific & expression mode</p>
+    <header class="calc-header">
+      <h2>Arithmetical Calculator</h2>
+      <p class="tiny">Type a number, press an operation or function button, then press <strong>Compute</strong>.</p>
     </header>
 
-    <main>
-      <!-- Calculator UI -->
-      <div class="calculator">
-        <input type="text" id="display" placeholder="0" readonly />
-        <div class="buttons">
-          <button class="btn" data-value="7">7</button>
-          <button class="btn" data-value="8">8</button>
-          <button class="btn" data-value="9">9</button>
-          <button class="btn" data-value="/">÷</button>
+    <div class="stage">
+      <input id="exprInput" type="text" placeholder="Enter number or expression (e.g. 12.5)" />
+    </div>
 
-          <button class="btn" data-value="4">4</button>
-          <button class="btn" data-value="5">5</button>
-          <button class="btn" data-value="6">6</button>
-          <button class="btn" data-value="*">×</button>
+    <div class="operators-grid">
+      <!-- Binary / Arithmetic Ops -->
+      <button class="op-btn" data-op="+">+</button>
+      <button class="op-btn" data-op="-">−</button>
+      <button class="op-btn" data-op="*">×</button>
+      <button class="op-btn" data-op="/">÷</button>
+      <button class="op-btn" data-op="%">%</button>
+      <button class="op-btn" data-op="^">^</button>
 
-          <button class="btn" data-value="1">1</button>
-          <button class="btn" data-value="2">2</button>
-          <button class="btn" data-value="3">3</button>
-          <button class="btn" data-value="-">−</button>
+      <!-- Unary / Functions -->
+      <button class="op-btn" data-op="sqrt">√</button>
+      <button class="op-btn" data-op="sin">sin</button>
+      <button class="op-btn" data-op="cos">cos</button>
+      <button class="op-btn" data-op="tan">tan</button>
+      <button class="op-btn" data-op="log">log₁₀</button>
+      <button class="op-btn" data-op="ln">ln</button>
+      <button class="op-btn" data-op="exp">exp</button>
+      <button class="op-btn" data-op="(">(</button>
+      <button class="op-btn" data-op=")">)</button>
 
-          <button class="btn" data-value="0">0</button>
-          <button class="btn" data-value=".">.</button>
-          <button class="btn" id="clear">C</button>
-          <button class="btn" data-value="+">+</button>
+      <button class="op-btn" id="clearBtn">Clear</button>
+    </div>
 
-          <button class="btn equal" id="equals">=</button>
-        </div>
-      </div>
-    </main>
+    <div class="actions">
+      <button id="computeBtn" class="calc-button">Compute</button>
+      <button id="undoBtn" class="btn-ghost">Undo</button>
+    </div>
 
-    <footer class="site-footer">
-      <a href="./index.html">⬅ Back to Home</a>
-    </footer>
+    <div id="arithResult" class="result">Result: —</div>
+
+    <div class="links">
+      <a class="home-btn" href="index.html">← Home</a>
+    </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="./arithmetical.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
+  <script src="arithmetical.js"></script>
 </body>
 </html>
 
