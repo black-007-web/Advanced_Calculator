@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Grade Calculator</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grade & CGPA Calculator</title>
 
-  <!-- Favicon and Tab Styling -->
+  <!-- Favicon -->
   <link rel="icon" href="grade.png" type="image/png" />
   <meta name="theme-color" content="#00ffd5" />
 
-  <link rel="stylesheet" href="styles.css"/>
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="container">
     <header class="calc-header">
-      <h2>Grade & CGPA Calculator</h2>
-      <p class="tiny">Compute CGPA with credits or convert numbers/GPA into grades.</p>
+      <h1>🎓 Grade & CGPA Calculator</h1>
+      <p>Compute CGPA with credits or convert numbers/GPA into grades.</p>
     </header>
 
     <!-- CGPA Calculator -->
@@ -41,16 +42,18 @@
     </section>
 
     <!-- Action Buttons -->
-    <div>
+    <div class="actions">
       <button id="computeBtn" class="calc-button">Compute</button>
       <button id="gradeClear" class="btn-ghost">Clear</button>
     </div>
 
+    <!-- Home Button -->
     <div class="links">
       <a href="index.html" class="home-btn">← Home</a>
     </div>
   </div>
 
+  <!-- Script -->
   <script src="grade.js"></script>
 </body>
 </html>
