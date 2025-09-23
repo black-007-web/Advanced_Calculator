@@ -1,57 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Currency Converter</title>
 
   <!-- Favicon and Tab Styling -->
   <link rel="icon" href="currency.png" type="image/png" />
   <meta name="theme-color" content="#00ffd5" />
 
-  <link rel="stylesheet" href="styles.css">
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="container">
-    <h2>Live Currency Converter</h2>
+    <header class="site-header">
+      <h1>💱 Live Currency Converter</h1>
+      <p>Convert any currency live using our backend API</p>
+    </header>
 
-    <div class="stage">
-      <input id="amount" type="number" placeholder="Enter amount" />
-      <select id="fromCur">
-        <option value="USD">USD - US Dollar</option>
-        <option value="EUR">EUR - Euro</option>
-        <option value="INR">INR - Indian Rupee</option>
-        <option value="PKR">PKR - Pakistani Rupee</option>
-        <option value="QAR">QAR - Qatari Riyal</option>
-        <option value="AED">AED - UAE Dirham</option>
-        <option value="SAR">SAR - Saudi Riyal</option>
-        <option value="BDT">BDT - Bangladeshi Taka</option>
-      </select>
-      <select id="toCur">
-        <option value="USD">USD - US Dollar</option>
-        <option value="EUR">EUR - Euro</option>
-        <option value="INR">INR - Indian Rupee</option>
-        <option value="PKR">PKR - Pakistani Rupee</option>
-        <option value="QAR">QAR - Qatari Riyal</option>
-        <option value="AED">AED - UAE Dirham</option>
-        <option value="SAR">SAR - Saudi Riyal</option>
-        <option value="BDT">BDT - Bangladeshi Taka</option>
-      </select>
-    </div>
+    <main>
+      <div class="currency-tool">
+        <input id="amount" type="number" placeholder="Enter amount" />
+        <select id="fromCur">
+          <option value="USD">USD - US Dollar</option>
+          <option value="EUR">EUR - Euro</option>
+          <option value="INR">INR - Indian Rupee</option>
+          <option value="PKR">PKR - Pakistani Rupee</option>
+          <option value="QAR">QAR - Qatari Riyal</option>
+          <option value="AED">AED - UAE Dirham</option>
+          <option value="SAR">SAR - Saudi Riyal</option>
+          <option value="BDT">BDT - Bangladeshi Taka</option>
+        </select>
 
-    <div>
-      <button id="convCurrencyBtn" class="calc-button">Convert</button>
-      <button id="currencyClear" class="btn-ghost">Clear</button>
-    </div>
+        <select id="toCur">
+          <option value="USD">USD - US Dollar</option>
+          <option value="EUR">EUR - Euro</option>
+          <option value="INR">INR - Indian Rupee</option>
+          <option value="PKR">PKR - Pakistani Rupee</option>
+          <option value="QAR">QAR - Qatari Riyal</option>
+          <option value="AED">AED - UAE Dirham</option>
+          <option value="SAR">SAR - Saudi Riyal</option>
+          <option value="BDT">BDT - Bangladeshi Taka</option>
+        </select>
 
-    <div id="currencyResult" class="result">Conversion: —</div>
+        <div class="currency-buttons">
+          <button id="convCurrencyBtn">Convert</button>
+          <button id="currencyClear">Clear</button>
+        </div>
 
-    <!-- Home button -->
-    <div class="links" style="margin-top:18px; text-align:center;">
-      <a href="index.html" class="calc-button" style="padding:12px 20px; border-radius:12px; background:linear-gradient(90deg,#7c4dff,#ff6b6b); color:white; font-weight:700; text-decoration:none;">← Home</a>
-    </div>
+        <p id="currencyResult">Conversion: —</p>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <a href="./index.html">⬅ Back to Home</a>
+    </footer>
   </div>
 
-  <script src="currency.js"></script>
+  <!-- Scripts -->
+  <script>
+    (() => {
+      const convBtn = document.getElementById('convCurrencyBtn');
+      const clearBtn = document.getElementById('currencyClear');
+      const amountInput = document.getElementById('amount');
+      const fromCur = document.getElementById('fromCur');
+      const toCur = document.getElementById('toCur');
+      const currencyResult = document.getElementById('currencyResult');
+
+      const API_URL = 'https://api-advancedcalculator.onrender.com/convert'; // Your deployed backend
+
+      convBtn.addEventListener('click', async () => {
+        const amt = parseFloat(amountInput.value);
+        if (isNaN(amt) || amt < 0) {
+          currencyResult.textContent = 'Conversion: Invalid amount';
+          currencyResult.classList.add('error');
+          return;
+        }
+
+        currencyResult.classList.remove('error');
+        currencyResult.textContent = 'Converting…';
+
+        const from = fromCur.value;
+        const to = toCur.value;
+
+        try {
+          const resp = await fetch(`${API_URL}?from=${from}&to=${to}&amount=${amt}`);
+          const data = await resp.json();
+
+          if (data && typeof data.conversion_result !== 'undefined') {
+            currencyResult.textContent = `Conversion: ${data.conversion_result.toFixed(2)} ${to}`;
+          } else if (data && data.error) {
+            currencyResult.textContent = `Conversion: ${data.error}`;
+            currencyResult.classList.add('error');
+          } else {
+            currencyResult.textContent = 'Conversion: Unexpected response';
+            currencyResult.classList.add('error');
+          }
+        } catch (err) {
+          currencyResult.textContent = 'Conversion: Server error';
+          currencyResult.classList.add('error');
+          console.error('Currency API error:', err);
+        }
+      });
+
+      clearBtn.addEventListener('click', () => {
+        amountInput.value = '';
+        currencyResult.textContent = 'Conversion: —';
+        currencyResult.classList.remove('error');
+      });
+    })();
+  </script>
 </body>
 </html>
+
