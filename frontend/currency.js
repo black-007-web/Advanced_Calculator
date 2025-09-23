@@ -1,4 +1,6 @@
 (() => {
+  const API_BASE = "https://api-advancedcalculator.onrender.com"; // Render backend URL
+
   const convBtn = document.getElementById('convCurrencyBtn');
   const clearBtn = document.getElementById('currencyClear');
   const amountInput = document.getElementById('amount');
@@ -21,7 +23,7 @@
     const to = toCur.value;
 
     try {
-      const resp = await fetch(`http://localhost:3000/convert?from=${from}&to=${to}&amount=${amt}`);
+      const resp = await fetch(`${API_BASE}/convert?from=${from}&to=${to}&amount=${amt}`);
       const data = await resp.json();
 
       if (data && typeof data.conversion_result !== 'undefined') {
