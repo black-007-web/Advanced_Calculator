@@ -1,10 +1,10 @@
 {
   "name": "multi-function-calculator",
   "version": "1.0.0",
-  "description": "A multi-function calculator frontend with arithmetical, binary, logic, and currency conversion features.",
+  "description": "A multi-function calculator frontend with arithmetical, binary, logic, currency conversion, and grade calculation features.",
   "main": "index.html",
   "scripts": {
-    "start": "live-server --port=3000 --open=./index.html",
+    "start": "live-server --port=5500 --open=./index.html",
     "build": "echo \"No build step defined\""
   },
   "keywords": [
@@ -12,7 +12,8 @@
     "arithmetical",
     "binary",
     "logic",
-    "currency"
+    "currency",
+    "grade"
   ],
   "author": "Mohammad Farial",
   "license": "MIT",
