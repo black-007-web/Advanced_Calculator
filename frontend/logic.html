@@ -1,70 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Logic Gates</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logic Gates Calculator</title>
 
-  <!-- Favicon and Tab Styling -->
-  <link rel="icon" href="logic.png" type="image/png" />
-  <meta name="theme-color" content="#00ffd5" />
-
-  <link rel="stylesheet" href="styles.css"/>
+  <!-- Styles -->
+  <link rel="stylesheet" href="./styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 </head>
 <body>
   <div class="container">
-    <header class="calc-header">
-      <h2>Logic Gate Calculator</h2>
-      <p class="tiny">
-        Select a mode, choose a gate, and either see the truth table or compute outputs for your custom inputs.
-      </p>
+    <header class="site-header">
+      <h1>🔀 Logic Gates</h1>
+      <p>AND / OR / XOR / NOT operations</p>
     </header>
 
-    <!-- Mode selection -->
-    <div class="stage">
-      <label style="color:#fff; font-weight:700; margin-right:10px;">Mode:</label>
-      <select id="modeSelect">
-        <option value="truth">Truth Table Mode</option>
-        <option value="manual">Manual Input Mode</option>
-      </select>
-    </div>
+    <main>
+      <div class="logic-tool">
+        <label for="inputA">Input A (0 or 1):</label>
+        <input type="number" id="inputA" min="0" max="1" />
 
-    <!-- Truth Table Mode -->
-    <div id="truthTableSettings" class="stage">
-      <label style="color:#fff; font-weight:700; margin-right:10px;">Number of Inputs:</label>
-      <select id="inputCount">
-        <option value="1">1</option>
-        <option value="2" selected>2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select>
-    </div>
+        <label for="inputB">Input B (0 or 1):</label>
+        <input type="number" id="inputB" min="0" max="1" />
 
-    <!-- Manual Input Mode -->
-    <div id="manualInputSettings" class="stage" style="display:none;">
-      <div id="manualInputs"></div>
-    </div>
+        <div class="logic-buttons">
+          <button id="andBtn">AND</button>
+          <button id="orBtn">OR</button>
+          <button id="xorBtn">XOR</button>
+          <button id="notABtn">NOT A</button>
+          <button id="notBBtn">NOT B</button>
+          <button id="clearLogic">Clear</button>
+        </div>
 
-    <div class="operators-grid">
-      <button class="gate-btn" data-g="AND">AND</button>
-      <button class="gate-btn" data-g="OR">OR</button>
-      <button class="gate-btn" data-g="NAND">NAND</button>
-      <button class="gate-btn" data-g="NOR">NOR</button>
-      <button class="gate-btn" data-g="XOR">XOR</button>
-      <button class="gate-btn" data-g="XNOR">XNOR</button>
-      <button id="logicClear" class="btn-ghost">Clear</button>
-    </div>
+        <p id="logicResult">Result: —</p>
+      </div>
+    </main>
 
-    <div id="logicExpression" class="result">Expression: —</div>
-    <div id="logicResult" class="result">Output: —</div>
-    <div id="truthTable" class="truth-table"></div>
-
-    <div class="links">
-      <a class="home-btn calc-button" href="index.html">← Home</a>
-    </div>
+    <footer class="site-footer">
+      <a href="./index.html">⬅ Back to Home</a>
+    </footer>
   </div>
 
-  <script src="logic.js"></script>
+  <!-- Scripts -->
+  <script src="./logic.js"></script>
 </body>
 </html>
