@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Currency Converter</title>
+
+  <!-- Favicon and Tab Styling -->
+  <link rel="icon" href="currency.png" type="image/png" />
+  <meta name="theme-color" content="#00ffd5" />
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Live Currency Converter</h2>
+
+    <div class="stage">
+      <input id="amount" type="number" placeholder="Enter amount" />
+      <select id="fromCur">
+        <option value="USD">USD - US Dollar</option>
+        <option value="EUR">EUR - Euro</option>
+        <option value="INR">INR - Indian Rupee</option>
+        <option value="PKR">PKR - Pakistani Rupee</option>
+        <option value="QAR">QAR - Qatari Riyal</option>
+        <option value="AED">AED - UAE Dirham</option>
+        <option value="SAR">SAR - Saudi Riyal</option>
+        <option value="BDT">BDT - Bangladeshi Taka</option>
+      </select>
+      <select id="toCur">
+        <option value="USD">USD - US Dollar</option>
+        <option value="EUR">EUR - Euro</option>
+        <option value="INR">INR - Indian Rupee</option>
+        <option value="PKR">PKR - Pakistani Rupee</option>
+        <option value="QAR">QAR - Qatari Riyal</option>
+        <option value="AED">AED - UAE Dirham</option>
+        <option value="SAR">SAR - Saudi Riyal</option>
+        <option value="BDT">BDT - Bangladeshi Taka</option>
+      </select>
+    </div>
+
+    <div>
+      <button id="convCurrencyBtn" class="calc-button">Convert</button>
+      <button id="currencyClear" class="btn-ghost">Clear</button>
+    </div>
+
+    <div id="currencyResult" class="result">Conversion: —</div>
+
+    <!-- Home button -->
+    <div class="links" style="margin-top:18px; text-align:center;">
+      <a href="index.html" class="calc-button" style="padding:12px 20px; border-radius:12px; background:linear-gradient(90deg,#7c4dff,#ff6b6b); color:white; font-weight:700; text-decoration:none;">← Home</a>
+    </div>
+  </div>
+
+  <script src="currency.js"></script>
+</body>
+</html>

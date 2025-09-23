@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Grade Calculator</title>
+
+  <!-- Favicon and Tab Styling -->
+  <link rel="icon" href="grade.png" type="image/png" />
+  <meta name="theme-color" content="#00ffd5" />
+
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <div class="container">
+    <header class="calc-header">
+      <h2>Grade & CGPA Calculator</h2>
+      <p class="tiny">Compute CGPA with credits or convert numbers/GPA into grades.</p>
+    </header>
+
+    <!-- CGPA Calculator -->
+    <section class="stage">
+      <h3>CGPA Calculator</h3>
+      <div class="cgpa-row">
+        <input id="cgpaGpa" type="number" step="0.01" placeholder="Enter GPA (e.g., 3.5)" />
+        <select id="cgpaCredit">
+          <option value="3">3 Credit</option>
+          <option value="1.5">1.5 Credit</option>
+        </select>
+        <button id="addCgpaBtn" class="calc-button">Add</button>
+      </div>
+      <textarea id="cgpaExprBox" class="operation-display" rows="3" placeholder="Added entries will appear here..."></textarea>
+      <div id="cgpaResult" class="result">CGPA Result: —</div>
+    </section>
+
+    <!-- Grade Converter -->
+    <section class="stage">
+      <h3>Grade Converter</h3>
+      <input id="gradeInput" type="number" step="0.01" placeholder="Enter Marks (0–100) or GPA (0–4.0)" />
+      <div id="gradeResult" class="result">Grade Result: —</div>
+    </section>
+
+    <!-- Action Buttons -->
+    <div>
+      <button id="computeBtn" class="calc-button">Compute</button>
+      <button id="gradeClear" class="btn-ghost">Clear</button>
+    </div>
+
+    <div class="links">
+      <a href="index.html" class="home-btn">← Home</a>
+    </div>
+  </div>
+
+  <script src="grade.js"></script>
+</body>
+</html>

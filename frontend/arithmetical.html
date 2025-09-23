@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Arithmetical Calculator</title>
+
+  <!-- Favicon and Tab Styling -->
+  <link rel="icon" href="calculator.png" type="image/png" />
+  <meta name="theme-color" content="#00ffd5" />
+
+  <!-- Fonts and Styles -->
+  <link rel="stylesheet" href="styles.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="container">
+    <header class="calc-header">
+      <h2>Arithmetical Calculator</h2>
+      <p class="tiny">Type a number, press an operation or function button, then press <strong>Compute</strong>.</p>
+    </header>
+
+    <div class="stage">
+      <input id="exprInput" type="text" placeholder="Enter number or expression (e.g. 12.5)" />
+    </div>
+
+    <div class="operators-grid">
+      <!-- Binary / Arithmetic Ops -->
+      <button class="op-btn" data-op="+">+</button>
+      <button class="op-btn" data-op="-">−</button>
+      <button class="op-btn" data-op="*">×</button>
+      <button class="op-btn" data-op="/">÷</button>
+      <button class="op-btn" data-op="%">%</button>
+      <button class="op-btn" data-op="^">^</button>
+
+      <!-- Unary / Functions -->
+      <button class="op-btn" data-op="sqrt">√</button>
+      <button class="op-btn" data-op="sin">sin</button>
+      <button class="op-btn" data-op="cos">cos</button>
+      <button class="op-btn" data-op="tan">tan</button>
+      <button class="op-btn" data-op="log">log₁₀</button>
+      <button class="op-btn" data-op="ln">ln</button>
+      <button class="op-btn" data-op="exp">exp</button>
+      <button class="op-btn" data-op="(">(</button>
+      <button class="op-btn" data-op=")">)</button>
+
+      <button class="op-btn" id="clearBtn">Clear</button>
+    </div>
+
+    <div class="actions">
+      <button id="computeBtn" class="calc-button">Compute</button>
+      <button id="undoBtn" class="btn-ghost">Undo</button>
+    </div>
+
+    <div id="arithResult" class="result">Result: —</div>
+
+    <div class="links">
+      <a class="home-btn" href="index.html">← Home</a>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
+  <script src="arithmetical.js"></script>
+</body>
+</html>
