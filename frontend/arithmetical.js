@@ -18,31 +18,39 @@
     acotDeg: x => math.unit(math.atan(1 / x), 'rad').toNumber('deg'),
   }, { override: true });
 
-  // Append operator/function to input
+  // Append operator/function to input and place cursor inside parentheses if it's a function
   function appendToExpression(op) {
     const funcOps = [
       'sqrt', 'sin', 'cos', 'tan',
       'sec', 'csc', 'cot',
-      'log', 'ln', 'exp'
+      'log', 'ln', 'exp',
+      'asin', 'acos', 'atan',
+      'asec', 'acsc', 'acot'
     ];
-    const inverseOps = ['asin', 'acos', 'atan', 'asec', 'acsc', 'acot'];
 
     if (funcOps.includes(op)) {
-      exprInput.value += `${op}(`;
-    } else if (inverseOps.includes(op)) {
-      exprInput.value += `${op}(`; // User types normally
+      const insertText = `${op}()`;
+      const cursorPos = exprInput.selectionStart;
+      // Insert func() at cursor position
+      exprInput.value = exprInput.value.slice(0, cursorPos) + insertText + exprInput.value.slice(cursorPos);
+      // Place cursor between parentheses
+      exprInput.setSelectionRange(cursorPos + op.length + 1, cursorPos + op.length + 1);
     } else if (op === 'nthRoot') {
-      exprInput.value += 'nthRoot( , )';
-      setTimeout(() => {
-        const pos = exprInput.value.indexOf(' ');
-        exprInput.setSelectionRange(pos, pos);
-        exprInput.focus();
-      }, 0);
+      const insertText = 'nthRoot( , )';
+      const cursorPos = exprInput.selectionStart;
+      exprInput.value = exprInput.value.slice(0, cursorPos) + insertText + exprInput.value.slice(cursorPos);
+      exprInput.setSelectionRange(cursorPos + 8, cursorPos + 8); // cursor inside first placeholder
     } else if (op === 'factorial' || op === '!') {
-      exprInput.value += '!';
+      const cursorPos = exprInput.selectionStart;
+      exprInput.value = exprInput.value.slice(0, cursorPos) + '!' + exprInput.value.slice(cursorPos);
+      exprInput.setSelectionRange(cursorPos + 1, cursorPos + 1);
     } else {
-      exprInput.value += op;
+      // Regular operator, just insert
+      const cursorPos = exprInput.selectionStart;
+      exprInput.value = exprInput.value.slice(0, cursorPos) + op + exprInput.value.slice(cursorPos);
+      exprInput.setSelectionRange(cursorPos + op.length, cursorPos + op.length);
     }
+
     exprInput.focus();
   }
 
@@ -52,7 +60,6 @@
     if (!expr) return;
 
     try {
-      // Replace ln → log, √ → sqrt
       expr = expr.replace(/ln\(/g, 'log(');
       expr = expr.replace(/√/g, 'sqrt');
 
@@ -111,3 +118,4 @@
     }
   });
 })();
+
