@@ -3,7 +3,7 @@ function addCustomer() {
   const name = document.getElementById("custName").value.trim();
   const id = document.getElementById("custId").value.trim();
   const product = document.getElementById("custProduct").value.trim();
-  const quantity = parseInt(document.getElementById("custQuantity").value);
+  const quantity = parseFloat(document.getElementById("custQuantity").value);
   const value = parseFloat(document.getElementById("custValue").value);
   const date = document.getElementById("custDate").value;
 
@@ -45,7 +45,13 @@ function renderCustomerReceipts(mode = "normal") {
   let grandTotal = 0;
 
   customers.forEach((c, idx) => {
-    let customerTotal = c.products.reduce((sum, p) => sum + p.value * p.quantity, 0);
+    // Calculate total only for numeric products
+    let customerTotal = 0;
+    c.products.forEach((p) => {
+      const qty = parseFloat(p.quantity);
+      const val = parseFloat(p.value);
+      if (!isNaN(qty) && !isNaN(val)) customerTotal += qty * val;
+    });
     grandTotal += customerTotal;
 
     let table = `<table class="data-table">
@@ -56,36 +62,54 @@ function renderCustomerReceipts(mode = "normal") {
       </thead><tbody>`;
 
     c.products.forEach((p, pi) => {
+      const qty = parseFloat(p.quantity);
+      const val = parseFloat(p.value);
+      const total = (!isNaN(qty) && !isNaN(val)) ? (qty * val).toFixed(2) : "";
       table += `<tr>
         <td>${pi + 1}.</td>
         <td contenteditable="true">${p.product}</td>
         <td contenteditable="true">${p.quantity}</td>
-        <td contenteditable="true">${p.value.toFixed(2)}</td>
-        <td>${(p.value * p.quantity).toFixed(2)}</td>
+        <td contenteditable="true">${!isNaN(val) ? val.toFixed(2) : p.value}</td>
+        <td>${total}</td>
         <td><button onclick="deleteCustomerProduct(${idx},${pi})">❌</button></td>
       </tr>`;
     });
 
-    // --- Profit calculation dynamically ---
-    let incomeRow = c.products.find((p) => p.product.toLowerCase() === "income");
-    let expensesRow = c.products.find((p) => p.product.toLowerCase() === "expenses");
+    // --- Profit calculation dynamically (numeric only) ---
+    const incomeRow = c.products.find((p) => p.product.toLowerCase() === "income");
+    const expensesRow = c.products.find((p) => p.product.toLowerCase() === "expenses");
     if (incomeRow && expensesRow) {
-      let profit = incomeRow.value * incomeRow.quantity - expensesRow.value * expensesRow.quantity;
-      table += `<tr class="highlight-row">
-        <td>*</td>
-        <td>Profit</td>
-        <td colspan="3">${profit.toFixed(2)}</td>
-        <td></td>
-      </tr>`;
+      const incomeQty = parseFloat(incomeRow.quantity);
+      const incomeVal = parseFloat(incomeRow.value);
+      const expensesQty = parseFloat(expensesRow.quantity);
+      const expensesVal = parseFloat(expensesRow.value);
+      if (!isNaN(incomeQty) && !isNaN(incomeVal) && !isNaN(expensesQty) && !isNaN(expensesVal)) {
+        const profit = incomeQty * incomeVal - expensesQty * expensesVal;
+        table += `<tr class="highlight-row">
+          <td>*</td>
+          <td>Profit</td>
+          <td colspan="3">${profit.toFixed(2)}</td>
+          <td></td>
+        </tr>`;
+      }
     }
 
     table += `</tbody></table>`;
 
-    // --- Totals for columns ---
-    let totalQty = c.products.reduce((sum, p) => sum + (parseInt(p.quantity) || 0), 0);
-    let totalExpenses = c.products
-      .filter((p) => p.product.toLowerCase() === "expenses")
-      .reduce((sum, p) => sum + (p.value * p.quantity || 0), 0);
+    // --- Totals for numeric columns only ---
+    const totalQty = c.products.reduce((sum, p) => {
+      const n = parseFloat(p.quantity);
+      return sum + (!isNaN(n) ? n : 0);
+    }, 0);
+
+    const totalExpenses = c.products.reduce((sum, p) => {
+      if (p.product.toLowerCase() === "expenses") {
+        const nQty = parseFloat(p.quantity);
+        const nVal = parseFloat(p.value);
+        if (!isNaN(nQty) && !isNaN(nVal)) return sum + nQty * nVal;
+      }
+      return sum;
+    }, 0);
 
     let totalsHtml = `<div class="totals">`;
     if (totalQty > 0) totalsHtml += `<p><strong>Total Quantity:</strong> ${totalQty}</p>`;
@@ -129,10 +153,13 @@ function updateCustomerTable() {
       const cols = row.querySelectorAll("td");
       if (cols.length >= 4 && cols[1].isContentEditable) {
         const product = cols[1].innerText.trim();
-        const quantity = parseInt(cols[2].innerText.trim());
+        const quantity = parseFloat(cols[2].innerText.trim());
         const value = parseFloat(cols[3].innerText.trim());
         if (product && !isNaN(quantity) && !isNaN(value)) {
           newProducts.push({ product, quantity, value });
+        } else if (product) {
+          // Keep text-type entries without numeric totals
+          newProducts.push({ product, quantity: cols[2].innerText.trim(), value: cols[3].innerText.trim() });
         }
       }
     });
@@ -140,36 +167,6 @@ function updateCustomerTable() {
   });
   localStorage.setItem("customers", JSON.stringify(customers));
   renderCustomerReceipts();
-}
-
-function exportCustomerCSV() {
-  let customers = JSON.parse(localStorage.getItem("customers") || "[]");
-  if (customers.length === 0) return;
-  let csv = "Customer,ID,Product,Qty,Unit $,Total $,Date\n";
-  customers.forEach((c) => {
-    c.products.forEach((p) => {
-      csv += `${c.name},${c.id},${p.product},${p.quantity},${p.value},${(
-        p.value * p.quantity
-      ).toFixed(2)},${c.date}\n`;
-    });
-  });
-  downloadCSV(csv, "customers.csv");
-}
-
-function downloadCSV(content, filename) {
-  const blob = new Blob([content], { type: "text/csv" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = filename;
-  a.click();
-}
-
-function filterCustomers() {
-  const term = document.getElementById("custSearch").value.toLowerCase();
-  document.querySelectorAll("#customerReceipts .receipt").forEach((div) => {
-    const text = div.innerText.toLowerCase();
-    div.style.display = text.includes(term) ? "" : "none";
-  });
 }
 
 // ================= Employee Functions =================
@@ -307,3 +304,4 @@ document.addEventListener("keypress", function (e) {
 // Initial Render
 renderCustomerReceipts();
 renderEmployeeTable();
+
