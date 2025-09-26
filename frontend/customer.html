@@ -6,12 +6,65 @@
   <title>Customer — Builder</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
-    .schema-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
-    .schema-item { background:linear-gradient(90deg,#141414,#1b1b1b); padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); display:flex; gap:8px; align-items:center; }
-    .schema-item button { padding:6px 8px; border-radius:6px; border:none; cursor:pointer; background:transparent; color:#cfcfcf; }
-    #dynamicFormFields { display:grid; grid-template-columns:repeat(1,1fr); gap:10px; margin-top:10px; }
-    #dynamicFormFields .field-input { padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:#0b0b0b; color:#fff; }
+    .schema-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; flex-wrap:wrap; }
+    .schema-item { 
+      background:linear-gradient(90deg,#141414,#1b1b1b);
+      padding:8px 10px; 
+      border-radius:8px; 
+      border:1px solid rgba(255,255,255,0.04); 
+      display:flex; 
+      gap:8px; 
+      align-items:center; 
+      justify-content:space-between;
+      margin-bottom:6px;
+    }
+    .schema-item button { 
+      padding:6px 8px; 
+      border-radius:6px; 
+      border:none; 
+      cursor:pointer; 
+      background:#ff4b4b; 
+      color:#fff; 
+      font-weight:600;
+    }
+    #dynamicFormFields { 
+      display:grid; 
+      grid-template-columns:repeat(1,1fr); 
+      gap:10px; 
+      margin-top:10px; 
+    }
+    .field-input { 
+      padding:12px 14px; 
+      border-radius:10px; 
+      border:1px solid rgba(255,255,255,0.04); 
+      background:#0b0b0b; 
+      color:#fff; 
+      font-size:1rem; 
+      box-shadow: 0 3px 18px rgba(0,0,0,0.6) inset;
+    }
     .controls { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+    .calc-button { 
+      background:linear-gradient(90deg,#7c4dff,#ff6b6b); 
+      color:#fff; 
+      border:none; 
+      padding:10px 16px; 
+      border-radius:10px; 
+      cursor:pointer; 
+      font-weight:700;
+    }
+    .calc-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(124, 77, 255, 0.5);
+    }
+    .btn-ghost { 
+      background:transparent; 
+      color:#cfcfcf; 
+      border:1px dashed rgba(255,255,255,0.06); 
+      padding:10px 16px; 
+      border-radius:10px; 
+      cursor:pointer; 
+      font-weight:600;
+    }
   </style>
 </head>
 <body>
@@ -28,11 +81,10 @@
     <div class="stage">
       <h3>Schema Builder</h3>
       <div class="schema-row">
-        <input id="newFieldName" type="text" placeholder="Field name (e.g. Name, ID, Income, Expenses)" />
-        <select id="newFieldType">
+        <input id="newFieldName" type="text" placeholder="Field name (e.g. Name, ID, Rate, Amount, Expenses)" class="field-input"/>
+        <select id="newFieldType" class="field-input">
           <option value="text">Text</option>
           <option value="number">Number</option>
-          <option value="date">Date</option>
         </select>
         <button id="addFieldBtn" class="calc-button">Create Field</button>
         <button id="resetSchemaBtn" class="btn-ghost">Reset Schema</button>
@@ -43,11 +95,14 @@
     <div class="stage">
       <h3>Insert Data</h3>
       <form id="dataForm" autocomplete="off">
+        <label for="sessionDate">Date for all entries:</label>
+        <input type="date" id="sessionDate" class="field-input" />
+
         <div id="dynamicFormFields"></div>
         <div class="controls">
           <button type="button" id="insertBtn" class="calc-button">➕ Insert</button>
           <button type="button" id="clearFormBtn" class="btn-ghost">Clear</button>
-          <button type="button" id="saveAndOpenBtn" class="home-btn">Save & Open Records</button>
+          <button type="button" id="saveAndOpenBtn" class="calc-button">Save & Open Records</button>
         </div>
       </form>
     </div>
@@ -81,6 +136,7 @@ const resetSchemaBtn = $("resetSchemaBtn");
 const insertBtn = $("insertBtn");
 const clearFormBtn = $("clearFormBtn");
 const saveAndOpenBtn = $("saveAndOpenBtn");
+const sessionDate = $("sessionDate");
 
 function defaultSchema(){
   return [
@@ -88,8 +144,9 @@ function defaultSchema(){
     {name:"ID", type:"text"},
     {name:"Product", type:"text"},
     {name:"Quantity", type:"number"},
-    {name:"Price", type:"number"},
-    {name:"Date", type:"date"}
+    {name:"Rate", type:"number"},
+    {name:"Amount", type:"number"},
+    {name:"Expenses", type:"number"}
   ];
 }
 
@@ -104,7 +161,7 @@ function renderSchemaList(){
   schema.forEach((f,i)=>{
     const div = document.createElement("div");
     div.className = "schema-item";
-    div.innerHTML = `<strong>${f.name}</strong> <small>${f.type}</small>`;
+    div.innerHTML = `<span><strong>${f.name}</strong> <small>${f.type}</small></span>`;
     const del = document.createElement("button");
     del.textContent = "Remove";
     del.addEventListener("click",()=>{
@@ -123,15 +180,22 @@ function renderFormFields(){
   dynamicFormFields.innerHTML = "";
   if(schema.length === 0){ dynamicFormFields.innerHTML = "<div>No fields defined.</div>"; return; }
   schema.forEach((f,idx)=>{
-    // Skip Profit field if present in schema; form should not show it
-    if(f.name.toLowerCase() === "profit") return;
+    if(f.name.toLowerCase() === "income" || f.name.toLowerCase() === "profit") return;
 
     const input = document.createElement("input");
     input.className = "field-input";
     input.placeholder = f.name;
     input.name = f.name;
     input.dataset.index = idx;
-    input.type = f.type==="number"?"number":f.type==="date"?"date":"text";
+    input.type = f.type==="number"?"number":"text";
+
+    // Enforce numeric input for number fields
+    if(f.type === "number"){
+      input.addEventListener("input", e => {
+        let v = e.target.value;
+        if(v !== "" && isNaN(v)) e.target.value = "";
+      });
+    }
 
     input.addEventListener("keydown",(e)=>{
       if(e.key==="Enter"){
@@ -169,21 +233,35 @@ insertBtn.addEventListener("click",()=>{
   if(inputs.length===0){ alert("No fields to insert."); return; }
   const row = {};
   let allEmpty = true;
+
   inputs.forEach(inp=>{
     let val = inp.value;
-    if(inp.type==="number"){ val = val===""?null:parseFloat(inp.value); if(val!==null) allEmpty=false; }
-    else{ if(String(val).trim()!=="") allEmpty=false; }
+    if(inp.type==="number"){ 
+      val = val===""?null:parseFloat(inp.value); 
+      if(val!==null) allEmpty=false; 
+    }
+    else{ 
+      if(String(val).trim()!=="") allEmpty=false; 
+    }
     row[inp.name]=val;
   });
-  if(allEmpty){ alert("Please enter at least one value."); return; }
 
-  // Do NOT handle Profit in form; calculation will be in records page
+  if(sessionDate.value) row["_recordDate"] = sessionDate.value;
+
+  if(allEmpty && !row["_recordDate"]){ alert("Please enter at least one value."); return; }
+
+  if("Rate" in row && "Amount" in row){
+    const rate = parseFloat(row["Rate"])||0;
+    const amount = parseFloat(row["Amount"])||0;
+    row["Income"] = rate * amount;
+  }
+
   records.push(row);
   saveRecords(records);
 
   inputs.forEach(i=>i.value="");
   if(inputs[0]) inputs[0].focus();
-  alert("Row inserted (serial #: "+records.length+").");
+  alert("Row inserted successfully.");
 });
 
 clearFormBtn.addEventListener("click",()=>{
@@ -201,3 +279,4 @@ renderFormFields();
 </script>
 </body>
 </html>
+
