@@ -203,20 +203,45 @@ exportCsvBtn.addEventListener("click", ()=>{
   a.click();
 });
 
-exportPngBtn.addEventListener("click", ()=>{
-  const el=tableWrap;
-  if(!el){ alert("Nothing to export"); return; }
-  html2canvas(el,{scale:2,backgroundColor:null}).then(canvas=>{
-    const a=document.createElement("a");
-    a.href=canvas.toDataURL("image/png");
-    a.download="customers.png";
+exportPngBtn.addEventListener("click", () => {
+  const el = tableWrap;
+  if (!el) {
+    alert("Nothing to export");
+    return;
+  }
+
+  // Save original styles
+  const originalHeight = el.style.maxHeight;
+  const originalOverflow = el.style.overflow;
+
+  // Expand container to show all content
+  el.style.maxHeight = "none";
+  el.style.overflow = "visible";
+
+  html2canvas(el, {
+    scale: 2,
+    backgroundColor: null,
+    useCORS: true
+  }).then(canvas => {
+    const a = document.createElement("a");
+    a.href = canvas.toDataURL("image/png");
+    a.download = "customers.png";
     a.click();
-  }).catch(err=>{ console.error(err); alert("PNG export failed."); });
+
+    // Restore original styles
+    el.style.maxHeight = originalHeight;
+    el.style.overflow = originalOverflow;
+  }).catch(err => {
+    console.error(err);
+    alert("PNG export failed.");
+  });
 });
+
 
 renderTable();
 </script>
 </body>
 </html>
+
 
 
