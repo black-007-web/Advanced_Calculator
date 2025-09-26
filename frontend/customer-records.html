@@ -1,42 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Customer — Records</title>
-  <link rel="stylesheet" href="styles.css" />
-  <!-- html2canvas for PNG export -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <style>
-    .truth-table table { width:100%; border-collapse:collapse; }
-    .truth-table th, .truth-table td { padding:10px 12px; border:1px solid rgba(255,255,255,0.04); text-align:left; vertical-align:middle; }
-    .truth-table th { background:linear-gradient(90deg,#7c4dff,#ff6b6b); color:#fff; font-weight:700; }
-    .action-btn { padding:6px 8px; border-radius:8px; border:none; cursor:pointer; }
-    .btn-del { background:#ff4b4b; color:#fff; }
-    .controls { display:flex; gap:10px; align-items:center; margin-bottom:12px; flex-wrap:wrap; }
-    .search { padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:#0b0b0b; color:#fff; }
-    .total-row td { background: rgba(255,255,255,0.02); font-weight:700; }
-    button { cursor:pointer; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customer — Records</title>
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  .truth-table table { width:100%; border-collapse:collapse; margin-bottom:20px; }
+  .truth-table th, .truth-table td { padding:10px 12px; border:1px solid rgba(255,255,255,0.04); text-align:left; vertical-align:middle; }
+  .truth-table th { background:linear-gradient(90deg,#7c4dff,#ff6b6b); color:#fff; font-weight:700; }
+  .action-btn { padding:6px 8px; border-radius:8px; border:none; cursor:pointer; }
+  .btn-del { background:#ff4b4b; color:#fff; }
+  .controls { display:flex; gap:10px; align-items:center; margin-bottom:12px; flex-wrap:wrap; }
+  .search { padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:#0b0b0b; color:#fff; }
+  .date-group { margin-bottom:30px; }
+  .date-group h3 { margin-bottom:8px; color:#fff; font-size:1.05rem; }
+  .total-row td { background: rgba(255,255,255,0.02); font-weight:700; }
+  .btn { background:linear-gradient(90deg,#7c4dff,#ff6b6b); color:#fff; border:none; padding:8px 14px; border-radius:8px; font-weight:600; cursor:pointer; }
+  .btn:hover { opacity:0.95; }
+  .tiny { color:#9aa0a6; font-size:.95rem; padding:8px 10px; }
+</style>
 </head>
 <body>
-  <div class="container">
-    <header class="site-header">
-      <h1 class="app-title">📑 Customer — Records</h1>
-    </header>
+<div class="container">
+  <header class="site-header">
+    <h1 class="app-title">📑 Customer — Records</h1>
+  </header>
 
-    <div class="stage controls">
-      <a class="home-btn" href="customer.html">⬅️ Back</a>
-      <input id="searchBox" class="search" placeholder="Search..." />
-      <button id="exportCsvBtn">📑 CSV</button>
-      <button id="exportPngBtn">🖼 PNG</button>
-    </div>
-
-    <div id="tableWrap" class="truth-table" aria-live="polite"></div>
+  <div class="stage controls">
+    <a class="home-btn" href="customer.html">⬅️ Back</a>
+    <input id="searchBox" class="search" placeholder="Search..." />
+    <button id="exportCsvBtn" class="btn">📑 CSV</button>
+    <button id="exportPngBtn" class="btn">🖼 PNG</button>
   </div>
 
+  <div id="tableWrap" class="truth-table" aria-live="polite"></div>
+</div>
+
 <script>
-const DATA_KEY  = "customerRecords";
+const DATA_KEY = "customerRecords";
 const $ = id => document.getElementById(id);
 const tableWrap = $("tableWrap");
 const searchBox = $("searchBox");
@@ -47,111 +50,157 @@ function loadRecords(){ try { return JSON.parse(localStorage.getItem(DATA_KEY)) 
 function saveRecords(data){ localStorage.setItem(DATA_KEY, JSON.stringify(data)); }
 
 let records = loadRecords();
-const schema = records.length > 0 ? Object.keys(records[0]).map(k => ({name:k,type:isNaN(records[0][k])?"text":"number"})) : [];
+
+// Detect column type correctly
+function buildSchema(){
+  const keys = [];
+  records.forEach(r => {
+    Object.keys(r).forEach(k => { if (!keys.includes(k) && k !== "_recordDate") keys.push(k); });
+  });
+  if (records.some(r => 'Rate' in r && 'Amount' in r) && !keys.includes('Income')) keys.push('Income');
+  if (records.some(r => 'Income' in r && 'Expenses' in r) && !keys.includes('Profit')) keys.push('Profit');
+
+  return keys.map(k => {
+    let val;
+    for (const r of records) { if (r[k] !== undefined) { val = r[k]; break; } }
+    const isNum = typeof val === 'number';
+    return { name: k, type: isNum ? 'number' : 'text' };
+  });
+}
+
+function groupByDate(recs){
+  const groups = {};
+  recs.forEach(r => { const date = r._recordDate || "No Date"; if(!groups[date]) groups[date]=[]; groups[date].push(r); });
+  return groups;
+}
 
 function renderTable(){
   records = loadRecords();
-  if(schema.length===0){ tableWrap.innerHTML = `<div>No records available.</div>`; return; }
+  if(!records || records.length===0){ tableWrap.innerHTML="<div class='tiny'>No records available.</div>"; return; }
 
-  let html = `<table><thead><tr><th>#</th>`;
-  schema.forEach(col => html += `<th>${col.name}</th>`);
-  html += `<th>Action</th></tr></thead><tbody>`;
-
-  records.forEach((row,rIdx)=>{
-    html += `<tr data-row="${rIdx}"><td>${rIdx+1}.</td>`;
-    schema.forEach(col=>{
-      const val = row[col.name]===undefined?"":row[col.name];
-      html += `<td contenteditable="true" data-field="${col.name}" data-row="${rIdx}">${val}</td>`;
-    });
-    html += `<td><button class="action-btn btn-del" onclick="deleteRow(${rIdx})">❌</button></td>`;
-    html += `</tr>`;
-  });
-
-  // Totals for numeric columns
-  const numericSums = {};
-  schema.forEach(col=>numericSums[col.name]=0);
-  let hasNumeric=false;
   records.forEach(r=>{
-    schema.forEach(col=>{
-      const v=parseFloat(r[col.name]);
-      if(!isNaN(v)){ numericSums[col.name]+=v; hasNumeric=true; }
-    });
+    if('Rate' in r && 'Amount' in r) r['Income']=(parseFloat(r['Rate'])||0)*(parseFloat(r['Amount'])||0);
+    if('Income' in r && 'Expenses' in r) r['Profit']=(parseFloat(r['Income'])||0)-(parseFloat(r['Expenses'])||0);
   });
 
-  if(hasNumeric){
-    html += `<tfoot><tr class="total-row"><td><strong>Total</strong></td>`;
-    schema.forEach(col=>{
-      const sum = numericSums[col.name];
-      html += `<td>${(sum!==0?Number(sum.toFixed(2)):"")}</td>`;
-    });
-    html += `<td></td></tr></tfoot>`;
-  }
+  const schema = buildSchema();
+  const displaySchema = schema.filter(s => s.name.toLowerCase()!=='_recorddate');
+  const grouped = groupByDate(records);
 
-  html += `</table>`;
+  let html = "";
+  Object.keys(grouped).sort().forEach(date=>{
+    const rows = grouped[date];
+    html += `<div class="date-group"><h3>${date}</h3><table><thead><tr>`;
+    displaySchema.forEach(col=>html+=`<th>${col.name}</th>`);
+    html+=`<th>Action</th></tr></thead><tbody>`;
+
+    rows.forEach((r, idx)=>{
+      html+=`<tr data-date="${date}" data-index="${idx}">`;
+      displaySchema.forEach(col=>{
+        const val = r[col.name] ?? "";
+        html+=`<td contenteditable="true" data-field="${col.name}" data-date="${date}" data-index="${idx}">${val}</td>`;
+      });
+      html+=`<td><button class="action-btn btn-del" onclick="deleteRow('${date}',${idx})">❌</button></td></tr>`;
+    });
+
+    // Totals only for numeric fields
+    const numericSums = {};
+    displaySchema.forEach(c => { if(c.type==='number') numericSums[c.name]=0; });
+    rows.forEach(r=>{
+      displaySchema.forEach(c=>{
+        if(c.type==='number'){
+          const n = parseFloat(r[c.name]);
+          if(!isNaN(n)) numericSums[c.name]+=n;
+        }
+      });
+    });
+
+    html+=`<tfoot><tr class="total-row"><td><strong>Total</strong></td>`;
+    for(let i=1;i<displaySchema.length;i++){
+      const c=displaySchema[i];
+      html+=`<td>${c.type==='number'?Number(numericSums[c.name].toFixed(2)):""}</td>`;
+    }
+    html+=`<td></td></tr></tfoot></table></div>`;
+  });
+
   tableWrap.innerHTML = html;
 
-  tableWrap.querySelectorAll("td[contenteditable='true']").forEach((td,i,arr)=>{
-    td.addEventListener("keydown",(e)=>{
-      if(e.key==="Enter"){ e.preventDefault(); const next=arr[i+1]; if(next){ next.focus(); selectCellText(next); } }
-    });
+  tableWrap.querySelectorAll("td[contenteditable='true']").forEach(td=>{
+    td.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); td.blur(); } });
     td.addEventListener("blur", onCellBlur);
   });
 }
 
-function selectCellText(td){ if(!td) return; const range=document.createRange(); range.selectNodeContents(td); const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(range); }
-
 function onCellBlur(e){
+  records=loadRecords();
   const td=e.target;
-  const rowIdx=parseInt(td.dataset.row,10);
+  const date=td.dataset.date;
+  const idx=parseInt(td.dataset.index,10);
   const field=td.dataset.field;
-  if(isNaN(rowIdx)||!field) return;
-  const text=td.innerText;
-  const colDef = schema.find(s=>s.name===field);
-  if(colDef && colDef.type==="number"){
-    const n=parseFloat(text);
-    records[rowIdx][field]=isNaN(n)?"":Number(n);
-  } else {
-    records[rowIdx][field]=text;
-  }
-  saveRecords(records);
-  updateTotalsRow();
-}
+  if(!date||isNaN(idx)||!field) return;
 
-function updateTotalsRow(){
-  const table=tableWrap.querySelector("table");
-  if(!table) return;
-  const tfoot=table.querySelector("tfoot");
-  if(!tfoot) return;
-  const numericSums={}; schema.forEach(col=>numericSums[col.name]=0);
-  let hasNumeric=false;
+  const grouped=groupByDate(records);
+  const row=grouped[date]?.[idx];
+  if(!row) return;
+
+  let val=td.innerText;
+  const schema=buildSchema();
+  const colDef=schema.find(s=>s.name===field);
+  row[field]=(colDef?.type==='number')?(parseFloat(val)||0):val;
+
+  records=Object.values(grouped).flat();
   records.forEach(r=>{
-    schema.forEach(col=>{
-      const v=parseFloat(r[col.name]);
-      if(!isNaN(v)){ numericSums[col.name]+=v; hasNumeric=true; }
-    });
+    if('Rate' in r && 'Amount' in r) r['Income']=(parseFloat(r['Rate'])||0)*(parseFloat(r['Amount'])||0);
+    if('Income' in r && 'Expenses' in r) r['Profit']=(parseFloat(r['Income'])||0)-(parseFloat(r['Expenses'])||0);
   });
-  const tds=tfoot.querySelectorAll("td");
-  for(let i=0;i<schema.length;i++){ tds[i+1].textContent=(numericSums[schema[i].name]!==0?Number(numericSums[schema[i].name].toFixed(2)):""); }
+  saveRecords(records);
+  renderTable();
 }
 
-function deleteRow(idx){ if(!confirm("Delete this row?")) return; records.splice(idx,1); saveRecords(records); renderTable(); }
+function deleteRow(date, idx){
+  records=loadRecords();
+  const grouped=groupByDate(records);
+  if(!grouped[date]) return;
+  grouped[date].splice(idx,1);
+  records=Object.values(grouped).flat();
+  saveRecords(records);
+  renderTable();
+}
 
-searchBox.addEventListener("input",(e)=>{
+searchBox.addEventListener("input", e=>{
   const q=String(e.target.value||"").toLowerCase().trim();
   tableWrap.querySelectorAll("tbody tr").forEach(tr=>{ tr.style.display=tr.innerText.toLowerCase().includes(q)?"":"none"; });
 });
 
-exportCsvBtn.addEventListener("click",()=>{
+exportCsvBtn.addEventListener("click", ()=>{
+  records=loadRecords();
   if(!records || records.length===0){ alert("No data to export"); return; }
-  const header=["#"].concat(schema.map(s=>s.name)).join(",");
-  const rows=records.map((r,i)=>{ const vals=schema.map(s=>{ const v=r[s.name]===undefined?'""':String(r[s.name]).replace(/"/g,'""'); return `"${v}"`; }); return `${i+1},${vals.join(",")}`; }).join("\n");
-  const csv=header+"\n"+rows;
+  const schema=buildSchema();
+  const displaySchema=schema.filter(s=>s.name.toLowerCase()!=='_recorddate');
+  const grouped=groupByDate(records);
+  let csv="";
+  Object.keys(grouped).forEach(date=>{
+    const rows=grouped[date];
+    csv+=`Date: ${date}\n`;
+    csv+=displaySchema.map(c=>c.name).join(",")+"\n";
+    rows.forEach(r=>{
+      const line=displaySchema.map(c=>{
+        const v=r[c.name]; return (v===undefined||v===null)?"":String(v).replace(/"/g,'""');
+      }).map(v=>`"${v}"`).join(",");
+      csv+=line+"\n";
+    });
+    csv+="\n";
+  });
   const blob=new Blob([csv],{type:"text/csv"});
-  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="customers.csv"; a.click();
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="customers.csv";
+  a.click();
 });
 
-exportPngBtn.addEventListener("click",()=>{
-  const el=tableWrap; if(!el){ alert("Nothing to export"); return; }
+exportPngBtn.addEventListener("click", ()=>{
+  const el=tableWrap;
+  if(!el){ alert("Nothing to export"); return; }
   html2canvas(el,{scale:2,backgroundColor:null}).then(canvas=>{
     const a=document.createElement("a");
     a.href=canvas.toDataURL("image/png");
@@ -160,8 +209,8 @@ exportPngBtn.addEventListener("click",()=>{
   }).catch(err=>{ console.error(err); alert("PNG export failed."); });
 });
 
-// initial render
 renderTable();
 </script>
 </body>
 </html>
+
