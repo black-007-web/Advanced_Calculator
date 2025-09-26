@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Customer — Builder</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .schema-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+    .schema-item { background:linear-gradient(90deg,#141414,#1b1b1b); padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); display:flex; gap:8px; align-items:center; }
+    .schema-item button { padding:6px 8px; border-radius:6px; border:none; cursor:pointer; background:transparent; color:#cfcfcf; }
+    #dynamicFormFields { display:grid; grid-template-columns:repeat(1,1fr); gap:10px; margin-top:10px; }
+    #dynamicFormFields .field-input { padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:#0b0b0b; color:#fff; }
+    .controls { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="site-header">
+      <h1 class="app-title">🧾 Customer — Builder</h1>
+    </header>
+
+    <div class="stage">
+      <a class="home-btn" href="index.html">🏠 Home</a>
+      <a class="home-btn" href="customer-records.html" style="margin-left:12px;">📑 Open Records</a>
+    </div>
+
+    <div class="stage">
+      <h3>Schema Builder</h3>
+      <div class="schema-row">
+        <input id="newFieldName" type="text" placeholder="Field name (e.g. Name, ID, Income, Expenses)" />
+        <select id="newFieldType">
+          <option value="text">Text</option>
+          <option value="number">Number</option>
+          <option value="date">Date</option>
+        </select>
+        <button id="addFieldBtn" class="calc-button">Create Field</button>
+        <button id="resetSchemaBtn" class="btn-ghost">Reset Schema</button>
+      </div>
+      <div id="schemaList" class="operation-display" aria-live="polite"></div>
+    </div>
+
+    <div class="stage">
+      <h3>Insert Data</h3>
+      <form id="dataForm" autocomplete="off">
+        <div id="dynamicFormFields"></div>
+        <div class="controls">
+          <button type="button" id="insertBtn" class="calc-button">➕ Insert</button>
+          <button type="button" id="clearFormBtn" class="btn-ghost">Clear</button>
+          <button type="button" id="saveAndOpenBtn" class="home-btn">Save & Open Records</button>
+        </div>
+      </form>
+    </div>
+
+    <footer class="site-footer">
+      <p class="designer"><strong>Designed by You</strong></p>
+      <p class="university">Customer Data Management</p>
+    </footer>
+  </div>
+
+<script>
+const FIELD_KEY = "customerFields";
+const DATA_KEY  = "customerRecords";
+
+const $ = id => document.getElementById(id);
+
+function loadFields(){ try { return JSON.parse(localStorage.getItem(FIELD_KEY)) || []; } catch(e){ return []; } }
+function saveFields(f){ localStorage.setItem(FIELD_KEY, JSON.stringify(f)); }
+function loadRecords(){ try { return JSON.parse(localStorage.getItem(DATA_KEY)) || []; } catch(e){ return []; } }
+function saveRecords(r){ localStorage.setItem(DATA_KEY, JSON.stringify(r)); }
+
+let schema = loadFields();
+let records = loadRecords();
+
+const schemaListEl = $("schemaList");
+const dynamicFormFields = $("dynamicFormFields");
+const newFieldName = $("newFieldName");
+const newFieldType = $("newFieldType");
+const addFieldBtn = $("addFieldBtn");
+const resetSchemaBtn = $("resetSchemaBtn");
+const insertBtn = $("insertBtn");
+const clearFormBtn = $("clearFormBtn");
+const saveAndOpenBtn = $("saveAndOpenBtn");
+
+function defaultSchema(){
+  return [
+    {name:"Name", type:"text"},
+    {name:"ID", type:"text"},
+    {name:"Product", type:"text"},
+    {name:"Quantity", type:"number"},
+    {name:"Price", type:"number"},
+    {name:"Date", type:"date"}
+  ];
+}
+
+if(!schema || schema.length === 0){
+  schema = defaultSchema();
+  saveFields(schema);
+}
+
+function renderSchemaList(){
+  schemaListEl.innerHTML = "";
+  if(schema.length === 0){ schemaListEl.textContent = "No fields defined."; return; }
+  schema.forEach((f,i)=>{
+    const div = document.createElement("div");
+    div.className = "schema-item";
+    div.innerHTML = `<strong>${f.name}</strong> <small>${f.type}</small>`;
+    const del = document.createElement("button");
+    del.textContent = "Remove";
+    del.addEventListener("click",()=>{
+      if(!confirm(`Remove field "${f.name}"?`)) return;
+      schema.splice(i,1);
+      saveFields(schema);
+      renderSchemaList();
+      renderFormFields();
+    });
+    div.appendChild(del);
+    schemaListEl.appendChild(div);
+  });
+}
+
+function renderFormFields(){
+  dynamicFormFields.innerHTML = "";
+  if(schema.length === 0){ dynamicFormFields.innerHTML = "<div>No fields defined.</div>"; return; }
+  schema.forEach((f,idx)=>{
+    // Skip Profit field if present in schema; form should not show it
+    if(f.name.toLowerCase() === "profit") return;
+
+    const input = document.createElement("input");
+    input.className = "field-input";
+    input.placeholder = f.name;
+    input.name = f.name;
+    input.dataset.index = idx;
+    input.type = f.type==="number"?"number":f.type==="date"?"date":"text";
+
+    input.addEventListener("keydown",(e)=>{
+      if(e.key==="Enter"){
+        e.preventDefault();
+        const next = dynamicFormFields.querySelector(`[data-index="${idx+1}"]`);
+        if(next) next.focus(); else input.blur();
+      }
+    });
+    dynamicFormFields.appendChild(input);
+  });
+}
+
+addFieldBtn.addEventListener("click",()=>{
+  const name = newFieldName.value.trim();
+  const type = newFieldType.value;
+  if(!name){ alert("Enter a field name."); return; }
+  if(schema.some(s=>s.name.toLowerCase()===name.toLowerCase())){ alert("Field already exists."); newFieldName.value=""; return; }
+  schema.push({name,type});
+  saveFields(schema);
+  newFieldName.value="";
+  renderSchemaList();
+  renderFormFields();
+});
+
+resetSchemaBtn.addEventListener("click",()=>{
+  if(!confirm("Reset schema to default?")) return;
+  schema = defaultSchema();
+  saveFields(schema);
+  renderSchemaList();
+  renderFormFields();
+});
+
+insertBtn.addEventListener("click",()=>{
+  const inputs = Array.from(dynamicFormFields.querySelectorAll("input"));
+  if(inputs.length===0){ alert("No fields to insert."); return; }
+  const row = {};
+  let allEmpty = true;
+  inputs.forEach(inp=>{
+    let val = inp.value;
+    if(inp.type==="number"){ val = val===""?null:parseFloat(inp.value); if(val!==null) allEmpty=false; }
+    else{ if(String(val).trim()!=="") allEmpty=false; }
+    row[inp.name]=val;
+  });
+  if(allEmpty){ alert("Please enter at least one value."); return; }
+
+  // Do NOT handle Profit in form; calculation will be in records page
+  records.push(row);
+  saveRecords(records);
+
+  inputs.forEach(i=>i.value="");
+  if(inputs[0]) inputs[0].focus();
+  alert("Row inserted (serial #: "+records.length+").");
+});
+
+clearFormBtn.addEventListener("click",()=>{
+  dynamicFormFields.querySelectorAll("input").forEach(i=>i.value="");
+});
+
+saveAndOpenBtn.addEventListener("click",()=>{
+  saveFields(schema);
+  saveRecords(records);
+  location.href="customer-records.html";
+});
+
+renderSchemaList();
+renderFormFields();
+</script>
+</body>
+</html>
