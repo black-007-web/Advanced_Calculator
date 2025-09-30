@@ -4,7 +4,7 @@
   <!-- Favicon and Tab Styling -->
   <link rel="icon" href="customer-records.png" type="image/png" />
   <meta name="theme-color" content="#00ffd5" />
-
+  
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Customer — Records</title>
@@ -45,6 +45,8 @@
 </div>
 
 <script>
+const { jsPDF } = window.jspdf;
+
 const DATA_KEY = "customerRecords";
 const $ = id => document.getElementById(id);
 const tableWrap = $("tableWrap");
@@ -202,7 +204,7 @@ exportCsvBtn.addEventListener("click", ()=>{
   a.click();
 });
 
-// Updated Export PNG / PDF logic
+// --- NEW EXPORT LOGIC ---
 exportPngBtn.addEventListener("click", async () => {
   const el = tableWrap;
   if (!el) { alert("Nothing to export"); return; }
@@ -213,51 +215,48 @@ exportPngBtn.addEventListener("click", async () => {
   el.style.maxHeight = "none";
 
   try {
-    const canvas = await html2canvas(el, {
-      scale: 2,
-      backgroundColor: null,
-      useCORS: true,
-      scrollX: 0,
-      scrollY: 0,
-      windowWidth: el.scrollWidth,
-      windowHeight: el.scrollHeight
-    });
-
-    el.style.overflow = originalOverflow;
-    el.style.maxHeight = originalMaxHeight;
+    const canvas = await html2canvas(el, { scale: 2, backgroundColor: "#0b0b0b", useCORS: true });
 
     const imgData = canvas.toDataURL("image/png");
-    const imgWidthMM = 210; // A4 width in mm
-    const imgHeightMM = imgWidthMM * canvas.height / canvas.width;
-    const pageHeightMM = 297; // A4 height
+    const pdf = new jsPDF({
+      orientation: canvas.width > canvas.height ? "l" : "p",
+      unit: "px",
+      format: [canvas.width, canvas.height]
+    });
 
-    if (imgHeightMM <= pageHeightMM) {
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const pageWidth = pdf.internal.pageSize.getWidth();
+
+    // If table fits on one page, just download PNG
+    if (canvas.height <= pageHeight && canvas.width <= pageWidth) {
       const a = document.createElement("a");
       a.href = imgData;
       a.download = "customers.png";
       a.click();
     } else {
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF({
-        orientation: imgWidthMM < imgHeightMM ? "portrait" : "landscape",
-        unit: "mm",
-        format: "a4"
-      });
+      // For large tables: split into PDF pages
+      let remainingHeight = canvas.height;
       let position = 0;
-      let remainingHeight = imgHeightMM;
-      const scale = imgWidthMM / canvas.width;
-
       while (remainingHeight > 0) {
-        pdf.addImage(imgData, "PNG", 0, position, imgWidthMM, imgHeightMM * scale);
-        remainingHeight -= pageHeightMM;
-        position -= pageHeightMM;
-        if (remainingHeight > 0) pdf.addPage();
+        const tempCanvas = document.createElement("canvas");
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = Math.min(pageHeight, remainingHeight);
+        tempCanvas.getContext("2d").drawImage(canvas, 0, position, canvas.width, tempCanvas.height, 0, 0, canvas.width, tempCanvas.height);
+
+        const img = tempCanvas.toDataURL("image/png");
+        if (position > 0) pdf.addPage();
+        pdf.addImage(img, "PNG", 0, 0, pageWidth, (tempCanvas.height * pageWidth) / tempCanvas.width);
+
+        position += tempCanvas.height;
+        remainingHeight -= tempCanvas.height;
       }
+
       pdf.save("customers.pdf");
     }
   } catch (err) {
     console.error(err);
     alert("Export failed.");
+  } finally {
     el.style.overflow = originalOverflow;
     el.style.maxHeight = originalMaxHeight;
   }
@@ -267,7 +266,6 @@ renderTable();
 </script>
 </body>
 </html>
-
 
 
 
