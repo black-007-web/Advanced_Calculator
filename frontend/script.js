@@ -300,8 +300,216 @@ document.addEventListener("keypress", function (e) {
     }
   }
 });
+// ======================
+// Shared Logic Functions
+// ======================
+const DATA_KEY = "customerRecords";
+
+function loadRecords(){
+  try { return JSON.parse(localStorage.getItem(DATA_KEY)) || []; }
+  catch(e){ return []; }
+}
+
+function formatCompact(num){
+  return new Intl.NumberFormat("en", { notation:"compact", maximumFractionDigits:1 }).format(num);
+}
+
+function calcEquity(records){
+  let totalExpenses=0, totalProfit=0, totalIncome=0;
+  records.forEach(r=>{
+    const inc = ("Rate" in r && "Amount" in r) ? (parseFloat(r["Rate"])||0)*(parseFloat(r["Amount"])||0) : (parseFloat(r["Income"])||0);
+    if(!isNaN(inc)) totalIncome+=inc;
+
+    const exp = parseFloat(r["Expenses"])||0;
+    if(!isNaN(exp)) totalExpenses+=exp;
+
+    const prof = (inc||0) - exp;
+    if(!isNaN(prof)) totalProfit+=prof;
+  });
+
+  return { equity: totalExpenses+totalProfit, totalIncome, totalExpenses, totalProfit };
+}
+
+function groupByPeriod(records, period){
+  const groups={};
+
+  records.forEach(r=>{
+    const d = r._recordDate ? new Date(r._recordDate) : null;
+    if(!d || isNaN(d)) return;
+
+    let key="";
+    if(period==="weekly"){
+      const year=d.getFullYear();
+      const firstDay=new Date(d.getFullYear(),0,1);
+      const days=Math.floor((d-firstDay)/(24*60*60*1000));
+      const week=Math.ceil((days+firstDay.getDay()+1)/7);
+      key=`${year}-W${week}`;
+    }
+    else if(period==="monthly"){
+      key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+    }
+    else key="Unknown";
+
+    if(!groups[key]) groups[key]=[];
+    groups[key].push(r);
+  });
+
+  return groups;
+}
+
+// ======================
+// Equity Page Renderer
+// ======================
+function renderEquityPage() {
+  const records = loadRecords();
+  const { totalIncome, totalExpenses, totalProfit, equity } = calcEquity(records);
+
+  const header = document.getElementById("equityHeader");
+  header.textContent = `Equity: ${formatCompact(equity)}`;
+  header.style.textAlign = "center";
+
+  const datasets = document.getElementById("datasets");
+  datasets.innerHTML = "";
+
+  const today = new Date();
+  const todayDate = today.toISOString().split("T")[0];
+
+  function getCurrentWeekKey(d) {
+    const year=d.getFullYear();
+    const firstDay=new Date(d.getFullYear(),0,1);
+    const days=Math.floor((d-firstDay)/(24*60*60*1000));
+    const week=Math.ceil((days+firstDay.getDay()+1)/7);
+    return `${year}-W${week}`;
+  }
+  function getCurrentMonthKey(d) {
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+  }
+
+  const currentWeekKey = getCurrentWeekKey(today);
+  const currentMonthKey = getCurrentMonthKey(today);
+
+  // ======================
+  // Flex container for side-by-side tables
+  // ======================
+  const containerDiv = document.createElement("div");
+  containerDiv.style.display = "flex";
+  containerDiv.style.flexWrap = "wrap";
+  containerDiv.style.gap = "20px";
+
+  // Main totals table
+  const mainDiv = document.createElement("div");
+  mainDiv.style.flex = "1 1 400px";
+  mainDiv.innerHTML = `
+    <h3>${todayDate}</h3>
+    <table class="summary-table">
+      <thead>
+        <tr><th>Income (Assets)</th><th>Expenses (Liabilities)</th><th>Profit</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>${totalIncome.toFixed(2)}</td>
+          <td>${totalExpenses.toFixed(2)}</td>
+          <td>${totalProfit.toFixed(2)}</td>
+        </tr>
+      </tbody>
+    </table>
+  `;
+
+  // Current period table
+  const currentDiv = document.createElement("div");
+  currentDiv.style.flex = "1 1 300px";
+
+  const weeklyGroups = groupByPeriod(records, "weekly");
+  const monthlyGroups = groupByPeriod(records, "monthly");
+
+  const currentWeekProfit = weeklyGroups[currentWeekKey] ? weeklyGroups[currentWeekKey].reduce((acc,r)=>{
+    const inc = ("Rate" in r && "Amount" in r) ? (parseFloat(r["Rate"])||0)*(parseFloat(r["Amount"])||0) : (parseFloat(r["Income"])||0);
+    const exp = parseFloat(r["Expenses"])||0;
+    return acc + ((inc||0) - exp);
+  },0) : 0;
+
+  const currentMonthProfit = monthlyGroups[currentMonthKey] ? monthlyGroups[currentMonthKey].reduce((acc,r)=>{
+    const inc = ("Rate" in r && "Amount" in r) ? (parseFloat(r["Rate"])||0)*(parseFloat(r["Amount"])||0) : (parseFloat(r["Income"])||0);
+    const exp = parseFloat(r["Expenses"])||0;
+    return acc + ((inc||0) - exp);
+  },0) : 0;
+
+  currentDiv.innerHTML = `
+    <h3>Current Period Summary</h3>
+    <table class="summary-table">
+      <thead>
+        <tr><th>Period</th><th>Profit</th></tr>
+      </thead>
+      <tbody>
+        <tr title="This is the current week" style="background:rgba(255,107,107,0.2); font-weight:700;">
+          <td>Week ${currentWeekKey}</td>
+          <td>${currentWeekProfit.toFixed(2)}</td>
+        </tr>
+        <tr title="This is the current month" style="background:rgba(124,77,255,0.2); font-weight:700;">
+          <td>Month ${currentMonthKey}</td>
+          <td>${currentMonthProfit.toFixed(2)}</td>
+        </tr>
+      </tbody>
+    </table>
+  `;
+
+  containerDiv.appendChild(mainDiv);
+  containerDiv.appendChild(currentDiv);
+  datasets.appendChild(containerDiv);
+
+  // ======================
+  // Full Weekly/Monthly tables below
+  // ======================
+  const fullDiv = document.createElement("div");
+  fullDiv.style.marginTop = "20px";
+
+  // Weekly table
+  let weeklyHtml = `
+    <h4>Weekly Profits</h4>
+    <table class="summary-table">
+      <thead><tr><th>Week</th><th>Profit</th></tr></thead>
+      <tbody>
+        ${Object.keys(weeklyGroups).map(week=>{
+          const sum = weeklyGroups[week].reduce((acc,r)=>{
+            const inc = ("Rate" in r && "Amount" in r) ? (parseFloat(r["Rate"])||0)*(parseFloat(r["Amount"])||0) : (parseFloat(r["Income"])||0);
+            const exp = parseFloat(r["Expenses"])||0;
+            return acc + ((inc||0)-exp);
+          },0);
+          const highlight = week===currentWeekKey ? "style='background:rgba(255,107,107,0.2); font-weight:700;'" : "";
+          return `<tr ${highlight}><td>${week}</td><td>${sum.toFixed(2)}</td></tr>`;
+        }).join("")}
+      </tbody>
+    </table>
+  `;
+  fullDiv.innerHTML += weeklyHtml;
+
+  // Monthly table
+  let monthlyHtml = `
+    <h4>Monthly Profits</h4>
+    <table class="summary-table">
+      <thead><tr><th>Month</th><th>Profit</th></tr></thead>
+      <tbody>
+        ${Object.keys(monthlyGroups).map(month=>{
+          const sum = monthlyGroups[month].reduce((acc,r)=>{
+            const inc = ("Rate" in r && "Amount" in r) ? (parseFloat(r["Rate"])||0)*(parseFloat(r["Amount"])||0) : (parseFloat(r["Income"])||0);
+            const exp = parseFloat(r["Expenses"])||0;
+            return acc + ((inc||0)-exp);
+          },0);
+          const highlight = month===currentMonthKey ? "style='background:rgba(124,77,255,0.2); font-weight:700;'" : "";
+          return `<tr ${highlight}><td>${month}</td><td>${sum.toFixed(2)}</td></tr>`;
+        }).join("")}
+      </tbody>
+    </table>
+  `;
+  fullDiv.innerHTML += monthlyHtml;
+
+  datasets.appendChild(fullDiv);
+}
+
+// Call renderer
+renderEquityPage();
+
 
 // Initial Render
 renderCustomerReceipts();
 renderEmployeeTable();
-
