@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer — Equity</title>
+  <link rel="icon" href="equity.png" type="image/png">
+  <meta name="theme-color" content="#00ffd5">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body { font-family: Arial, sans-serif; background:#0b0b0b; color:#fff; margin:0; padding:0; }
+    .container { max-width:1200px; margin:0 auto; padding:20px; }
+    header { margin-bottom:20px; text-align:center; }
+    .app-title { font-size:2rem; font-weight:700; }
+
+    .equity-header { font-size:2rem; font-weight:700; margin-bottom:10px; text-align:center; }
+    .today-date { color:#9aa0a6; margin-bottom:30px; text-align:center; }
+
+    .card { background:#121212; padding:20px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.4); margin-bottom:20px; }
+    .card h3 { margin-top:0; margin-bottom:15px; text-align:center; }
+
+    .flex-container { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; margin-bottom:20px; }
+    .flex-item { flex:1 1 300px; }
+
+    .summary-table { width:100%; border-collapse:collapse; }
+    .summary-table th, .summary-table td { padding:10px 12px; border:1px solid rgba(255,255,255,0.08); text-align:center; }
+    .summary-table th { background:linear-gradient(90deg,#7c4dff,#ff6b6b); color:#fff; font-weight:700; }
+    .summary-table tbody tr:nth-child(even) { background:rgba(255,255,255,0.05); }
+
+    .current-week { background:rgba(255,107,107,0.2); font-weight:700; }
+    .current-month { background:rgba(124,77,255,0.2); font-weight:700; }
+
+    .legend { display:flex; gap:15px; margin-bottom:20px; justify-content:center; }
+    .legend-item { display:flex; align-items:center; gap:6px; font-size:0.9rem; }
+    .legend-color { width:16px; height:16px; border-radius:4px; }
+    .week-color { background:rgba(255,107,107,0.5); }
+    .month-color { background:rgba(124,77,255,0.5); }
+
+    canvas { background:#1a1a1a; border-radius:12px; padding:10px; }
+
+    .bottom-btn { position:sticky; bottom:10px; text-align:center; z-index:100; margin-top:30px; }
+    .bottom-btn .btn { padding:12px 20px; font-size:1rem; }
+
+    @media(max-width:768px){ .flex-container{flex-direction:column;} }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1 class="app-title">📊 Customer — Equity</h1>
+  </header>
+
+  <div class="equity-header" id="equityHeader">Equity: 0</div>
+  <div class="today-date" id="todayDate"></div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-color week-color"></div>Current Week</div>
+    <div class="legend-item"><div class="legend-color month-color"></div>Current Month</div>
+  </div>
+
+  <div id="equityWrap" aria-live="polite"></div>
+
+  <div class="flex-container">
+    <div class="flex-item card">
+      <h3>Weekly Profit Trend</h3>
+      <canvas id="weeklyChart"></canvas>
+    </div>
+    <div class="flex-item card">
+      <h3>Monthly Profit Trend</h3>
+      <canvas id="monthlyChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Sticky Bottom Back Button -->
+  <div class="bottom-btn">
+   <a class="home-btn" href="customer-records.html" style="margin-left:12px;">📑 Open Records</a>
+    <a class="home-btn" href="customer.html">⬅️ Back</a>
+  </div>
+</div>
+
+<script>
+const DATA_KEY = "customerRecords";
+
+function loadRecords(){ 
+  try { return JSON.parse(localStorage.getItem(DATA_KEY)) || []; } 
+  catch(e){ return []; } 
+}
+
+function formatCompact(num){
+  return new Intl.NumberFormat("en", { notation:"compact", maximumFractionDigits:1 }).format(num);
+}
+
+function getWeekNumber(startDate, currentDate){
+  const msPerDay = 24*60*60*1000;
+  const diffDays = Math.floor((currentDate - startDate)/msPerDay);
+  return Math.floor(diffDays/7) + 1;
+}
+
+function getMonthNumber(startDate, currentDate){
+  return (currentDate.getFullYear() - startDate.getFullYear())*12 + (currentDate.getMonth() - startDate.getMonth()) + 1;
+}
+
+function renderEquity(){
+  const records = loadRecords();
+  const wrap = document.getElementById("equityWrap");
+  const headerBox = document.getElementById("equityHeader");
+  const todayBox = document.getElementById("todayDate");
+
+  if(!records || records.length===0){
+    wrap.innerHTML = "<div class='tiny'>No records available.</div>";
+    headerBox.textContent = "Equity: 0";
+    todayBox.textContent = "";
+    return;
+  }
+
+  records.forEach(r=>{
+    r.Income = ('Rate' in r && 'Amount' in r) ? (parseFloat(r['Rate'])||0)*(parseFloat(r['Amount'])||0) : (parseFloat(r['Income'])||0);
+    r.Expenses = parseFloat(r['Expenses'])||0;
+    r.Profit = r.Income - r.Expenses;
+    r.DateObj = r.Date ? new Date(r.Date) : new Date();
+  });
+
+  let totalIncome=0, totalExpenses=0, totalProfit=0;
+  records.forEach(r=>{ totalIncome+=r.Income; totalExpenses+=r.Expenses; totalProfit+=r.Profit; });
+
+  headerBox.textContent = `Equity: ${formatCompact(totalIncome)}`;
+  todayBox.textContent = `Updated: ${new Date().toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"})}`;
+
+  const firstDate = new Date(Math.min(...records.map(r=>r.DateObj)));
+  const today = new Date();
+  const currentWeek = getWeekNumber(firstDate, today);
+  const currentMonth = getMonthNumber(firstDate, today);
+
+  let weeklyTotal=0, monthlyTotal=0;
+  let weeklyData={}, monthlyData={};
+  records.forEach(r=>{
+    const week = getWeekNumber(firstDate, r.DateObj);
+    const month = getMonthNumber(firstDate, r.DateObj);
+    weeklyData[week] = (weeklyData[week]||0)+r.Profit;
+    monthlyData[month] = (monthlyData[month]||0)+r.Profit;
+
+    if(week===currentWeek) weeklyTotal+=r.Profit;
+    if(month===currentMonth) monthlyTotal+=r.Profit;
+  });
+
+  let html = `
+    <div class="card">
+      <h3>Main Dataset Totals</h3>
+      <table class="summary-table">
+        <thead><tr><th>Income (Assets)</th><th>Expenses (Liabilities)</th><th>Profit</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>${totalIncome.toFixed(2)}</td>
+            <td>${totalExpenses.toFixed(2)}</td>
+            <td>${totalProfit.toFixed(2)}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flex-container">
+      <div class="flex-item card">
+        <h3>Current Week Profit</h3>
+        <table class="summary-table">
+          <tbody>
+            <tr class="current-week"><td>Week ${currentWeek}</td><td>${weeklyTotal.toFixed(2)}</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="flex-item card">
+        <h3>Current Month Profit</h3>
+        <table class="summary-table">
+          <tbody>
+            <tr class="current-month"><td>Month ${currentMonth}</td><td>${monthlyTotal.toFixed(2)}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+  wrap.innerHTML = html;
+
+  const weeklyLabels = Object.keys(weeklyData).map(w=>`Week ${w}`);
+  const weeklyValues = Object.values(weeklyData);
+  const monthlyLabels = Object.keys(monthlyData).map(m=>`Month ${m}`);
+  const monthlyValues = Object.values(monthlyData);
+
+  new Chart(document.getElementById('weeklyChart'), {
+    type:'line',
+    data:{ labels: weeklyLabels, datasets:[{label:'Profit', data: weeklyValues, borderColor:'#ff6b6b', backgroundColor:'rgba(255,107,107,0.2)', tension:0.3 }] },
+    options:{ responsive:true, plugins:{ legend:{ display:false } } }
+  });
+
+  new Chart(document.getElementById('monthlyChart'), {
+    type:'line',
+    data:{ labels: monthlyLabels, datasets:[{label:'Profit', data: monthlyValues, borderColor:'#7c4dff', backgroundColor:'rgba(124,77,255,0.2)', tension:0.3 }] },
+    options:{ responsive:true, plugins:{ legend:{ display:false } } }
+  });
+}
+
+renderEquity();
+</script>
+</body>
+</html>
