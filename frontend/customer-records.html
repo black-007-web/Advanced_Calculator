@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Customer — Records</title>
 <link rel="stylesheet" href="styles.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   .truth-table table { width:100%; border-collapse:collapse; margin-bottom:20px; }
   .truth-table th, .truth-table td { padding:10px 12px; border:1px solid rgba(255,255,255,0.04); text-align:left; vertical-align:middle; }
@@ -204,53 +204,36 @@ exportCsvBtn.addEventListener("click", ()=>{
   a.click();
 });
 
-
 exportPngBtn.addEventListener("click", () => {
-  const el = document.getElementById("tableWrap");
-  if (!el) { alert("Nothing to export"); return; }
+  const el = tableWrap;
+  if (!el) { 
+    alert("Nothing to export"); 
+    return; 
+  }
 
-  html2canvas(el, { scale: 1.5, backgroundColor: null, useCORS: true }).then(canvas => {
-    const imgData = canvas.toDataURL("image/png");
-    const { jsPDF } = window.jspdf; // ✅ Make sure this line is present
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-
-    const canvasWidth = canvas.width;
-    const canvasHeight = canvas.height;
-    const ratio = canvasHeight / canvasWidth;
-    const imgWidth = pageWidth;
-    const imgHeight = pageWidth * ratio;
-
-    let heightLeft = imgHeight;
-    let position = 0;
-
-    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
-
-    while (heightLeft > 0) {
-      position += pageHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, "PNG", 0, -position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-    }
-
-    pdf.save("full_dataset.pdf");
+  html2canvas(el, {
+    scale: 2,
+    backgroundColor: null,
+    useCORS: true,
+    scrollX: 0,
+    scrollY: 0,
+    windowWidth: el.scrollWidth,   // capture full width
+    windowHeight: el.scrollHeight  // capture full height
+  }).then(canvas => {
+    const a = document.createElement("a");
+    a.href = canvas.toDataURL("image/png");
+    a.download = "customers.png";
+    a.click();
   }).catch(err => {
-    console.error("Export failed:", err);
-    alert("Export failed.");
+    console.error(err);
+    alert("PNG export failed.");
   });
 });
-
-
 
 renderTable();
 </script>
 </body>
 </html>
-
-
-
 
 
 
