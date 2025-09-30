@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  
   <!-- Favicon and Tab Styling -->
   <link rel="icon" href="customer-records.png" type="image/png" />
   <meta name="theme-color" content="#00ffd5" />
-  
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Customer — Records</title>
-<link rel="stylesheet" href="styles.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<style>
-  .truth-table table { width:100%; border-collapse:collapse; margin-bottom:20px; }
-  .truth-table th, .truth-table td { padding:10px 12px; border:1px solid rgba(255,255,255,0.04); text-align:left; vertical-align:middle; }
-  .truth-table th { background:linear-gradient(90deg,#7c4dff,#ff6b6b); color:#fff; font-weight:700; }
-  .action-btn { padding:6px 8px; border-radius:8px; border:none; cursor:pointer; }
-  .btn-del { background:#ff4b4b; color:#fff; }
-  .controls { display:flex; gap:10px; align-items:center; margin-bottom:12px; flex-wrap:wrap; }
-  .search { padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:#0b0b0b; color:#fff; }
-  .date-group { margin-bottom:30px; }
-  .date-group h3 { margin-bottom:8px; color:#fff; font-size:1.05rem; }
-  .total-row td { background: rgba(255,255,255,0.02); font-weight:700; }
-  .btn { background:linear-gradient(90deg,#7c4dff,#ff6b6b); color:#fff; border:none; padding:8px 14px; border-radius:8px; font-weight:600; cursor:pointer; }
-  .btn:hover { opacity:0.95; }
-  .tiny { color:#9aa0a6; font-size:.95rem; padding:8px 10px; }
-</style>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer — Records</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    .truth-table table { width:100%; border-collapse:collapse; margin-bottom:20px; }
+    .truth-table th, .truth-table td { padding:10px 12px; border:1px solid rgba(255,255,255,0.04); text-align:left; vertical-align:middle; }
+    .truth-table th { background:linear-gradient(90deg,#7c4dff,#ff6b6b); color:#fff; font-weight:700; }
+    .action-btn { padding:6px 8px; border-radius:8px; border:none; cursor:pointer; }
+    .btn-del { background:#ff4b4b; color:#fff; }
+    .controls { display:flex; gap:10px; align-items:center; margin-bottom:12px; flex-wrap:wrap; }
+    .search { padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:#0b0b0b; color:#fff; }
+    .date-group { margin-bottom:30px; }
+    .date-group h3 { margin-bottom:8px; color:#fff; font-size:1.05rem; }
+    .total-row td { background: rgba(255,255,255,0.02); font-weight:700; }
+    .btn { background:linear-gradient(90deg,#7c4dff,#ff6b6b); color:#fff; border:none; padding:8px 14px; border-radius:8px; font-weight:600; cursor:pointer; }
+    .btn:hover { opacity:0.95; }
+    .tiny { color:#9aa0a6; font-size:.95rem; padding:8px 10px; }
+  </style>
 </head>
 <body>
 <div class="container">
@@ -38,7 +38,7 @@
     <a class="home-btn" href="equity.html">📊 Equity</a>
     <input id="searchBox" class="search" placeholder="Search..." />
     <button id="exportCsvBtn" class="btn">📑 CSV</button>
-    <button id="exportPngBtn" class="btn">🖼 PNG</button>
+    <button id="exportPngBtn" class="btn">🖼 PNG / PDF</button>
   </div>
 
   <div id="tableWrap" class="truth-table" aria-live="polite"></div>
@@ -57,7 +57,6 @@ function saveRecords(data){ localStorage.setItem(DATA_KEY, JSON.stringify(data))
 
 let records = loadRecords();
 
-// Detect column type correctly
 function buildSchema(){
   const keys = [];
   records.forEach(r => {
@@ -109,7 +108,6 @@ function renderTable(){
       html+=`<td><button class="action-btn btn-del" onclick="deleteRow('${date}',${idx})">❌</button></td></tr>`;
     });
 
-    // Totals only for numeric fields
     const numericSums = {};
     displaySchema.forEach(c => { if(c.type==='number') numericSums[c.name]=0; });
     rows.forEach(r=>{
@@ -204,36 +202,72 @@ exportCsvBtn.addEventListener("click", ()=>{
   a.click();
 });
 
-exportPngBtn.addEventListener("click", () => {
+// Updated Export PNG / PDF logic
+exportPngBtn.addEventListener("click", async () => {
   const el = tableWrap;
-  if (!el) { 
-    alert("Nothing to export"); 
-    return; 
-  }
+  if (!el) { alert("Nothing to export"); return; }
 
-  html2canvas(el, {
-    scale: 2,
-    backgroundColor: null,
-    useCORS: true,
-    scrollX: 0,
-    scrollY: 0,
-    windowWidth: el.scrollWidth,   // capture full width
-    windowHeight: el.scrollHeight  // capture full height
-  }).then(canvas => {
-    const a = document.createElement("a");
-    a.href = canvas.toDataURL("image/png");
-    a.download = "customers.png";
-    a.click();
-  }).catch(err => {
+  const originalOverflow = el.style.overflow;
+  const originalMaxHeight = el.style.maxHeight;
+  el.style.overflow = "visible";
+  el.style.maxHeight = "none";
+
+  try {
+    const canvas = await html2canvas(el, {
+      scale: 2,
+      backgroundColor: null,
+      useCORS: true,
+      scrollX: 0,
+      scrollY: 0,
+      windowWidth: el.scrollWidth,
+      windowHeight: el.scrollHeight
+    });
+
+    el.style.overflow = originalOverflow;
+    el.style.maxHeight = originalMaxHeight;
+
+    const imgData = canvas.toDataURL("image/png");
+    const imgWidthMM = 210; // A4 width in mm
+    const imgHeightMM = imgWidthMM * canvas.height / canvas.width;
+    const pageHeightMM = 297; // A4 height
+
+    if (imgHeightMM <= pageHeightMM) {
+      const a = document.createElement("a");
+      a.href = imgData;
+      a.download = "customers.png";
+      a.click();
+    } else {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({
+        orientation: imgWidthMM < imgHeightMM ? "portrait" : "landscape",
+        unit: "mm",
+        format: "a4"
+      });
+      let position = 0;
+      let remainingHeight = imgHeightMM;
+      const scale = imgWidthMM / canvas.width;
+
+      while (remainingHeight > 0) {
+        pdf.addImage(imgData, "PNG", 0, position, imgWidthMM, imgHeightMM * scale);
+        remainingHeight -= pageHeightMM;
+        position -= pageHeightMM;
+        if (remainingHeight > 0) pdf.addPage();
+      }
+      pdf.save("customers.pdf");
+    }
+  } catch (err) {
     console.error(err);
-    alert("PNG export failed.");
-  });
+    alert("Export failed.");
+    el.style.overflow = originalOverflow;
+    el.style.maxHeight = originalMaxHeight;
+  }
 });
 
 renderTable();
 </script>
 </body>
 </html>
+
 
 
 
