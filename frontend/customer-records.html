@@ -204,21 +204,46 @@ exportCsvBtn.addEventListener("click", ()=>{
   a.click();
 });
 
-exportPngBtn.addEventListener("click", ()=>{
-  const el=tableWrap;
-  if(!el){ alert("Nothing to export"); return; }
-  html2canvas(el,{scale:2,backgroundColor:null}).then(canvas=>{
-    const a=document.createElement("a");
-    a.href=canvas.toDataURL("image/png");
-    a.download="customers.png";
-    a.click();
-  }).catch(err=>{ console.error(err); alert("PNG export failed."); });
+exportPngBtn.addEventListener("click", () => {
+  const el = document.getElementById("tableWrap"); // Make sure this includes all data and diagrams
+  if (!el) { alert("Nothing to export"); return; }
+
+  html2canvas(el, { scale: 2, backgroundColor: null }).then(canvas => {
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const imgProps = pdf.getImageProperties(imgData);
+    const imgWidth = pageWidth;
+    const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+
+    let position = 0;
+    if (imgHeight > pageHeight) {
+      // Split into multiple pages if needed
+      let heightLeft = imgHeight;
+      while (heightLeft > 0) {
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+        position -= pageHeight;
+        if (heightLeft > 0) pdf.addPage();
+      }
+    } else {
+      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+    }
+
+    pdf.save("full_dataset.pdf");
+  }).catch(err => {
+    console.error(err);
+    alert("Export failed.");
+  });
 });
+
 
 renderTable();
 </script>
 </body>
 </html>
+
 
 
 
