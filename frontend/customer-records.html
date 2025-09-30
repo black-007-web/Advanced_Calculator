@@ -208,8 +208,9 @@ exportPngBtn.addEventListener("click", () => {
   const el = document.getElementById("tableWrap");
   if (!el) { alert("Nothing to export"); return; }
 
-  html2canvas(el, { scale: 2, backgroundColor: null }).then(canvas => {
+  html2canvas(el, { scale: 1.5, backgroundColor: null, useCORS: true }).then(canvas => {
     const imgData = canvas.toDataURL("image/png");
+    const { jsPDF } = window.jspdf;
     const pdf = new jsPDF("p", "mm", "a4");
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
@@ -220,17 +221,17 @@ exportPngBtn.addEventListener("click", () => {
     const imgWidth = pageWidth;
     const imgHeight = pageWidth * ratio;
 
+    let heightLeft = imgHeight;
     let position = 0;
-    if (imgHeight > pageHeight) {
-      let heightLeft = imgHeight;
-      while (heightLeft > 0) {
-        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-        position -= pageHeight;
-        if (heightLeft > 0) pdf.addPage();
-      }
-    } else {
-      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+
+    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+
+    while (heightLeft > 0) {
+      position += pageHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, "PNG", 0, -position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
     }
 
     pdf.save("full_dataset.pdf");
@@ -246,6 +247,7 @@ renderTable();
 </script>
 </body>
 </html>
+
 
 
 
