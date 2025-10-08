@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Conversion — Information</title>
+  <link rel="icon" href="data_info.png" type="image/png" />
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: #0b0c10;
+      color: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+    h1, h2 {
+      color: #00ffd0;
+      text-align: center;
+    }
+    .intro {
+      max-width: 800px;
+      margin: 20px auto;
+      text-align: center;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #c5f3e0;
+    }
+    .top-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .small-note {
+      color: #c5f3e0;
+      font-size: 0.95rem;
+      text-align: center;
+      flex-basis: 100%;
+    }
+    .btn-ghost {
+      padding: 8px 16px;
+      border: 1px solid #45a29e;
+      border-radius: 6px;
+      background: transparent;
+      color: #00ffd0;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .btn-ghost:hover {
+      background: #45a29e;
+      color: #0b0c10;
+    }
+    .home-btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      background: #45a29e;
+      color: #0b0c10;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .home-btn:hover {
+      background: #00ffd0;
+      color: #0b0c10;
+    }
+    .section {
+      background: #1f2833;
+      margin: 20px 0;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,255,208,0.2);
+    }
+    .section p {
+      margin-top: 0;
+      color: #c5f3e0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      border: 1px solid #45a29e;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #45a29e;
+      color: #0b0c10;
+    }
+    tr:nth-child(even) {
+      background-color: #16232e;
+    }
+    tr:hover {
+      background-color: #1b3a4b;
+    }
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      color: #aaa;
+    }
+  </style>
+</head>
+
+<body>
+  
+
+  <h1>📘 Data Conversion System — Unit Information</h1>
+
+  <!-- Intro paragraph in English & Bangla -->
+  <div class="intro">
+    <p>
+      Welcome! This page provides detailed information about all 19 unit categories in our data conversion system. 
+      Here, you can learn the meaning and usage of each unit, helping you convert values accurately and confidently.
+    </p>
+    <p>
+      স্বাগতম! এই পৃষ্ঠায় আমাদের ডেটা কনভার্সন সিস্টেমের সব ১৯টি ইউনিটের বিস্তারিত তথ্য রয়েছে। 
+      এখানে আপনি প্রতিটি ইউনিটের অর্থ এবং ব্যবহার শিখতে পারবেন, যা আপনাকে সঠিকভাবে মান রূপান্তর করতে সাহায্য করবে।
+    </p>
+  </div>
+
+  <!-- Top Controls -->
+   
+ <div class="top-controls">
+  <div class="small-note">
+    Tabular unit buttons for every category. Each section works independently.
+  </div>
+  
+  <!-- Navigation Buttons -->
+  <a class="home-btn" href="data_conversion.html">⬅️ Back</a>
+  <a class="home-btn" href="index.html">🏠 Home</a>
+</div>
+
+  <!-- Sections 1–19 -->
+  <!-- 1. Length -->
+  <div class="section">
+    <h2>1. 📏 Length / Distance</h2>
+    <p>Length measures the distance between two points. Units include metric (meter, cm, km) and imperial (inch, ft, yd, mi).</p>
+    <table>
+      <tr><th>Unit</th><th>Meaning</th></tr>
+      <tr><td>m</td><td>Meter — base unit of length in metric system.</td></tr>
+      <tr><td>cm</td><td>Centimeter — 1/100 of a meter.</td></tr>
+      <tr><td>mm</td><td>Millimeter — 1/1000 of a meter.</td></tr>
+      <tr><td>km</td><td>Kilometer — 1000 meters.</td></tr>
+      <tr><td>inch</td><td>Inch — 2.54 cm.</td></tr>
+      <tr><td>ft</td><td>Foot — 12 inches = 0.3048 m.</td></tr>
+      <tr><td>yd</td><td>Yard — 3 feet = 0.9144 m.</td></tr>
+      <tr><td>mi</td><td>Mile — 1.609 km.</td></tr>
+    </table>
+  </div>
+
+  <!-- 2. Mass -->
+  <div class="section">
+    <h2>2. ⚖️ Mass / Weight</h2>
+    <p>Mass measures the amount of matter in an object. Weight is mass influenced by gravity. Units include grams, kilograms, pounds, ounces, etc.</p>
+    <table>
+      <tr><th>Unit</th><th>Meaning</th></tr>
+      <tr><td>g</td><td>Gram — base unit of mass.</td></tr>
+      <tr><td>kg</td><td>Kilogram — 1000 grams.</td></tr>
+      <tr><td>mg</td><td>Milligram — 1/1000 of a gram.</td></tr>
+      <tr><td>lb</td><td>Pound — 0.4536 kilograms.</td></tr>
+      <tr><td>oz</td><td>Ounce — 1/16 of a pound.</td></tr>
+      <tr><td>ton</td><td>Tonne — 1000 kilograms (metric ton).</td></tr>
+    </table>
+  </div>
+
+  <!-- 3. Time -->
+  <div class="section">
+    <h2>3. ⏱ Time</h2>
+    <p>Time units measure durations from seconds to years. They are widely used in science, daily activities, and technology.</p>
+    <table>
+      <tr><th>Unit</th><th>Meaning</th></tr>
+      <tr><td>s</td><td>Second — base unit of time.</td></tr>
+      <tr><td>min</td><td>Minute — 60 seconds.</td></tr>
+      <tr><td>h</td><td>Hour — 60 minutes.</td></tr>
+      <tr><td>d</td><td>Day — 24 hours.</td></tr>
+      <tr><td>wk</td><td>Week — 7 days.</td></tr>
+      <tr><td>yr</td><td>Year — 365 days (approx).</td></tr>
+    </table>
+  </div>
+
+  <!-- 4. Temperature -->
+  <div class="section">
+    <h2>4. 🌡 Temperature</h2>
+    <p>Temperature measures hotness or coldness. Common units: Celsius, Fahrenheit, Kelvin.</p>
+    <table>
+      <tr><th>Unit</th><th>Meaning</th></tr>
+      <tr><td>°C</td><td>Celsius — metric scale.</td></tr>
+      <tr><td>°F</td><td>Fahrenheit — imperial scale.</td></tr>
+      <tr><td>K</td><td>Kelvin — absolute thermodynamic scale.</td></tr>
+    </table>
+  </div>
+
+  <!-- 5. Area -->
+  <div class="section">
+    <h2>5. 🗺 Area</h2>
+    <p>Area measures surface size. Units range from square meters to acres and hectares.</p>
+    <table>
+      <tr><th>Unit</th><th>Meaning</th></tr>
+      <tr><td>m²</td><td>Square meter — base unit.</td></tr>
+      <tr><td>cm²</td><td>Square centimeter — 1/10000 m².</td></tr>
+      <tr><td>km²</td><td>Square kilometer — 1,000,000 m².</td></tr>
+      <tr><td>acre</td><td>4046.86 m².</td></tr>
+      <tr><td>hectare</td><td>10,000 m².</td></tr>
+    </table>
+  </div>
+
+  <!-- 6. Volume -->
+  <div class="section">
+    <h2>6. 🧴 Volume</h2>
+    <p>Volume measures space occupied by an object or liquid.</p>
+    <table>
+      <tr><th>Unit</th><th>Meaning</th></tr>
+      <tr><td>L</td><td>Liter — base unit of volume.</td></tr>
+      <tr><td>mL</td><td>Milliliter — 1/1000 L.</td></tr>
+      <tr><td>cm³</td><td>Cubic centimeter — equal to 1 mL.</td></tr>
+      <tr><td>m³</td><td>Cubic meter — 1000 L.</td></tr>
+      <tr><td>gal</td><td>Gallon — 3.785 L (US).</td></tr>
+    </table>
+  </div>
+
+  <!-- 7. Speed -->
+  <div class="section">
+    <h2>7. 🏎 Speed</h2>
+    <p>Speed measures distance traveled over time. Units include metric and imperial systems, as well as nautical speed.</p>
+    <table>
+      <tr><th>Unit</th><th>Meaning</th></tr>
+      <tr><td>m/s</td><td>Meters per second.</td></tr>
+      <tr><td>km/h</td><td>Kilometers per hour.</td></tr>
+      <tr><td>mph</td><td>Miles per hour.</td></tr>
+      <tr><td>kn</td><td>Knot — nautical mile per hour.</td></tr>
+    </table>
+  </div>
+
+  <!-- 8. Pressure -->
+  <div class="section">
+    <h2>8. 🔧 Pressure</h2>
+    <p>Pressure measures force applied over an area. Units include Pascal, bar, atmosphere, and psi.</p>
+    <table>
+      <tr><th>Unit</th><th>Meaning</th></tr>
+      <tr><td>Pa</td><td>Pascal — 1 N/m².</td></tr>
+      <tr><td>bar</td><td>1 bar = 100,000 Pa.</td></tr>
+      <tr><td>atm</td><td>Atmosphere — 101,325 Pa.</td></tr>
+      <tr><td>psi</td><td>Pound per square inch.</td></tr>
+    </table>
+  </div>
+
+  <!-- 9. Energy -->
+  <div class="section">
+    <h2>9. ⚡ Energy</h2>
+    <p>Energy is the capacity to do work. Units include Joule, calorie, kilojoule, and kilowatt-hour.</p>
+    <table>
+      <tr><th>Unit</th><th>Meaning</th></tr>
+      <tr><td>J</td><td>Joule — base SI unit.</td></tr>
+      <tr><td>kJ</td><td>Kilojoule — 1000 Joules.</td></tr>
+      <tr><td>cal</td><td>Calorie — 4.184 Joules.</td></tr>
+      <tr><td>kWh</td><td>Kilowatt-hour — 3.6 million Joules.</td></tr>
+    </table>
+  </div>
+
+  <!-- 10. Power -->
+  <div class="section">
+    <h2>10. ⚙️ Power</h2>
+    <p>Power is the rate of energy transfer. Units include Watt, kilowatt, and horsepower.</p>
+    <table>
+      <tr><th>Unit</th><th>Meaning</th></tr>
+      <tr><td>W</td><td>Watt — 1 Joule per second.</td></tr>
+      <tr><td>kW</td><td>Kilowatt — 1000 watts.</td></tr>
+      <tr><td>hp</td><td>Horsepower — 745.7 watts.</td></tr>
+    </table>
+  </div>
+
+  <!-- 11. Frequency -->
+  <div class="section">
+    <h2>11. 🎵 Frequency</h2>
+    <p>Frequency measures cycles per second. Units include Hertz, Kilohertz, Megahertz, Gigahertz.</p>
+    <table>
+      <tr><th>Unit</th><th>Meaning</th></tr>
+      <tr><td>Hz</td><td>Hertz — 1 cycle per second.</td></tr>
+      <tr><td>kHz</td><td>Kilohertz — 1000 Hz.</td></tr>
+      <tr><td>MHz</td><td>Megahertz — 1,000,000 Hz.</td></tr>
+      <tr><td>GHz</td><td>Gigahertz — 1,000,000,000 Hz.</td></tr>
+    </table>
+  </div>
+
+  <!-- 12. Angle -->
+  <div class="section">
+    <h2>12. 🔄 Angle</h2>
+    <p>Angles measure rotation or inclination. Units include degrees, radians, and gradians.</p>
+    <table>
+      <tr><th>Unit</th><th>Meaning</th></tr>
+      <tr><td>°</td><td>Degree — 1/360 of a full rotation.</td></tr>
+      <tr><td>rad</td><td>Radian — 180/π degrees.</td></tr>
+      <tr><td>grad</td><td>Gradian — 1/400 of a full rotation.</td></tr>
+    </table>
+  </div>
+
+  <!-- 13. Data Storage -->
+  <div class="section">
+    <h2>13. 💾 Data Storage</h2>
+    <p>Data storage units measure digital information.</p>
+    <table>
+      <tr><th>Unit</th><th>Meaning</th></tr>
+      <tr><td>bit</td><td>Binary digit — smallest unit.</td></tr>
+      <tr><td>B</td><td>Byte — 8 bits.</td></tr>
+      <tr><td>KB</td><td>Kilobyte — 1024 bytes.</td></tr>
+      <tr><td>MB</td><td>Megabyte — 1024 KB.</td></tr>
+      <tr><td>GB</td><td>Gigabyte — 1024 MB.</td></tr>
+      <tr><td>TB</td><td>Terabyte — 1024 GB.</td></tr>
+    </table>
+  </div>
+
+  <!-- 14. Digital Speed -->
+  <div class="section">
+    <h2>14. 🌐 Digital Speed</h2>
+    <p>Digital speed measures data transfer rate over time.</p>
+    <table>
+      <tr><th>Unit</th><th>Meaning</th></tr>
+      <tr><td>bps</td><td>Bits per second.</td></tr>
+      <tr><td>Kbps</td><td>Kilobits per second.</td></tr>
+      <tr><td>Mbps</td><td>Megabits per second.</td></tr>
+      <tr><td>Gbps</td><td>Gigabits per second.</td></tr>
+    </table>
+  </div>
+
+  <!-- 15. Force -->
+  <div class="section">
+    <h2>15. 🏋️ Force</h2>
+    <p>Force measures the push or pull on an object.</p>
+    <table>
+      <tr><th>Unit</th><th>Meaning</th></tr>
+      <tr><td>N</td><td>Newton — force to accelerate 1 kg by 1 m/s².</td></tr>
+      <tr><td>kN</td><td>Kilonewton — 1000 Newtons.</td></tr>
+      <tr><td>dyne</td><td>1 dyne = 10⁻⁵ Newton.</td></tr>
+      <tr><td>lbf</td><td>Pound-force.</td></tr>
+    </table>
+  </div>
+
+  <!-- 16. Density -->
+  <div class="section">
+    <h2>16. 🧪 Density</h2>
+    <p>Density measures mass per unit volume.</p>
+    <table>
+      <tr><th>Unit</th><th>Meaning</th></tr>
+      <tr><td>kg/m³</td><td>Kilogram per cubic meter.</td></tr>
+      <tr><td>g/cm³</td><td>Gram per cubic centimeter.</td></tr>
+      <tr><td>lb/ft³</td><td>Pound per cubic foot.</td></tr>
+    </table>
+  </div>
+
+  <!-- 17. Illuminance -->
+  <div class="section">
+    <h2>17. 💡 Illuminance</h2>
+    <p>Illuminance measures light intensity on a surface.</p>
+    <table>
+      <tr><th>Unit</th><th>Meaning</th></tr>
+      <tr><td>lx</td><td>Lux — lumen per square meter.</td></tr>
+      <tr><td>fc</td><td>Foot-candle — lumen per square foot.</td></tr>
+    </table>
+  </div>
+
+  <!-- 18. Radioactivity -->
+  <div class="section">
+    <h2>18. ☢️ Radioactivity</h2>
+    <p>Radioactivity measures decay of unstable atoms.</p>
+    <table>
+      <tr><th>Unit</th><th>Meaning</th></tr>
+      <tr><td>Bq</td><td>Becquerel — 1 disintegration per second.</td></tr>
+      <tr><td>Ci</td><td>Curie — 3.7×10¹⁰ disintegrations per second.</td></tr>
+    </table>
+  </div>
+
+  <!-- 19. Astronomy Distance -->
+  <div class="section">
+    <h2>19. 🌌 Astronomy Distance</h2>
+    <p>Measures distances in space, from the Earth-Sun distance to light-years and parsecs.</p>
+    <table>
+      <tr><th>Unit</th><th>Meaning</th></tr>
+      <tr><td>AU</td><td>Astronomical Unit — distance from Earth to Sun (~149.6 million km).</td></tr>
+      <tr><td>ly</td><td>Light-year — distance light travels in one year.</td></tr>
+      <tr><td>pc</td><td>Parsec — 3.26 light-years.</td></tr>
+    </table>
+  </div>
+
+  <footer>
+    <p>Created for Data Conversion System — All 19 unit categories explained for easy understanding.</p>
+  </footer>
+
+</body>
+</html>
