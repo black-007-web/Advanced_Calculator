@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+   <!-- Favicon and Tab Styling -->
+  <link rel="icon" href="data_conversion.jpeg" type="image/png" />
+  <meta name="theme-color" content="#00ffd5" />
+   <link rel="stylesheet" href="styles.css" />
+  <title> Data Conversion </title>
+
+  <style>
+/* Reset + base */
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Inter', system-ui, Arial, sans-serif;
+  background: linear-gradient(180deg,#070707 0%, #0b0b0b 100%);
+  color: #e8e8e8;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+/* container */
+.container {
+  width:100%;
+  max-width:980px;
+  background:linear-gradient(180deg, rgba(20,20,20,0.95), rgba(16,16,16,0.98));
+  border-radius:20px;
+  padding:26px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.02);
+}
+
+/* header */
+.site-header { text-align:center; margin-bottom:18px; }
+.app-title { font-size:1.6rem; font-weight:800; letter-spacing:0.4px;
+  background: linear-gradient(90deg,#7c4dff,#ff6b6b);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.app-quote { color:#a9a9a9; font-size:0.94rem; margin-top:6px; }
+
+/* top info */
+.top-controls { display:flex; gap:10px; align-items:center; justify-content:center; margin-bottom:14px; flex-wrap:wrap; }
+.small-note { color:#9aa0a6; font-size:.9rem; }
+
+/* sections grid */
+.sections-grid {
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:18px;
+  max-height:75vh;
+  overflow:auto;
+  padding-right:12px;
+}
+
+/* each conversion block */
+.stage {
+  padding:14px;
+  border-radius:12px;
+  background:linear-gradient(180deg, rgba(10,10,10,0.6), rgba(6,6,6,0.6));
+  border:1px solid rgba(255,255,255,0.02);
+}
+.stage h2 { font-size:1rem; margin-bottom:10px; display:flex; gap:10px; align-items:center; }
+.stage .subtitle { color:#9aa0a6; font-size:.85rem; margin-bottom:10px; }
+
+/* input + helper */
+.conv-panel { display:grid; gap:8px; }
+.conv-input { width:100%; padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,0.04);
+  background:#0b0b0b; color:#fff; font-size:1rem; margin-bottom:6px;
+  box-shadow: 0 3px 18px rgba(0,0,0,0.6) inset;
+}
+.conv-input.small { width:180px; padding:8px; font-size:0.95rem; }
+.hint { color:#9aa0a6; font-size:.86rem; }
+
+/* unit buttons grid (calculator-like) */
+.units-grid { display:grid; gap:10px; grid-template-columns: repeat(auto-fit, minmax(72px,1fr)); margin-top:6px; }
+.conv-btn {
+  padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.03);
+  background:linear-gradient(90deg,#141414,#1b1b1b); color:#fff; cursor:pointer; font-weight:700;
+  transition: transform .14s ease, box-shadow .14s ease;
+  text-align:center;
+  user-select:none;
+}
+.conv-btn:hover { transform: translateY(-4px); box-shadow:0 10px 30px rgba(124,77,255,0.12); }
+.conv-btn.selected-source { outline: 3px solid rgba(124,77,255,0.12); box-shadow: 0 8px 30px rgba(124,77,255,0.08); transform:none; }
+.conv-btn.selected-target { outline: 3px solid rgba(255,107,107,0.12); box-shadow: 0 8px 30px rgba(255,107,107,0.08); transform:none; }
+
+/* small controls under each section */
+.controls { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:8px; }
+.calc-button { background:linear-gradient(90deg,#7c4dff,#ff6b6b); border:none; color:white; padding:10px 12px; border-radius:10px; font-weight:800; cursor:pointer;}
+.btn-ghost { background:transparent; border:1px dashed rgba(255,255,255,0.06); color:#cfcfcf; padding:10px 12px; border-radius:10px; font-weight:700; cursor:pointer; }
+
+/* result */
+.result { margin-top:8px; padding:12px; border-radius:12px; background:#060606; border:1px solid rgba(255,255,255,0.03); color:#7ef4ff; font-weight:700; min-height:44px; display:flex; align-items:center; justify-content:center; }
+.result.error { color:#ff7b7b; border-color: rgba(255,123,123,0.12); background:linear-gradient(180deg,#2b0b0b,#120606); }
+
+/* responsive */
+@media (max-width:880px) {
+  .container { padding:18px; border-radius:14px; }
+  .units-grid { grid-template-columns: repeat(auto-fit,minmax(64px,1fr)); }
+}
+  </style>
+</head>
+<body>
+  <div class="container" id="app">
+    <header class="site-header">
+      <div class="app-title">Data Conversion</div>
+      <div class="app-quote">Click a <strong>source</strong> unit, enter a value (press Enter), then click the <strong>target</strong> unit — result will appear below as <code>1 m = 100 cm</code>.</div>
+    </header>
+
+    <div class="top-controls" style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:center; margin-bottom:20px;">
+  <div class="small-note" style="color:#c5f3e0; font-size:0.95rem; text-align:center; flex-basis:100%;">
+    Tabular unit buttons for every category. Each section works independently.
+  </div>
+  
+  <button id="expandAll" class="btn-ghost" style="padding:8px 16px; border:1px solid #45a29e; border-radius:6px; background:transparent; color:#00ffd0; cursor:pointer;">
+    Expand All
+  </button>
+  
+  <button id="collapseAll" class="btn-ghost" style="padding:8px 16px; border:1px solid #45a29e; border-radius:6px; background:transparent; color:#00ffd0; cursor:pointer;">
+    Collapse All
+  </button>
+  
+  <a class="home-btn" href="data_info.html" target="_blank" style="padding:8px 16px; border-radius:6px; background:#45a29e; color:#0b0c10; text-decoration:none; font-weight:600;">
+    📘 Data Conversion Info
+  </a>
+  
+  <a class="home-btn" href="index.html" style="padding:8px 16px; border-radius:6px; background:#45a29e; color:#0b0c10; text-decoration:none; font-weight:600;">
+    🏠 Home
+  </a>
+</div>
+
+
+    <div class="sections-grid" id="sectionsGrid">
+
+      <!-- 1. Length -->
+      <section class="stage" data-cat="length" id="cat-length">
+        <h2>📏 1. Length / Distance Conversions</h2>
+        <div class="subtitle">Metric, Metric↔Imperial & special units</div>
+        <div class="conv-panel">
+          <input type="number" step="any" class="conv-input" placeholder="Enter value (press Enter)"/>
+          <div class="hint">Example flow: click <strong>m</strong> → type <strong>1</strong> → Enter → click <strong>cm</strong> → result shown.</div>
+
+          <div class="units-grid">
+            <!-- Metric -->
+            <button class="conv-btn" data-unit="km">km</button>
+            <button class="conv-btn" data-unit="m">m</button>
+            <button class="conv-btn" data-unit="cm">cm</button>
+            <button class="conv-btn" data-unit="mm">mm</button>
+            <button class="conv-btn" data-unit="μm">μm</button>
+            <button class="conv-btn" data-unit="nm">nm</button>
+
+            <!-- Metric <-> Imperial -->
+            <button class="conv-btn" data-unit="in">in</button>
+            <button class="conv-btn" data-unit="ft">ft</button>
+            <button class="conv-btn" data-unit="yd">yd</button>
+            <button class="conv-btn" data-unit="mi">mi</button>
+            <button class="conv-btn" data-unit="nmi">nmi</button>
+
+            <!-- Special -->
+            <button class="conv-btn" data-unit="Å">Å</button>
+            <button class="conv-btn" data-unit="ly">ly</button>
+            <button class="conv-btn" data-unit="AU">AU</button>
+          </div>
+
+          <div class="controls">
+            <button class="calc-button swap-btn">Swap</button>
+            <button class="btn-ghost clear-btn">Clear</button>
+          </div>
+          <div class="result output"></div>
+        </div>
+      </section>
+
+      <!-- 2. Mass -->
+      <section class="stage" data-cat="mass" id="cat-mass">
+        <h2>⚖️ 2. Mass / Weight Conversions</h2>
+        <div class="subtitle">Metric, Metric↔Imperial & special</div>
+        <div class="conv-panel">
+          <input type="number" step="any" class="conv-input" placeholder="Enter value (press Enter)"/>
+          <div class="units-grid">
+            <!-- Metric -->
+            <button class="conv-btn" data-unit="tonne">tonne</button>
+            <button class="conv-btn" data-unit="kg">kg</button>
+            <button class="conv-btn" data-unit="g">g</button>
+            <button class="conv-btn" data-unit="mg">mg</button>
+            <button class="conv-btn" data-unit="μg">μg</button>
+
+            <!-- Metric <-> Imperial -->
+            <button class="conv-btn" data-unit="lb">lb</button>
+            <button class="conv-btn" data-unit="oz">oz</button>
+            <button class="conv-btn" data-unit="ton_us">ton (US)</button>
+            <button class="conv-btn" data-unit="ton_uk">ton (UK)</button>
+
+            <!-- Special -->
+            <button class="conv-btn" data-unit="carat">carat</button>
+            <button class="conv-btn" data-unit="stone">stone</button>
+          </div>
+
+          <div class="controls">
+            <button class="calc-button swap-btn">Swap</button>
+            <button class="btn-ghost clear-btn">Clear</button>
+          </div>
+          <div class="result output"></div>
+        </div>
+      </section>
+
+      <!-- 3. Area -->
+      <section class="stage" data-cat="area" id="cat-area">
+        <h2>📐 3. Area Conversions</h2>
+        <div class="subtitle">m², cm², km², ha, acre</div>
+        <div class="conv-panel">
+          <input type="number" step="any" class="conv-input" placeholder="Enter area value (press Enter)"/>
+          <div class="units-grid">
+            <button class="conv-btn" data-unit="m2">m²</button>
+            <button class="conv-btn" data-unit="cm2">cm²</button>
+            <button class="conv-btn" data-unit="mm2">mm²</button>
+            <button class="conv-btn" data-unit="km2">km²</button>
+            <button class="conv-btn" data-unit="ha">ha</button>
+            <button class="conv-btn" data-unit="acre">acre</button>
+          </div>
+          <div class="controls">
+            <button class="calc-button swap-btn">Swap</button>
+            <button class="btn-ghost clear-btn">Clear</button>
+          </div>
+          <div class="result output"></div>
+        </div>
+      </section>
+
+      <!-- 4. Volume -->
+      <section class="stage" data-cat="volume" id="cat-volume">
+        <h2>📦 4. Volume / Capacity Conversions</h2>
+        <div class="subtitle">L, mL, m³, gal, fl oz, pint, quart, barrel</div>
+        <div class="conv-panel">
+          <input type="number" step="any" class="conv-input" placeholder="Enter volume value (press Enter)"/>
+          <div class="units-grid">
+            <button class="conv-btn" data-unit="m3">m³</button>
+            <button class="conv-btn" data-unit="L">L</button>
+            <button class="conv-btn" data-unit="mL">mL</button>
+            <button class="conv-btn" data-unit="cm3">cm³</button>
+            <button class="conv-btn" data-unit="gal_us">gal (US)</button>
+            <button class="conv-btn" data-unit="gal_uk">gal (UK)</button>
+            <button class="conv-btn" data-unit="fl_oz">fl oz</button>
+            <button class="conv-btn" data-unit="pint">pint</button>
+            <button class="conv-btn" data-unit="quart">quart</button>
+            <button class="conv-btn" data-unit="barrel">barrel</button>
+          </div>
+          <div class="controls">
+            <button class="calc-button swap-btn">Swap</button>
+            <button class="btn-ghost clear-btn">Clear</button>
+          </div>
+          <div class="result output"></div>
+        </div>
+      </section>
+
+      <!-- 5. Time -->
+      <section class="stage" data-cat="time" id="cat-time">
+        <h2>🕒 5. Time Conversions</h2>
+        <div class="subtitle">s, ms, min, hr, day, week, month, year, decade, century</div>
+        <div class="conv-panel">
+          <input type="number" step="any" class="conv-input" placeholder="Enter time value (press Enter)"/>
+          <div class="units-grid">
+            <button class="conv-btn" data-unit="ms">ms</button>
+            <button class="conv-btn" data-unit="s">s</button>
+            <button class="conv-btn" data-unit="min">min</button>
+            <button class="conv-btn" data-unit="hr">hr</button>
+            <button class="conv-btn" data-unit="day">day</button>
+            <button class="conv-btn" data-unit="week">week</button>
+            <button class="conv-btn" data-unit="month">month</button>
+            <button class="conv-btn" data-unit="year">year</button>
+            <button class="conv-btn" data-unit="decade">decade</button>
+            <button class="conv-btn" data-unit="century">century</button>
+          </div>
+          <div class="controls">
+            <button class="calc-button swap-btn">Swap</button>
+            <button class="btn-ghost clear-btn">Clear</button>
+          </div>
+          <div class="result output"></div>
+        </div>
+      </section>
+
+      <!-- 6. Temperature -->
+      <section class="stage" data-cat="temperature" id="cat-temperature">
+        <h2>🌡️ 6. Temperature Conversions</h2>
+        <div class="subtitle">°C, K, °F</div>
+        <div class="conv-panel">
+          <input type="number" step="any" class="conv-input" placeholder="Enter temperature (press Enter)"/>
+          <div class="units-grid">
+            <button class="conv-btn" data-unit="C">°C</button>
+            <button class="conv-btn" data-unit="K">K</button>
+            <button class="conv-btn" data-unit="F">°F</button>
+          </div>
+          <div class="controls">
+            <button class="calc-button swap-btn">Swap</button>
+            <button class="btn-ghost clear-btn">Clear</button>
+          </div>
+          <div class="result output"></div>
+        </div>
+      </section>
+
+      <!-- 7. Energy -->
+      <section class="stage" data-cat="energy" id="cat-energy">
+        <h2>⚡ 7. Energy Conversions</h2>
+        <div class="subtitle">J, kJ, cal, kcal, eV, Wh, kWh, BTU</div>
+        <div class="conv-panel">
+          <input type="number" step="any" class="conv-input" placeholder="Enter energy (press Enter)"/>
+          <div class="units-grid">
+            <button class="conv-btn" data-unit="J">J</button>
+            <button class="conv-btn" data-unit="kJ">kJ</button>
+            <button class="conv-btn" data-unit="cal">cal</button>
+            <button class="conv-btn" data-unit="kcal">kcal</button>
+            <button class="conv-btn" data-unit="eV">eV</button>
+            <button class="conv-btn" data-unit="Wh">Wh</button>
+            <button class="conv-btn" data-unit="kWh">kWh</button>
+            <button class="conv-btn" data-unit="BTU">BTU</button>
+          </div>
+          <div class="controls">
+            <button class="calc-button swap-btn">Swap</button>
+            <button class="btn-ghost clear-btn">Clear</button>
+          </div>
+          <div class="result output"></div>
+        </div>
+      </section>
+
+      <!-- 8. Power -->
+      <section class="stage" data-cat="power" id="cat-power">
+        <h2>🔋 8. Power Conversions</h2>
+        <div class="subtitle">W, kW, hp, BTU/hr</div>
+        <div class="conv-panel">
+          <input type="number" step="any" class="conv-input" placeholder="Enter power (press Enter)"/>
+          <div class="units-grid">
+            <button class="conv-btn" data-unit="W">W</button>
+            <button class="conv-btn" data-unit="kW">kW</button>
+            <button class="conv-btn" data-unit="hp">hp</button>
+            <button class="conv-btn" data-unit="BTU_h">BTU/h</button>
+          </div>
+          <div class="controls">
+            <button class="calc-button swap-btn">Swap</button>
+            <button class="btn-ghost clear-btn">Clear</button>
+          </div>
+          <div class="result output"></div>
+        </div>
+      </section>
+
+      <!-- 9. Electricity -->
+      <section class="stage" data-cat="electricity" id="cat-electricity">
+        <h2>🔌 9. Electricity Conversions</h2>
+        <div class="subtitle">V, mV, kV, A, mA, Ω, kΩ, MΩ, Wh↔Ah (voltage needed)</div>
+        <div class="conv-panel">
+          <input type="number" step="any" class="conv-input" placeholder="Enter value (press Enter)"/>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input type="number" step="any" class="conv-input small voltage-input" placeholder="Voltage (V) — for Wh↔Ah"/>
+          </div>
+          <div class="units-grid">
+            <button class="conv-btn" data-unit="V">V</button>
+            <button class="conv-btn" data-unit="mV">mV</button>
+            <button class="conv-btn" data-unit="kV">kV</button>
+            <button class="conv-btn" data-unit="A">A</button>
+            <button class="conv-btn" data-unit="mA">mA</button>
+            <button class="conv-btn" data-unit="ohm">Ω</button>
+            <button class="conv-btn" data-unit="kohm">kΩ</button>
+            <button class="conv-btn" data-unit="Mohm">MΩ</button>
+            <button class="conv-btn" data-unit="Wh">Wh</button>
+            <button class="conv-btn" data-unit="Ah">Ah</button>
+          </div>
+          <div class="controls">
+            <button class="calc-button swap-btn">Swap</button>
+            <button class="btn-ghost clear-btn">Clear</button>
+          </div>
+          <div class="result output"></div>
+        </div>
+      </section>
+
+      <!-- 10. Digital Storage -->
+      <section class="stage" data-cat="data" id="cat-data">
+        <h2>💻 10. Digital Storage / Data Conversions</h2>
+        <div class="subtitle">bit, byte, B, KB, MB, GB, TB, PB, EB (1024 base)</div>
+        <div class="conv-panel">
+          <input type="number" step="any" class="conv-input" placeholder="Enter data value (press Enter)"/>
+          <div class="hint">Uses 1024-based scale by default (binary).</div>
+          <div class="units-grid">
+            <button class="conv-btn" data-unit="bit">bit</button>
+            <button class="conv-btn" data-unit="B">B</button>
+            <button class="conv-btn" data-unit="KB">KB</button>
+            <button class="conv-btn" data-unit="MB">MB</button>
+            <button class="conv-btn" data-unit="GB">GB</button>
+            <button class="conv-btn" data-unit="TB">TB</button>
+            <button class="conv-btn" data-unit="PB">PB</button>
+            <button class="conv-btn" data-unit="EB">EB</button>
+          </div>
+          <div class="controls">
+            <button class="calc-button swap-btn">Swap</button>
+            <button class="btn-ghost clear-btn">Clear</button>
+          </div>
+          <div class="result output"></div>
+        </div>
+      </section>
+
+      <!-- 11. Speed -->
+      <section class="stage" data-cat="speed" id="cat-speed">
+        <h2>🎯 11. Speed Conversions</h2>
+        <div class="subtitle">m/s, km/h, ft/s, mph, knots</div>
+        <div class="conv-panel">
+          <input type="number" step="any" class="conv-input" placeholder="Enter speed (press Enter)"/>
+          <div class="units-grid">
+            <button class="conv-btn" data-unit="m_s">m/s</button>
+            <button class="conv-btn" data-unit="km_h">km/h</button>
+            <button class="conv-btn" data-unit="ft_s">ft/s</button>
+            <button class="conv-btn" data-unit="mph">mph</button>
+            <button class="conv-btn" data-unit="knot">knots</button>
+          </div>
+          <div class="controls">
+            <button class="calc-button swap-btn">Swap</button>
+            <button class="btn-ghost clear-btn">Clear</button>
+          </div>
+          <div class="result output"></div>
+        </div>
+      </section>
+
+      <!-- 12. Pressure -->
+      <section class="stage" data-cat="pressure" id="cat-pressure">
+        <h2>🧭 12. Pressure Conversions</h2>
+        <div class="subtitle">Pa, kPa, MPa, bar, atm, psi, torr, mmHg</div>
+        <div class="conv-panel">
+          <input type="number" step="any" class="conv-input" placeholder="Enter pressure (press Enter)"/>
+          <div class="units-grid">
+            <button class="conv-btn" data-unit="Pa">Pa</button>
+            <button class="conv-btn" data-unit="kPa">kPa</button>
+            <button class="conv-btn" data-unit="MPa">MPa</button>
+            <button class="conv-btn" data-unit="bar">bar</button>
+            <button class="conv-btn" data-unit="atm">atm</button>
+            <button class="conv-btn" data-unit="psi">psi</button>
+            <button class="conv-btn" data-unit="torr">torr</button>
+            <button class="conv-btn" data-unit="mmHg">mmHg</button>
+          </div>
+          <div class="controls">
+            <button class="calc-button swap-btn">Swap</button>
+            <button class="btn-ghost clear-btn">Clear</button>
+          </div>
+          <div class="result output"></div>
+        </div>
+      </section>
+
+      <!-- 13. Angle -->
+      <section class="stage" data-cat="angle" id="cat-angle">
+        <h2>🌍 13. Angle Conversions</h2>
+        <div class="subtitle">degrees, radians, gradians, arcmin, arcsec</div>
+        <div class="conv-panel">
+          <input type="number" step="any" class="conv-input" placeholder="Enter angle (press Enter)"/>
+          <div class="units-grid">
+            <button class="conv-btn" data-unit="deg">deg</button>
+            <button class="conv-btn" data-unit="rad">rad</button>
+            <button class="conv-btn" data-unit="grad">grad</button>
+            <button class="conv-btn" data-unit="arcmin">arcmin</button>
+            <button class="conv-btn" data-unit="arcsec">arcsec</button>
+          </div>
+          <div class="controls">
+            <button class="calc-button swap-btn">Swap</button>
+            <button class="btn-ghost clear-btn">Clear</button>
+          </div>
+          <div class="result output"></div>
+        </div>
+      </section>
+
+      <!-- 14. Frequency & Wave -->
+      <section class="stage" data-cat="frequency" id="cat-frequency">
+        <h2>🎶 14. Frequency & Wave Conversions</h2>
+        <div class="subtitle">Hz, kHz, MHz, GHz, rad/s, wavelength (m)</div>
+        <div class="conv-panel">
+          <input type="number" step="any" class="conv-input" placeholder="Enter frequency or wavelength (press Enter)"/>
+          <div class="units-grid">
+            <button class="conv-btn" data-unit="Hz">Hz</button>
+            <button class="conv-btn" data-unit="kHz">kHz</button>
+            <button class="conv-btn" data-unit="MHz">MHz</button>
+            <button class="conv-btn" data-unit="GHz">GHz</button>
+            <button class="conv-btn" data-unit="rad_s">rad/s</button>
+            <button class="conv-btn" data-unit="wavelength">wavelength (m)</button>
+          </div>
+          <div class="controls">
+            <button class="calc-button swap-btn">Swap</button>
+            <button class="btn-ghost clear-btn">Clear</button>
+          </div>
+          <div class="result output"></div>
+        </div>
+      </section>
+
+      <!-- 15. Chemistry & Science -->
+      <section class="stage" data-cat="chemistry" id="cat-chemistry">
+        <h2>🧪 15. Chemistry & Science Conversions</h2>
+        <div class="subtitle">mol, particles, g/L, atm, kPa</div>
+        <div class="conv-panel">
+          <input type="number" step="any" class="conv-input" placeholder="Enter value (press Enter)"/>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input type="number" step="any" class="conv-input small molar-mass-input" placeholder="Molar mass (g/mol) if needed"/>
+          </div>
+          <div class="units-grid">
+            <button class="conv-btn" data-unit="mol">mol</button>
+            <button class="conv-btn" data-unit="particles">particles</button>
+            <button class="conv-btn" data-unit="g_per_L">g/L</button>
+            <button class="conv-btn" data-unit="atm">atm</button>
+            <button class="conv-btn" data-unit="kPa">kPa</button>
+          </div>
+          <div class="controls">
+            <button class="calc-button swap-btn">Swap</button>
+            <button class="btn-ghost clear-btn">Clear</button>
+          </div>
+          <div class="result output"></div>
+        </div>
+      </section>
+
+      <!-- 16. Fuel / Consumption -->
+      <section class="stage" data-cat="fuel" id="cat-fuel">
+        <h2>🚗 16. Fuel / Consumption Conversions</h2>
+        <div class="subtitle">L/100 km, km/L, mpg (US/UK)</div>
+        <div class="conv-panel">
+          <input type="number" step="any" class="conv-input" placeholder="Enter value (press Enter)"/>
+          <div class="units-grid">
+            <button class="conv-btn" data-unit="L_per_100km">L/100km</button>
+            <button class="conv-btn" data-unit="km_per_L">km/L</button>
+            <button class="conv-btn" data-unit="mpg_us">mpg (US)</button>
+            <button class="conv-btn" data-unit="mpg_uk">mpg (UK)</button>
+          </div>
+          <div class="controls">
+            <button class="calc-button swap-btn">Swap</button>
+            <button class="btn-ghost clear-btn">Clear</button>
+          </div>
+          <div class="result output"></div>
+        </div>
+      </section>
+
+      <!-- 17. Construction / Misc -->
+      <section class="stage" data-cat="construction" id="cat-construction">
+        <h2>🏗️ 17. Construction / Miscellaneous Conversions</h2>
+        <div class="subtitle">density, torque, viscosity, hardness (representative)</div>
+        <div class="conv-panel">
+          <input type="number" step="any" class="conv-input" placeholder="Enter value (press Enter)"/>
+          <div class="units-grid">
+            <button class="conv-btn" data-unit="g_per_cm3">g/cm³</button>
+            <button class="conv-btn" data-unit="kg_per_m3">kg/m³</button>
+            <button class="conv-btn" data-unit="Nm">Nm</button>
+            <button class="conv-btn" data-unit="ft_lb">ft·lb</button>
+            <button class="conv-btn" data-unit="Pa_s">Pa·s</button>
+            <button class="conv-btn" data-unit="cP">cP</button>
+          </div>
+          <div class="controls">
+            <button class="calc-button swap-btn">Swap</button>
+            <button class="btn-ghost clear-btn">Clear</button>
+          </div>
+          <div class="result output"></div>
+        </div>
+      </section>
+
+      <!-- 18. Astronomy & Physics -->
+      <section class="stage" data-cat="astronomy" id="cat-astronomy">
+        <h2>🛰️ 18. Astronomy & Physics Conversions</h2>
+        <div class="subtitle">parsec, light-year, solar mass, lunar distance, g (acceleration)</div>
+        <div class="conv-panel">
+          <input type="number" step="any" class="conv-input" placeholder="Enter value (press Enter)"/>
+          <div class="units-grid">
+            <button class="conv-btn" data-unit="parsec">parsec</button>
+            <button class="conv-btn" data-unit="ly">light-year</button>
+            <button class="conv-btn" data-unit="solar_mass">solar mass</button>
+            <button class="conv-btn" data-unit="kg">kg</button>
+            <button class="conv-btn" data-unit="lunar_distance">lunar distance</button>
+            <button class="conv-btn" data-unit="g_acc">g (acceleration)</button>
+          </div>
+          <div class="controls">
+            <button class="calc-button swap-btn">Swap</button>
+            <button class="btn-ghost clear-btn">Clear</button>
+          </div>
+          <div class="result output"></div>
+        </div>
+      </section>
+
+      <!-- 19. (Optional extra) Placeholder for any other -->
+      <section class="stage" data-cat="other" id="cat-other">
+        <h2>🔎 19. Other Conversions (placeholder)</h2>
+        <div class="subtitle">Use this for extension (or remove)</div>
+        <div class="conv-panel">
+          <input type="number" step="any" class="conv-input" placeholder="Enter value (press Enter)"/>
+          <div class="units-grid">
+            <button class="conv-btn" data-unit="unit1">unit1</button>
+            <button class="conv-btn" data-unit="unit2">unit2</button>
+            <button class="conv-btn" data-unit="unit3">unit3</button>
+          </div>
+          <div class="controls">
+            <button class="calc-button swap-btn">Swap</button>
+            <button class="btn-ghost clear-btn">Clear</button>
+          </div>
+          <div class="result output"></div>
+        </div>
+      </section>
+
+   
+  <!-- Logic file (must be provided/placed next to this HTML) -->
+  <script src="data_conversion.js"></script>
+</body>
+</html>
