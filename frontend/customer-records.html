@@ -207,7 +207,14 @@ exportCsvBtn.addEventListener("click", ()=>{
 // --- NEW EXPORT LOGIC ---
 exportPngBtn.addEventListener("click", async () => {
   const el = tableWrap;
-  if (!el) { alert("Nothing to export"); return; }
+  if (!el) {
+    alert("Nothing to export");
+    return;
+  }
+
+  // Optional: show loading indicator
+  exportPngBtn.disabled = true;
+  exportPngBtn.textContent = "Exporting...";
 
   const originalOverflow = el.style.overflow;
   const originalMaxHeight = el.style.maxHeight;
@@ -215,57 +222,127 @@ exportPngBtn.addEventListener("click", async () => {
   el.style.maxHeight = "none";
 
   try {
-    const canvas = await html2canvas(el, { scale: 2, backgroundColor: "#0b0b0b", useCORS: true });
+    // Ensure layout is stable
+    await new Promise(r => setTimeout(r, 100));
 
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF({
-      orientation: canvas.width > canvas.height ? "l" : "p",
-      unit: "px",
-      format: [canvas.width, canvas.height]
+    // Full capture
+    const canvas = await html2canvas(el, {
+      scale: 2,
+      backgroundColor: "#0b0b0b",
+      useCORS: true,
+      scrollX: 0,
+      scrollY: 0,
+      width: el.scrollWidth,
+      height: el.scrollHeight,
+      windowWidth: el.scrollWidth,
+      windowHeight: el.scrollHeight
     });
 
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const pageWidth = pdf.internal.pageSize.getWidth();
+    const imgData = canvas.toDataURL("image/png");
+    const pageFormat = "a4";
+    const pdf = new jsPDF({
+      orientation: "p",
+      unit: "px",
+      format: pageFormat
+    });
 
-    // If table fits on one page, just download PNG
-    if (canvas.height <= pageHeight && canvas.width <= pageWidth) {
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+
+    // Scale factor to fit width
+    const scaleFactor = pageWidth / canvas.width;
+    const scaledHeight = canvas.height * scaleFactor;
+
+    // 👉 If everything fits easily on one page → PNG
+    if (scaledHeight <= pageHeight) {
       const a = document.createElement("a");
       a.href = imgData;
       a.download = "customers.png";
       a.click();
-    } else {
-      // For large tables: split into PDF pages
-      let remainingHeight = canvas.height;
-      let position = 0;
-      while (remainingHeight > 0) {
-        const tempCanvas = document.createElement("canvas");
-        tempCanvas.width = canvas.width;
-        tempCanvas.height = Math.min(pageHeight, remainingHeight);
-        tempCanvas.getContext("2d").drawImage(canvas, 0, position, canvas.width, tempCanvas.height, 0, 0, canvas.width, tempCanvas.height);
-
-        const img = tempCanvas.toDataURL("image/png");
-        if (position > 0) pdf.addPage();
-        pdf.addImage(img, "PNG", 0, 0, pageWidth, (tempCanvas.height * pageWidth) / tempCanvas.width);
-
-        position += tempCanvas.height;
-        remainingHeight -= tempCanvas.height;
-      }
-
-      pdf.save("customers.pdf");
+      return;
     }
+
+    // 👉 Otherwise create a structured multi-page PDF
+    const ctx = canvas.getContext("2d");
+    const dateColumnIndex = findDateColumnIndex(el); // helper function below
+    const rows = Array.from(el.querySelectorAll("tr"));
+    const dateGroups = groupRowsByDate(rows, dateColumnIndex);
+
+    let pageCount = 0;
+
+    for (const [date, rowGroup] of Object.entries(dateGroups)) {
+      // Create a temporary section canvas for this date group
+      const sectionCanvas = document.createElement("canvas");
+      sectionCanvas.width = canvas.width;
+      sectionCanvas.height = Math.min(canvas.height, pageHeight / scaleFactor);
+
+      const sectionCtx = sectionCanvas.getContext("2d");
+
+      // Find the Y start and end positions for these rows
+      const firstRow = rowGroup[0];
+      const lastRow = rowGroup[rowGroup.length - 1];
+      const startY = firstRow.offsetTop;
+      const endY = lastRow.offsetTop + lastRow.offsetHeight;
+
+      const groupHeight = endY - startY;
+
+      // Draw this section
+      sectionCanvas.height = groupHeight;
+      sectionCtx.drawImage(canvas, 0, startY, canvas.width, groupHeight, 0, 0, canvas.width, groupHeight);
+
+      const sectionImg = sectionCanvas.toDataURL("image/png");
+
+      if (pageCount > 0) pdf.addPage();
+      pdf.setFontSize(14);
+      pdf.text(`Date: ${date}`, 20, 25);
+      pdf.addImage(sectionImg, "PNG", 0, 40, pageWidth, groupHeight * scaleFactor);
+
+      pageCount++;
+    }
+
+    pdf.save("customers.pdf");
+
   } catch (err) {
-    console.error(err);
+    console.error("Export failed:", err);
     alert("Export failed.");
   } finally {
+    exportPngBtn.disabled = false;
+    exportPngBtn.textContent = "Export";
     el.style.overflow = originalOverflow;
     el.style.maxHeight = originalMaxHeight;
   }
 });
 
+
+// Helper: Find which column has a date
+function findDateColumnIndex(tableEl) {
+  const headers = Array.from(tableEl.querySelectorAll("th"));
+  for (let i = 0; i < headers.length; i++) {
+    if (/date/i.test(headers[i].innerText.trim())) return i;
+  }
+  return 0; // fallback
+}
+
+// Helper: Group <tr> elements by their date column value
+function groupRowsByDate(rows, dateColumnIndex) {
+  const groups = {};
+  for (const row of rows.slice(1)) { // skip header row
+    const cells = row.querySelectorAll("td");
+    if (cells.length > dateColumnIndex) {
+      const dateText = cells[dateColumnIndex].innerText.trim();
+      if (!groups[dateText]) groups[dateText] = [];
+      groups[dateText].push(row);
+    }
+  }
+  return groups;
+}
+
+
 renderTable();
 </script>
 </body>
 </html>
+
 
 
 
