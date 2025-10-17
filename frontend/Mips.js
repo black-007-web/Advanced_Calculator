@@ -145,9 +145,35 @@
       if (manualToggle.checked) {
         mapGrid.querySelectorAll('input').forEach(i => { if (i.value.trim()) manualMap[i.dataset.var] = i.value.trim(); });
       }
+
+      const target = asmSelect.value.toLowerCase();
+
+      if(target === 'simple') {
+        // Simple Assembly: convert MIPS -> basic instructions
+        const mipsLines = genAssembly(rpn, {manualMap});
+        const simpleLines = mipsLines.map(line => {
+          return line
+            .replace(/<[^>]+>/g,'')
+            .replace(/\blw\b/i,'MOV')
+            .replace(/\bsw\b/i,'MOV')
+            .replace(/\badd\b/i,'ADD')
+            .replace(/\bsub\b/i,'SUB')
+            .replace(/\bmul\b/i,'MUL')
+            .replace(/\bdiv\b/i,'DIV')
+            .replace(/\bmove\b/i,'MOV')
+            .replace(/\s+#.*/,'')
+            .trim();
+        });
+        renderOutput(simpleLines);
+        showStatus('Done (Simple Assembly)');
+        return;
+      }
+
+      // Default MIPS path
       const lines = genAssembly(rpn, {manualMap});
       renderOutput(lines);
       showStatus('Done');
+
     } catch (e) {
       showStatus(e.message || 'Error','error');
     }
