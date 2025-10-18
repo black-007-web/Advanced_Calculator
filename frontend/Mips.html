@@ -58,14 +58,25 @@ textarea.input { width:100%; min-height:86px; resize:vertical; padding:12px; bor
 .copy-btn { background:transparent; border:1px dashed rgba(255,255,255,0.06); color:#cfcfcf; padding:8px 10px; border-radius:8px; font-weight:700; cursor:pointer; }
 
 /* output styling */
-.output { min-height:200px; padding:12px; border-radius:12px; background:#060606; border:1px solid rgba(255,255,255,0.03); color:#dff; font-family: monospace; font-weight:600; position:relative; overflow:auto; }
+.output { min-height:200px; padding:12px; border-radius:12px; background:#060606; border:1px solid rgba(255,255,255,0.03); color:#dff; font-family: monospace; font-weight:600; position:relative; overflow:auto; white-space:pre-wrap; }
 .output .line { padding:6px 8px; border-radius:8px; margin:6px 0; opacity:0; transform:translateY(8px); }
 .output.show .line { animation: slideIn .28s ease forwards; }
 @keyframes slideIn { to { opacity:1; transform:none; } }
 
-.token-mnemonic { font-weight:900; color:#ffd87a; }
-.token-reg { color:#9ae6b4; }
-.token-comment { color:#9aa0a6; font-weight:700; }
+/* token colors for JS-injected elements */
+.token-mnemonic { font-weight:900; color:#ffd87a; } /* mnemonic / instruction names */
+.token-keyword { font-weight:900; color:#00ffd5; }   /* keywords like ADD, MOV for formats */
+.token-reg { color:#9ae6b4; }                         /* registers $t0 etc */
+.token-var { color:#dcdcdc; }                         /* variables / user names */
+.token-comment { color:#9aa0a6; font-weight:700; }   /* comments */
+.token-binary { color:#7fffd4; font-weight:800; }     /* binary fields / machine code */
+
+/* small table-like breakdown */
+.breakdown { display:block; margin-top:8px; background:rgba(255,255,255,0.01); padding:10px; border-radius:8px; }
+.break-row { display:flex; gap:12px; align-items:center; padding:4px 0; }
+.break-field { width:120px; color:#ffd700; font-weight:800; }
+.break-bits  { width:48px; color:#9aa0a6; text-align:center; }
+.break-bin   { color:#7fffd4; font-family:monospace; }
 
 /* controls */
 .controls { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:10px; }
@@ -102,15 +113,20 @@ textarea.input { width:100%; min-height:86px; resize:vertical; padding:12px; bor
         <div class="input-area">
           <label class="small">Choose target assembly</label>
           <div class="row">
+            <!-- keep same id asm-select but add third option -->
             <select id="asm-select" class="select" aria-label="Select assembly">
               <option value="mips">MIPS</option>
+              <option value="mipsFormat">MIPS Formats</option>
               <option value="simple">Simple Assembly</option>
             </select>
             <button id="example-btn" class="small-btn">Insert example</button>
           </div>
 
-          <label class="small">Enter equation</label>
-          <textarea id="expr-input" class="input" placeholder="add $t0, $t1, $t2"></textarea>
+          <label class="small">Enter equation or instruction</label>
+          <textarea id="expr-input" class="input" placeholder="Examples:
+ - Equation: A = (i + j) - (k + m)
+ - MIPS: add $t0, $t1, $t2
+ - Simple: add a, b"></textarea>
 
           <div class="switch-row">
             <label class="small">Manual register mapping?</label>
@@ -129,13 +145,13 @@ textarea.input { width:100%; min-height:86px; resize:vertical; padding:12px; bor
       <!-- Output Card -->
       <section class="card" aria-labelledby="output-heading">
         <h3 id="output-heading">Assembly Output</h3>
-        <div id="output" class="output"></div>
+        <div id="output" class="output" aria-live="polite"></div>
 
         <div class="controls">
           <div class="small" id="status">Ready</div>
           <div style="display:flex;gap:8px;">
-            <button id="copy-btn" class="copy-btn">Copy Code</button>
-            <button id="download-btn" class="copy-btn">Download .s</button>
+            <button id="copy-btn" class="copy-btn">Copy Output</button>
+            <button id="download-btn" class="copy-btn">Download Result</button>
           </div>
         </div>
 
