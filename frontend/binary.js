@@ -10,7 +10,7 @@
   const binClear = document.getElementById('binClear');
   const operationLabel = document.getElementById('binOperation');
 
-  // 🆕 Get bit length input (1–32)
+  // 🆕 Bit length input (1–32)
   const bitInput = document.getElementById('bitLength');
   function getBitLength() {
     const bit = parseInt(bitInput?.value);
@@ -18,7 +18,7 @@
     return bit;
   }
 
-  // 🆕 Pad/trim binary string to user bit length
+  // 🆕 Pad or trim to user bit length
   function formatToBits(binStr, bits) {
     if (!bits) return binStr;
     if (binStr.length < bits) return binStr.padStart(bits, '0');
@@ -26,14 +26,22 @@
     return binStr;
   }
 
-  // 🆕 Floating box animation
+  // 🆕 Floating result box (no fade timer)
   const floatBox = document.getElementById('floatBox');
   function showFloatingResult(text) {
     if (!floatBox) return;
     floatBox.textContent = text;
     floatBox.classList.add('show');
-    setTimeout(() => floatBox.classList.remove('show'), 3500);
   }
+
+  // 🆕 Hide only when clicking outside
+  document.addEventListener('click', (e) => {
+    if (floatBox && floatBox.classList.contains('show')) {
+      if (!floatBox.contains(e.target)) {
+        floatBox.classList.remove('show');
+      }
+    }
+  });
 
   function validateBinary(s) { return /^[01]{1,16}$/.test(s); }
 
