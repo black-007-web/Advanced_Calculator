@@ -4,132 +4,97 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Binary System</title>
-
-  <!-- Favicon and Tab Styling -->
   <link rel="icon" href="dna.png" type="image/png" />
   <meta name="theme-color" content="#00ffd5" />
-
   <link rel="stylesheet" href="styles.css"/>
+
   <style>
-    /* Extra styling just for Binary page (keeps stereotype look) */
-    .container {
-      max-width: 700px; /* wider for binary system */
-    }
-
+    /* Existing Styles (unchanged)... */
+    .container { max-width: 700px; }
     #binInput {
-      width: 100%;
-      padding: 15px;
-      font-size: 1.1rem;
-      text-align: center;
-      border-radius: 10px;
-      border: none;
-      background: #2c2c2c;
-      color: #fff;
-      margin-bottom: 12px;
+      width: 100%; padding: 15px; font-size: 1.1rem; text-align: center;
+      border-radius: 10px; border: none; background: #2c2c2c; color: #fff; margin-bottom: 12px;
     }
-
-    .operation-display {
-      text-align: center;
-      font-size: 0.95rem;
-      color: #ccc;
-      margin-bottom: 15px;
-    }
-
-    .conversion-row {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
+    .operation-display { text-align: center; font-size: 0.95rem; color: #ccc; margin-bottom: 15px; }
+    .conversion-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
     .conv-btn {
-      padding: 12px;
-      font-size: 1rem;
-      border-radius: 10px;
-      border: none;
-      background: linear-gradient(90deg,#7c4dff,#ff6b6b);
-      color: #fff;
-      cursor: pointer;
+      padding: 12px; font-size: 1rem; border-radius: 10px; border: none;
+      background: linear-gradient(90deg,#7c4dff,#ff6b6b); color: #fff; cursor: pointer;
       transition: transform 0.2s ease;
     }
     .conv-btn:hover { transform: translateY(-3px); }
-
-    .binary-ops {
-      background: #1e1e1e;
-      padding: 20px;
-      border-radius: 15px;
-      margin-bottom: 20px;
-    }
-
+    .binary-ops { background: #1e1e1e; padding: 20px; border-radius: 15px; margin-bottom: 20px; }
     .binary-ops input {
-      width: 100%;
-      margin: 8px 0;
-      padding: 12px;
-      font-size: 1rem;
-      border-radius: 10px;
-      border: none;
-      background: #2c2c2c;
-      color: #fff;
+      width: 100%; margin: 8px 0; padding: 12px; font-size: 1rem;
+      border-radius: 10px; border: none; background: #2c2c2c; color: #fff;
     }
-
-    .bin-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
+    .bin-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
     .op-bin {
-      flex: 1;
-      padding: 12px;
-      font-size: 1rem;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      background: linear-gradient(90deg,#2196f3,#00bcd4);
-      color: #fff;
+      flex: 1; padding: 12px; font-size: 1rem; border-radius: 10px; border: none;
+      cursor: pointer; background: linear-gradient(90deg,#2196f3,#00bcd4); color: #fff;
       transition: transform 0.2s ease;
     }
     .op-bin:hover { transform: translateY(-3px); }
-
     .btn-ghost {
-      background: transparent;
-      border: 2px solid #ff6b6b;
-      color: #ff6b6b;
-      padding: 10px 15px;
-      border-radius: 10px;
-      cursor: pointer;
+      background: transparent; border: 2px solid #ff6b6b; color: #ff6b6b;
+      padding: 10px 15px; border-radius: 10px; cursor: pointer;
     }
     .btn-ghost:hover { background: #ff6b6b; color: #fff; }
-
     .result {
-      background: #000;
-      padding: 15px;
-      border-radius: 10px;
-      font-size: 1.05rem;
-      text-align: center;
-      margin-top: 12px;
-      color: #00ffff;
-      word-wrap: break-word; /* prevents overflow */
+      background: #000; padding: 15px; border-radius: 10px;
+      font-size: 1.05rem; text-align: center; margin-top: 12px;
+      color: #00ffff; word-wrap: break-word;
     }
-
-    .links {
-      margin-top: 20px;
-      text-align: center;
-    }
-
+    .links { margin-top: 20px; text-align: center; }
     .home-btn {
-      padding: 12px 25px;
-      border-radius: 12px;
+      padding: 12px 25px; border-radius: 12px;
       background: linear-gradient(90deg,#7c4dff,#ff6b6b);
-      color: #fff;
-      font-weight: 700;
-      text-decoration: none;
-      transition: transform 0.2s ease;
+      color: #fff; font-weight: 700; text-decoration: none; transition: transform 0.2s ease;
     }
     .home-btn:hover { transform: translateY(-3px); }
+
+    /* 🆕 Bit system input */
+    .bit-system {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .bit-system input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: #2c2c2c;
+      color: #00ffd5;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    /* 🆕 Floating animated result box */
+    .float-result {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      background: rgba(10, 10, 10, 0.95);
+      color: #00ffff;
+      border-radius: 15px;
+      padding: 25px;
+      font-size: 1.1rem;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0,255,255,0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.4s ease;
+      z-index: 999;
+    }
+    .float-result.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+      pointer-events: auto;
+    }
   </style>
 </head>
+
 <body>
   <div class="container">
     <header class="calc-header">
@@ -139,6 +104,9 @@
 
     <div class="stage">
       <input id="binInput" placeholder="Type decimal, binary (1010) or hex (A3)" />
+      <div class="bit-system">
+        <input id="bitLength" type="number" min="1" max="32" placeholder="Optional: Set bit length (1–32)" />
+      </div>
       <div id="binOperation" class="operation-display">Operation: —</div>
     </div>
 
@@ -169,9 +137,11 @@
     </div>
   </div>
 
+  <!-- 🆕 Floating output box -->
+  <div id="floatBox" class="float-result">Result: —</div>
+
   <!-- big-integer -->
   <script src="https://unpkg.com/big-integer@1.6.51/BigInteger.min.js"></script>
   <script src="binary.js"></script>
 </body>
 </html>
-
