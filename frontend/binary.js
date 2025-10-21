@@ -18,7 +18,7 @@
     return bit;
   }
 
-  // 🆕 Pad or trim to user bit length
+  // 🆕 Format binary output according to bit length
   function formatToBits(binStr, bits) {
     if (!bits) return binStr;
     if (binStr.length < bits) return binStr.padStart(bits, '0');
@@ -26,15 +26,16 @@
     return binStr;
   }
 
-  // 🆕 Floating result box (no fade timer)
+  // 🆕 Floating result box control
   const floatBox = document.getElementById('floatBox');
+
   function showFloatingResult(text) {
     if (!floatBox) return;
     floatBox.textContent = text;
     floatBox.classList.add('show');
   }
 
-  // 🆕 Hide only when clicking outside
+  // Hide floating box only when clicking outside
   document.addEventListener('click', (e) => {
     if (floatBox && floatBox.classList.contains('show')) {
       if (!floatBox.contains(e.target)) {
@@ -43,17 +44,21 @@
     }
   });
 
-  function validateBinary(s) { return /^[01]{1,16}$/.test(s); }
+  // Binary validation (same as before)
+  function validateBinary(s) {
+    return /^[01]{1,16}$/.test(s);
+  }
 
+  // Conversion buttons
   convBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       const type = btn.dataset.type;
       const val = binInput.value.trim();
       const bits = getBitLength();
-      if (!val) { 
-        binConvResult.textContent = 'Conversion: Enter a value'; 
+      if (!val) {
+        binConvResult.textContent = 'Conversion: Enter a value';
         showFloatingResult('Enter a value');
-        return; 
+        return;
       }
       try {
         let out = '';
@@ -75,16 +80,19 @@
             out = formatToBits(out, bits);
             break;
         }
-        binConvResult.textContent = `Conversion: ${out}`;
+        const resultText = `Conversion: ${out}`;
+        binConvResult.textContent = resultText;
         operationLabel.textContent = `Operation: ${type}`;
-        showFloatingResult(`Conversion: ${out}`);
+        showFloatingResult(resultText);
       } catch (e) {
-        binConvResult.textContent = `Conversion: ${e}`;
-        showFloatingResult(`Error: ${e}`);
+        const err = `Conversion: ${e}`;
+        binConvResult.textContent = err;
+        showFloatingResult(err);
       }
     });
   });
 
+  // Binary operation buttons
   binButtons.forEach(b => {
     b.addEventListener('click', () => {
       const op = b.dataset.op;
@@ -105,24 +113,28 @@
           case 'add': r = x.add(y); break;
           case 'sub': r = x.subtract(y); break;
           case 'mul': r = x.multiply(y); break;
-          case 'div': r = y.equals(0) ? (() => { throw 'Divide by zero'; })() : x.divide(y); break;
+          case 'div':
+            if (y.equals(0)) throw 'Divide by zero';
+            r = x.divide(y);
+            break;
         }
         const binRes = formatToBits(r.toString(2), bits);
         const decRes = r.toString(10);
-        const output = `Binary Op Result: ${binRes} (dec ${decRes})`;
-        binCalcResult.textContent = output;
-        showFloatingResult(output);
+        const resultText = `Binary Op Result: ${binRes} (dec ${decRes})`;
+        binCalcResult.textContent = resultText;
+        showFloatingResult(resultText);
       } catch (e) {
-        const errMsg = `Binary Op Result: ${e}`;
-        binCalcResult.textContent = errMsg;
-        showFloatingResult(errMsg);
+        const err = `Binary Op Result: ${e}`;
+        binCalcResult.textContent = err;
+        showFloatingResult(err);
       }
     });
   });
 
+  // Clear all fields
   binClear.addEventListener('click', () => {
-    binA.value = ''; 
-    binB.value = ''; 
+    binA.value = '';
+    binB.value = '';
     binInput.value = '';
     if (bitInput) bitInput.value = '';
     binConvResult.textContent = 'Conversion: —';
