@@ -142,6 +142,101 @@
 
   <!-- big-integer -->
   <script src="https://unpkg.com/big-integer@1.6.51/BigInteger.min.js"></script>
-  <script src="binary.js"></script>
+  
+  <!-- 🆕 Floating output JS logic -->
+  <script>
+    const floatBox = document.getElementById('floatBox');
+
+    // Show floating box
+    function showFloat(message) {
+      floatBox.textContent = message;
+      floatBox.classList.add('show');
+    }
+
+    // Hide floating box when clicking outside
+    document.addEventListener('click', e => {
+      if (!floatBox.contains(e.target) && !e.target.classList.contains('conv-btn') && !e.target.classList.contains('op-bin')) {
+        floatBox.classList.remove('show');
+      }
+    });
+
+    // Conversion logic
+    const binInput = document.getElementById('binInput');
+    const convBtns = document.querySelectorAll('.conv-btn');
+    const binConvResult = document.getElementById('binConvResult');
+    const operationLabel = document.getElementById('binOperation');
+    const bitLengthInput = document.getElementById('bitLength');
+
+    convBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const type = btn.dataset.type;
+        let val = binInput.value.trim();
+        if(!val) { binConvResult.textContent = 'Conversion: Enter a value'; return; }
+        try {
+          let out = '';
+          switch(type) {
+            case 'dec2bin':
+              out = bigInt(val,10).toString(2); break;
+            case 'bin2dec':
+              if(!/^[01]+$/.test(val)) throw 'Invalid binary';
+              out = bigInt(val,2).toString(10); break;
+            case 'bin2hex':
+              if(!/^[01]+$/.test(val)) throw 'Invalid binary';
+              out = bigInt(val,2).toString(16).toUpperCase(); break;
+            case 'hex2bin':
+              out = bigInt(val,16).toString(2); break;
+          }
+          const bits = parseInt(bitLengthInput.value);
+          if(!isNaN(bits) && (type==='dec2bin'||type==='hex2bin')) out = out.padStart(bits,'0').slice(-bits);
+
+          binConvResult.textContent = `Conversion: ${out}`;
+          operationLabel.textContent = `Operation: ${type}`;
+          showFloat(`Conversion Result: ${out}`);
+        } catch(e) {
+          binConvResult.textContent = `Conversion: ${e}`;
+          showFloat(`Error: ${e}`);
+        }
+      });
+    });
+
+    // Binary operation logic
+    const binA = document.getElementById('binA');
+    const binB = document.getElementById('binB');
+    const binButtons = document.querySelectorAll('.op-bin');
+    const binCalcResult = document.getElementById('binCalcResult');
+
+    function validateBinary(s){ return /^[01]{1,16}$/.test(s); }
+
+    binButtons.forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const op = btn.dataset.op;
+        const a = binA.value.trim(), b = binB.value.trim();
+        if(!validateBinary(a)||!validateBinary(b)){ 
+          binCalcResult.textContent = 'Binary Op Result: Invalid binary (max 16 bits)';
+          showFloat('Binary Op Error: Invalid input');
+          return;
+        }
+        const x = bigInt(a,2), y = bigInt(b,2);
+        let r;
+        switch(op){
+          case 'add': r = x.add(y); break;
+          case 'sub': r = x.subtract(y); break;
+          case 'mul': r = x.multiply(y); break;
+          case 'div': 
+            if(y.equals(0)){ showFloat('Error: Division by 0'); binCalcResult.textContent='Binary Op Result: Error'; return; }
+            r = x.divide(y); break;
+        }
+        const resBin = r.toString(2);
+        binCalcResult.textContent = `Binary Op Result: ${resBin}`;
+        showFloat(`Binary Op Result: ${resBin}`);
+      });
+    });
+
+    // Clear button
+    document.getElementById('binClear').addEventListener('click',()=>{
+      binA.value=''; binB.value=''; binCalcResult.textContent='Binary Op Result: —';
+      showFloat('Binary Operation Cleared');
+    });
+  </script>
 </body>
 </html>
