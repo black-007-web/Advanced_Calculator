@@ -54,6 +54,10 @@
     color:#fff;
     position:relative;
     overflow:hidden;
+    background-image: url('./profile.jpg'); /* Fixed path */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
   }
   .hero-bg .overlay {
     position:absolute; top:0; left:0; width:100%; height:100%;
@@ -102,44 +106,7 @@
 
 <!-- Full-page Skill Engine Background -->
 <canvas id="skills-engine-canvas"></canvas>
-
-<!-- Navbar -->
-<nav id="navbar">
-  <div class="logo">Portfolio</div>
-  <ul class="nav-links">
-    <li><a href="#home">Home</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <div class="hamburger">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-</nav>
-
-<!-- Home Section -->
-<section id="home">
-<div class="hero-bg" style="background-image: url('profile.jpg');">
-
-
-    <div class="overlay"></div>
-    <div class="hero-content" data-aos="fade-up">
-      <h1>Hi, I'm <span>Mohammad Farial</span></h1>
-      <p>Web Developer & Tech Enthusiast</p>
-      <div class="hero-buttons">
-        <a href="https://www.facebook.com/mohammad.farial.2025" class="btn">Facebook</a>
-        <a href="https://www.instagram.com/myselffarial/" class="btn">Instagram</a>
-        <a href="https://x.com/blackend0007" class="btn">X</a>
-        <a href="https://www.linkedin.com/in/md-farial-bin-shah-778788389/" class="btn">LinkedIn</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Skills Section -->
+  <!-- Skills Section -->
 <section id="skills">
   <h2 style="text-align:center; color:#fff; margin-bottom:20px;"></h2>
   <div class="skills-container" style="text-align:center; color:#00d4ff;">
@@ -881,6 +848,39 @@
   </div>
 </section>
 
+<!-- Navbar -->
+<nav id="navbar">
+  <div class="logo">Portfolio</div>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="hamburger">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</nav>
+
+<!-- Home Section -->
+<section id="home">
+  <div class="hero-bg">
+    <div class="overlay"></div>
+    <div class="hero-content" data-aos="fade-up">
+      <h1>Hi, I'm <span>Mohammad Farial</span></h1>
+      <p>Web Developer & Tech Enthusiast</p>
+      <div class="hero-buttons">
+        <a href="https://www.facebook.com/mohammad.farial.2025" class="btn">Facebook</a>
+        <a href="https://www.instagram.com/myselffarial/" class="btn">Instagram</a>
+        <a href="https://x.com/blackend0007" class="btn">X</a>
+        <a href="https://www.linkedin.com/in/md-farial-bin-shah-778788389/" class="btn">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- About Section -->
 <section id="about">
@@ -953,7 +953,6 @@
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
   camera.position.z = 5;
 
-  // Example interactive particles (replace with your skill.html JS content)
   const particleCount = 3000;
   const geometry = new THREE.BufferGeometry();
   const positions = [];
@@ -967,7 +966,6 @@
   const particles = new THREE.Points(geometry, material);
   scene.add(particles);
 
-  // Mouse interaction
   const mouse = {x:0, y:0};
   document.addEventListener('mousemove', e => {
     mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
