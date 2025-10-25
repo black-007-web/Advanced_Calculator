@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile</title>
+<link rel="stylesheet" href="profile.css">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+<style>
+  /* Full-page skill engine background */
+  #skills-engine-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    display: block;
+  }
+
+  /* Transparent sections */
+  section, nav, footer {
+    position: relative;
+    z-index: 1;
+    background: transparent;
+  }
+
+  body, html { margin:0; padding:0; font-family: 'Orbitron', sans-serif; }
+
+  /* Navbar */
+  nav {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding: 20px 50px;
+    position: fixed;
+    width:100%;
+    top:0;
+    z-index:2;
+  }
+  nav .nav-links li { display:inline-block; margin-left:20px; }
+  nav .nav-links a { text-decoration:none; color:#fff; transition:0.3s; }
+  nav .nav-links a:hover { color:#00d4ff; }
+
+  /* Hero Section */
+  .hero-bg {
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:#fff;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero-bg .overlay {
+    position:absolute; top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.4);
+    z-index:0;
+  }
+  .hero-bg h1 span { color:#00d4ff; }
+  .btn {
+    text-decoration:none;
+    color:#fff;
+    background:#00d4ff;
+    padding:10px 20px;
+    margin:5px;
+    border-radius:5px;
+    transition:0.3s;
+  }
+  .btn:hover { background:#00a0cc; }
+
+  /* Sections spacing */
+  section { padding:80px 50px; }
+  h2 { color:#fff; margin-bottom:30px; text-align:center; }
+
+  /* About */
+  .about-container { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:30px; color:#fff; }
+  .about-container .profile-pic { width:200px; border-radius:50%; }
+
+  /* Projects */
+  .projects-container { display:flex; flex-wrap:wrap; justify-content:center; gap:30px; }
+  .project-card {
+    background: rgba(0,0,0,0.6);
+    padding:20px; border-radius:10px;
+    width:300px; text-align:center; transition:0.3s;
+  }
+  .project-card:hover { transform:translateY(-10px); box-shadow:0 0 20px #00d4ff; }
+  .project-card img { width:100%; border-radius:10px; }
+
+  /* Contact */
+  .contact-container { text-align:center; color:#fff; }
+
+  /* Footer */
+  footer { text-align:center; padding:20px; color:#fff; background: rgba(0,0,0,0.3); }
+
+</style>
+</head>
+<body>
+
+<!-- Full-page Skill Engine Background -->
+<canvas id="skills-engine-canvas"></canvas>
+
+<!-- Navbar -->
+<nav id="navbar">
+  <div class="logo">Portfolio</div>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="hamburger">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</nav>
+
+<!-- Home Section -->
+<section id="home">
+  <div class="hero-bg" style="background-image: url('profile.jpg');">
+    <div class="overlay"></div>
+    <div class="hero-content" data-aos="fade-up">
+      <h1>Hi, I'm <span>Mohammad Farial</span></h1>
+      <p>Web Developer & Tech Enthusiast</p>
+      <div class="hero-buttons">
+        <a href="https://www.facebook.com/mohammad.farial.2025" class="btn">Facebook</a>
+        <a href="https://www.instagram.com/myselffarial/" class="btn">Instagram</a>
+        <a href="https://x.com/blackend0007" class="btn">X</a>
+        <a href="https://www.linkedin.com/in/md-farial-bin-shah-778788389/" class="btn">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Skills Section -->
+<section id="skills">
+  <h2 style="text-align:center; color:#fff; margin-bottom:20px;"></h2>
+  <div class="skills-container" style="text-align:center; color:#00d4ff;">
+    <!-- Replace this with your exact skill.html structure content -->
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React Core Skills Engine</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: #000;
+      overflow-x: hidden;
+    }
+
+    .skills-engine-section {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      background: radial-gradient(ellipse at 50% 50%, #0a0515 0%, #000000 50%, #000508 100%);
+      overflow: hidden;
+    }
+
+    .cyber-grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(0, 255, 213, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 213, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: gridMove 20s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes gridMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+
+    .scanlines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, transparent 50%, rgba(0, 255, 213, 0.02) 51%);
+      background-size: 100% 4px;
+      pointer-events: none;
+      animation: scan 8s linear infinite;
+    }
+
+    @keyframes scan {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(100%); }
+    }
+
+    .skills-header {
+      position: relative;
+      text-align: center;
+      padding: 60px 20px 30px;
+      z-index: 10;
+    }
+
+    .skills-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 900;
+      color: #61dafb;
+      text-transform: uppercase;
+      letter-spacing: 6px;
+      margin-bottom: 15px;
+      text-shadow: 
+        0 0 20px rgba(97, 218, 251, 0.8),
+        0 0 40px rgba(97, 218, 251, 0.5);
+      animation: titleGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes titleGlow {
+      0%, 100% { text-shadow: 0 0 20px rgba(97, 218, 251, 0.8), 0 0 40px rgba(97, 218, 251, 0.5); }
+      50% { text-shadow: 0 0 30px rgba(97, 218, 251, 1), 0 0 60px rgba(97, 218, 251, 0.7); }
+    }
+
+    .skills-subtitle {
+      font-size: 1.1rem;
+      color: #98aeb9;
+      font-weight: 300;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    #skills-3d-engine {
+      position: relative;
+      width: 100%;
+      height: 85vh;
+      margin: 0 auto;
+      cursor: grab;
+    }
+
+    #skills-3d-engine:active {
+      cursor: grabbing;
+    }
+
+    /* Compact Skill Labels */
+    .skill-label {
+      position: absolute;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      pointer-events: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 8px;
+      background: rgba(0, 15, 25, 0.9);
+      border: 1px solid;
+      border-radius: 4px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 15px;
+      transition: all 0.3s ease;
+      min-width: 80px;
+      white-space: nowrap;
+    }
+
+    .skill-label.react-core {
+      border-color: rgba(97, 218, 251, 0.7);
+      background: rgba(10, 25, 40, 0.95);
+      box-shadow: 0 0 20px rgba(97, 218, 251, 0.5);
+      padding: 5px 10px;
+      min-width: 95px;
+    }
+
+    .skill-name-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 3px;
+    }
+
+    .skill-name {
+      font-size: 0.7rem;
+      color: #00ffd5;
+      line-height: 1;
+    }
+
+    .skill-label.react-core .skill-name {
+      font-size: 0.85rem;
+      color: #61dafb;
+    }
+
+    .skill-percentage {
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: #00ffd5;
+      text-shadow: 0 0 6px currentColor;
+    }
+
+    .skill-label.react-core .skill-percentage {
+      font-size: 1rem;
+      color: #61dafb;
+    }
+
+    .skill-bar-container {
+      width: 100%;
+      height: 3px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .skill-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #00ffd5, #00aaff);
+      border-radius: 2px;
+      position: relative;
+      transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 10px rgba(0, 255, 213, 0.6);
+    }
+
+    .skill-label.react-core .skill-bar {
+      background: linear-gradient(90deg, #61dafb, #0099ff);
+      box-shadow: 0 0 10px rgba(97, 218, 251, 0.6);
+    }
+
+    .skill-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* Stats HUD */
+    .stats-hud {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-family: 'Rajdhani', monospace;
+      color: #00ffd5;
+      background: rgba(0, 15, 25, 0.85);
+      padding: 12px 16px;
+      border: 1.5px solid rgba(0, 255, 213, 0.4);
+      border-radius: 6px;
+      backdrop-filter: blur(12px);
+      font-size: 0.85rem;
+      z-index: 20;
+      box-shadow: 0 0 15px rgba(0, 255, 213, 0.3);
+    }
+
+    .stats-hud div {
+      margin: 5px 0;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .stats-label {
+      color: #6b8a99;
+    }
+
+    .stats-value {
+      color: #00ffd5;
+      font-weight: 700;
+    }
+
+    .particle-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .floating-particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: #00ffd5;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #00ffd5;
+      animation: floatParticle 15s linear infinite;
+    }
+
+    @keyframes floatParticle {
+      0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
+    }
+
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      transition: opacity 0.5s;
+    }
+
+    .loading-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loader {
+      width: 60px;
+      height: 60px;
+      border: 3px solid rgba(97, 218, 251, 0.1);
+      border-top: 3px solid #61dafb;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      color: #61dafb;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .info-panel {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      color: #6b8a99;
+      font-size: 0.85rem;
+      z-index: 10;
+    }
+
+    .info-panel-item {
+      display: inline-block;
+      margin: 0 10px;
+      padding: 6px 14px;
+      background: rgba(0, 15, 25, 0.7);
+      border: 1px solid rgba(0, 255, 213, 0.3);
+      border-radius: 20px;
+      backdrop-filter: blur(8px);
+    }
+
+          @media (max-width: 768px) {
+      .skill-label {
+        min-width: 70px;
+        padding: 3px 6px;
+      }
+      
+      .skill-label.react-core {
+        min-width: 85px;
+        padding: 4px 8px;
+      }
+
+      .skill-name {
+        font-size: 0.65rem;
+      }
+
+      .skill-percentage {
+        font-size: 0.75rem;
+      }
+
+      #skills-3d-engine {
+        height: 70vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="skills-engine-section">
+    <div class="cyber-grid"></div>
+    <div class="scanlines"></div>
+    <div class="particle-container" id="particleContainer"></div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loader"></div>
+      <div class="loading-text">Initializing Core...</div>
+    </div>
+
+    <div class="skills-header">
+      <h2 class="skills-title">[ My Skill ]</h2>
+      <p class="skills-subtitle">Skill Proficiency Matrix • Interactive 3D Engine</p>
+    </div>
+
+    <div id="skills-3d-engine"></div>
+
+    <div class="stats-hud">
+      <div><span class="stats-label">FPS:</span><span class="stats-value" id="fps">60</span></div>
+      <div><span class="stats-label">CORE:</span><span class="stats-value">ACTIVE</span></div>
+      <div><span class="stats-label">SATELLITES:</span><span class="stats-value" id="satelliteCount">5</span></div>
+      <div><span class="stats-label">AVG:</span><span class="stats-value" id="avgSkill">88</span>%</div>
+    </div>
+
+    
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
+  <script>
+    // Floating particles
+    const particleContainer = document.getElementById('particleContainer');
+    for (let i = 0; i < 25; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'floating-particle';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.animationDelay = Math.random() * 15 + 's';
+      particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+      particleContainer.appendChild(particle);
+    }
+
+    const container = document.getElementById('skills-3d-engine');
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000);
+    scene.fog = new THREE.FogExp2(0x000508, 0.0007);
+
+    const camera = new THREE.PerspectiveCamera(65, container.clientWidth / container.clientHeight, 0.1, 3000);
+    camera.position.set(0, 450, 650);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    container.appendChild(renderer.domElement);
+
+    const ambientLight = new THREE.AmbientLight(0x61dafb, 0.4);
+    scene.add(ambientLight);
+
+    const coreLight = new THREE.PointLight(0x61dafb, 3.5, 1500);
+    coreLight.position.set(0, 0, 0);
+    scene.add(coreLight);
+
+    const topLight = new THREE.PointLight(0x00ffd5, 1.5, 1200);
+    topLight.position.set(0, 400, 200);
+    scene.add(topLight);
+
+    const accentLight = new THREE.PointLight(0x007bff, 1.2, 1000);
+    accentLight.position.set(400, -200, -300);
+    scene.add(accentLight);
+
+    function createAdvancedGear(radius, thickness, teeth, color) {
+      const shape = new THREE.Shape();
+      const outerRadius = radius;
+      const toothHeight = radius * 0.15;
+      
+      for (let i = 0; i < teeth; i++) {
+        const angle = (i / teeth) * Math.PI * 2;
+        const nextAngle = ((i + 0.5) / teeth) * Math.PI * 2;
+        const endAngle = ((i + 1) / teeth) * Math.PI * 2;
+        
+        const x1 = Math.cos(angle) * outerRadius;
+        const y1 = Math.sin(angle) * outerRadius;
+        const x2 = Math.cos(nextAngle) * (outerRadius + toothHeight);
+        const y2 = Math.sin(nextAngle) * (outerRadius + toothHeight);
+        const x3 = Math.cos(endAngle) * outerRadius;
+        const y3 = Math.sin(endAngle) * outerRadius;
+        
+        if (i === 0) shape.moveTo(x1, y1);
+        shape.lineTo(x2, y2);
+        shape.lineTo(x3, y3);
+      }
+      shape.closePath();
+
+      const holePath = new THREE.Path();
+      holePath.absarc(0, 0, radius * 0.3, 0, Math.PI * 2, true);
+      shape.holes.push(holePath);
+
+      const extrudeSettings = { depth: thickness, bevelEnabled: true, bevelThickness: 2, bevelSize: 2, bevelSegments: 3 };
+      const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+      geometry.center();
+
+      const material = new THREE.MeshStandardMaterial({
+        color: color,
+        metalness: 0.9,
+        roughness: 0.2,
+        emissive: color,
+        emissiveIntensity: 0.5
+      });
+
+      const gear = new THREE.Mesh(geometry, material);
+      gear.castShadow = true;
+      gear.receiveShadow = true;
+      return gear;
+    }
+
+    const skillLevels = {
+      'React': 95,
+      'HTML': 90,
+      'CSS': 88,
+      'JavaScript': 92,
+      'Node.js': 85,
+      'TypeScript': 80
+    };
+
+    const reactCore = createAdvancedGear(150, 40, 48, 0x61dafb);
+    reactCore.position.set(0, 0, 0);
+    reactCore.rotation.x = Math.PI / 2;
+    scene.add(reactCore);
+
+    const coreRingGeometry = new THREE.TorusGeometry(200, 3, 16, 100);
+    const coreRingMaterial = new THREE.MeshBasicMaterial({ color: 0x61dafb, transparent: true, opacity: 0.4 });
+    const coreRing = new THREE.Mesh(coreRingGeometry, coreRingMaterial);
+    coreRing.position.set(0, 0, 0);
+    coreRing.rotation.x = Math.PI / 2;
+    scene.add(coreRing);
+
+    const satelliteConfigs = [
+      { name: "HTML", radius: 70, teeth: 28, thickness: 22, color: 0xff5722, orbitRadius: 350, orbitSpeed: 0.28, startAngle: 0, gearSpeed: 0.05 },
+      { name: "CSS", radius: 70, teeth: 28, thickness: 22, color: 0x2196f3, orbitRadius: 350, orbitSpeed: 0.28, startAngle: Math.PI * 2 / 3, gearSpeed: 0.05 },
+      { name: "JavaScript", radius: 75, teeth: 30, thickness: 24, color: 0xffc107, orbitRadius: 430, orbitSpeed: 0.18, startAngle: Math.PI / 3, gearSpeed: 0.045 },
+      { name: "Node.js", radius: 75, teeth: 30, thickness: 24, color: 0x4caf50, orbitRadius: 430, orbitSpeed: 0.18, startAngle: Math.PI, gearSpeed: 0.045 },
+      { name: "TypeScript", radius: 65, teeth: 26, thickness: 20, color: 0x3178c6, orbitRadius: 430, orbitSpeed: 0.18, startAngle: Math.PI * 5 / 3, gearSpeed: 0.04 }
+    ];
+
+    const satellites = [];
+    satelliteConfigs.forEach(config => {
+      const gear = createAdvancedGear(config.radius, config.thickness, config.teeth, config.color);
+      gear.rotation.x = Math.PI / 2;
+      scene.add(gear);
+      
+      const ringGeometry = new THREE.TorusGeometry(config.radius * 1.25, 1.5, 16, 100);
+      const ringMaterial = new THREE.MeshBasicMaterial({ color: config.color, transparent: true, opacity: 0.25 });
+      const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+      ring.rotation.x = Math.PI / 2;
+      scene.add(ring);
+      
+      satellites.push({ mesh: gear, ring: ring, config: config, angle: config.startAngle, gearRotation: 0 });
+    });
+
+    const beams = [];
+    satellites.forEach(satellite => {
+      const beamGeometry = new THREE.CylinderGeometry(1.5, 1.5, 100, 8);
+      const beamMaterial = new THREE.MeshBasicMaterial({ color: satellite.config.color, transparent: true, opacity: 0.35 });
+      const beam = new THREE.Mesh(beamGeometry, beamMaterial);
+      scene.add(beam);
+      beams.push({ mesh: beam, satellite: satellite });
+    });
+
+    const energyParticles = [];
+    const energyGeometry = new THREE.SphereGeometry(2.5, 8, 8);
+    
+    satellites.forEach(satellite => {
+      for (let i = 0; i < 12; i++) {
+        const energyMaterial = new THREE.MeshBasicMaterial({ color: satellite.config.color, transparent: true, opacity: 0.75 });
+        const particle = new THREE.Mesh(energyGeometry, energyMaterial);
+        scene.add(particle);
+        energyParticles.push({ mesh: particle, satellite: satellite, progress: i / 12, speed: 0.008 + Math.random() * 0.004 });
+      }
+    });
+
+    const ambientParticleGroup = new THREE.Group();
+    scene.add(ambientParticleGroup);
+
+    for (let i = 0; i < 120; i++) {
+      const colors = [0x61dafb, 0x00ffd5, 0x007bff];
+      const particleMaterial = new THREE.MeshBasicMaterial({ color: colors[Math.floor(Math.random() * colors.length)], transparent: true, opacity: 0.5 });
+      const particle = new THREE.Mesh(new THREE.SphereGeometry(1.2, 6, 6), particleMaterial);
+      particle.position.set((Math.random() - 0.5) * 1000, (Math.random() - 0.5) * 500, (Math.random() - 0.5) * 500);
+      particle.userData = { velocity: new THREE.Vector3((Math.random() - 0.5) * 0.3, (Math.random() - 0.5) * 0.3, (Math.random() - 0.5) * 0.3) };
+      ambientParticleGroup.add(particle);
+    }
+
+    function createSkillLabel(skillName, proficiency, isCore = false) {
+      const container = document.createElement('div');
+      container.className = isCore ? 'skill-label react-core' : 'skill-label';
+      
+      const nameRow = document.createElement('div');
+      nameRow.className = 'skill-name-row';
+      
+      const name = document.createElement('span');
+      name.className = 'skill-name';
+      name.textContent = skillName;
+      
+      const percentage = document.createElement('span');
+      percentage.className = 'skill-percentage';
+      percentage.textContent = proficiency + '%';
+      
+      nameRow.appendChild(name);
+      nameRow.appendChild(percentage);
+      
+      const barContainer = document.createElement('div');
+      barContainer.className = 'skill-bar-container';
+      
+      const bar = document.createElement('div');
+      bar.className = 'skill-bar';
+      bar.style.width = '0%';
+      
+      barContainer.appendChild(bar);
+      container.appendChild(nameRow);
+      container.appendChild(barContainer);
+      
+      return { element: container, bar: bar, targetWidth: proficiency };
+    }
+
+    const skillLabels = [];
+    
+    const reactLabel = createSkillLabel('React', skillLevels['React'], true);
+    container.appendChild(reactLabel.element);
+    skillLabels.push({ ...reactLabel, isCore: true, target: reactCore });
+
+    satelliteConfigs.forEach((config, i) => {
+      const label = createSkillLabel(config.name, skillLevels[config.name], false);
+      container.appendChild(label.element);
+      skillLabels.push({ 
+        ...label, 
+        satellite: satellites[i], 
+        isCore: false,
+        config: config
+      });
+    });
+
+    setTimeout(() => {
+      skillLabels.forEach(label => {
+        setTimeout(() => { label.bar.style.width = label.targetWidth + '%'; }, 100);
+      });
+    }, 800);
+
+    const mouse = { x: 0, y: 0, targetX: 0, targetY: 0 };
+    
+    container.addEventListener('mousemove', (e) => {
+      const rect = container.getBoundingClientRect();
+      mouse.targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+      mouse.targetY = ((e.clientY - rect.top) / rect.height - 0.5) * -2;
+    });
+
+    let lastTime = performance.now();
+    let frames = 0;
+    
+    function updateStats() {
+      const currentTime = performance.now();
+      frames++;
+      if (currentTime >= lastTime + 1000) {
+        document.getElementById('fps').textContent = frames;
+        let total = 0;
+        Object.values(skillLevels).forEach(skill => total += skill);
+        document.getElementById('avgSkill').textContent = Math.floor(total / Object.keys(skillLevels).length);
+        frames = 0;
+        lastTime = currentTime;
+      }
+    }
+
+    let time = 0;
+    
+    function animate() {
+      requestAnimationFrame(animate);
+      time += 0.01;
+
+      mouse.x += (mouse.targetX - mouse.x) * 0.05;
+      mouse.y += (mouse.targetY - mouse.y) * 0.05;
+
+      reactCore.rotation.z += 0.012;
+      coreRing.rotation.z -= 0.006;
+      coreRing.material.opacity = 0.3 + Math.sin(time * 2) * 0.15;
+      coreLight.intensity = 3 + Math.sin(time * 3) * 0.5;
+
+      satellites.forEach((satellite, index) => {
+        satellite.angle += satellite.config.orbitSpeed * 0.01;
+        const x = Math.cos(satellite.angle) * satellite.config.orbitRadius;
+        const z = Math.sin(satellite.angle) * satellite.config.orbitRadius;
+        satellite.mesh.position.set(x, 0, z);
+        satellite.ring.position.copy(satellite.mesh.position);
+        satellite.gearRotation += satellite.config.gearSpeed;
+        satellite.mesh.rotation.z = satellite.gearRotation;
+        satellite.ring.rotation.z += 0.01;
+        satellite.ring.material.opacity = 0.18 + Math.sin(time + index) * 0.08;
+      });
+
+      beams.forEach(beam => {
+        const satellitePos = beam.satellite.mesh.position;
+        const corePos = reactCore.position;
+        const midpoint = new THREE.Vector3().addVectors(satellitePos, corePos).multiplyScalar(0.5);
+        beam.mesh.position.copy(midpoint);
+        const direction = new THREE.Vector3().subVectors(satellitePos, corePos);
+        beam.mesh.scale.y = direction.length() / 100;
+        beam.mesh.lookAt(satellitePos);
+        beam.mesh.rotateX(Math.PI / 2);
+        beam.mesh.material.opacity = 0.25 + Math.sin(time * 3 + beam.satellite.angle) * 0.12;
+      });
+
+      energyParticles.forEach(particle => {
+        particle.progress += particle.speed;
+        if (particle.progress > 1) particle.progress = 0;
+        const satellitePos = particle.satellite.mesh.position;
+        const corePos = reactCore.position;
+        particle.mesh.position.lerpVectors(satellitePos, corePos, particle.progress);
+        particle.mesh.scale.setScalar(1 - particle.progress * 0.7);
+        particle.mesh.material.opacity = 0.75 * (1 - particle.progress);
+      });
+
+      ambientParticleGroup.children.forEach(particle => {
+        particle.position.add(particle.userData.velocity);
+        if (Math.abs(particle.position.x) > 500) particle.userData.velocity.x *= -1;
+        if (Math.abs(particle.position.y) > 250) particle.userData.velocity.y *= -1;
+        if (Math.abs(particle.position.z) > 250) particle.userData.velocity.z *= -1;
+        const toCore = new THREE.Vector3().subVectors(reactCore.position, particle.position);
+        toCore.normalize().multiplyScalar(0.008);
+        particle.userData.velocity.add(toCore).multiplyScalar(0.98);
+      });
+
+      topLight.position.x = Math.sin(time * 0.5) * 200;
+      topLight.position.z = Math.cos(time * 0.5) * 200;
+      accentLight.intensity = 1.2 + Math.cos(time * 1.5) * 0.3;
+
+      camera.position.x += (mouse.x * 100 - camera.position.x) * 0.05;
+      camera.position.y += (450 + mouse.y * 60 - camera.position.y) * 0.05;
+      camera.lookAt(0, 0, 0);
+
+      skillLabels.forEach(label => {
+        let vector;
+        if (label.isCore) {
+          vector = new THREE.Vector3(0, 0, 0);
+        } else {
+          vector = label.satellite.mesh.position.clone();
+        }
+        
+        // Offset labels away from gears
+        const offset = label.isCore ? 100 : 75;
+        const angle = label.isCore ? 0 : label.satellite.angle;
+        const offsetX = Math.cos(angle) * offset;
+        const offsetY = Math.sin(angle) * offset;
+        
+        vector.project(camera);
+        const x = (vector.x * 0.5 + 0.5) * container.clientWidth + offsetX;
+        const y = (-vector.y * 0.5 + 0.5) * container.clientHeight - offsetY;
+        label.element.style.left = x + 'px';
+        label.element.style.top = y + 'px';
+        label.element.style.transform = 'translate(-50%, -50%)';
+      });
+
+      updateStats();
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => {
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    });
+
+    setTimeout(() => {
+      document.getElementById('loadingOverlay').classList.add('hidden');
+      animate();
+    }, 500);
+  </script>
+</body>
+</html>
+    <!-- Add more skill elements or interactive divs as in skill.html -->
+  </div>
+</section>
+
+
+<!-- About Section -->
+<section id="about">
+  <h2 data-aos="fade-up">About Me</h2>
+  <div class="about-container" data-aos="fade-up" data-aos-delay="200">
+    <img src="xyz.jpg" alt="Profile Picture" class="profile-pic">
+    <p>
+      I am a futuristic web developer who loves building high-tech digital experiences.
+      I specialize in creating responsive, mechanical-inspired interfaces with a cyberpunk vibe.
+    </p>
+  </div>
+</section>
+
+<!-- Projects Section -->
+<section id="projects">
+  <h2 data-aos="fade-up">Projects</h2>
+  <div class="projects-container">
+    <div class="project-card" data-aos="fade-up" data-aos-delay="100">
+      <img src="guiter.jpg" alt="Project 1">
+      <h3>Project One</h3>
+      <p>A Library Management System built with React.</p>
+      <a href="https://fable-forestx.vercel.app/" target="_blank" class="btn">View Project</a>
+    </div>
+    <div class="project-card" data-aos="fade-up" data-aos-delay="200">
+      <img src="profile.jpg" alt="Project 2">
+      <h3>Project Two</h3>
+      <p>An Advanced Calculator built with dedication.</p>
+      <a href="https://advanced-calculator-eta.vercel.app/" target="_blank" class="btn">View Project</a>
+    </div>
+    <div class="project-card" data-aos="fade-up" data-aos-delay="300">
+      <img src="skull.jpg" alt="Project 3">
+      <h3>Project Three</h3>
+      <p>An interactive React web app with neon animations.</p>
+      <a href="#" target="_blank" class="btn">View Project</a>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact">
+  <h2 data-aos="fade-up">Contact Me</h2>
+  <div class="contact-container" data-aos="fade-up" data-aos-delay="200">
+    <div class="contact-info">
+      <p>Email: mdfarial100@gmail.com</p>
+      <p>Phone: Not Available</p>
+      <a class="btn" href="index.html">Home</a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>&copy; 2025 Mohammad Farial. All Rights Reserved.</p>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({ duration: 1200, once: true });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+  // Skill engine background
+  const canvas = document.getElementById('skills-engine-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha:true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+  camera.position.z = 5;
+
+  // Example interactive particles (replace with your skill.html JS content)
+  const particleCount = 3000;
+  const geometry = new THREE.BufferGeometry();
+  const positions = [];
+  for (let i=0;i<particleCount;i++){
+    positions.push((Math.random()-0.5)*50);
+    positions.push((Math.random()-0.5)*50);
+    positions.push((Math.random()-0.5)*50);
+  }
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions,3));
+  const material = new THREE.PointsMaterial({ color:0x00ffff, size:0.05 });
+  const particles = new THREE.Points(geometry, material);
+  scene.add(particles);
+
+  // Mouse interaction
+  const mouse = {x:0, y:0};
+  document.addEventListener('mousemove', e => {
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  });
+
+  function animate(){
+    requestAnimationFrame(animate);
+    particles.rotation.x += 0.001 + mouse.y*0.001;
+    particles.rotation.y += 0.002 + mouse.x*0.002;
+    renderer.render(scene,camera);
+  }
+  animate();
+
+  window.addEventListener('resize',()=>{
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+</script>
+
+<script src="profile.js"></script>
+</body>
+</html>
