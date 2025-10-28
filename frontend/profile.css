@@ -281,7 +281,7 @@ footer {
 .hero-bg {
   width: 100%;
   min-height: 100vh;           /* Ensures full viewport height */
-  background-image: url('./profile.jpg'); /* Use relative path to your jpg */
+  background-image: url('profile.jpg'); /* Correct relative path for GitHub Pages */
   background-size: cover;       /* Cover the whole area */
   background-position: center;  /* Center the image */
   background-repeat: no-repeat; /* Prevent tiling */
@@ -303,6 +303,7 @@ footer {
   background: rgba(0, 0, 0, 0.4); /* dark overlay to improve readability */
   z-index: 0;
 }
+
 .hero-content {
   position: relative;
   z-index: 2;
@@ -393,6 +394,7 @@ footer {
   border: none;
   display: block;
 }
+
 
 
 
