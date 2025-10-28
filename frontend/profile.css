@@ -8,7 +8,7 @@
 }
 
 body {
- background: url('profile.jpeg') no-repeat center center fixed;
+ background: url('profile.jpg') no-repeat center center fixed;
   background-size: cover;
   color: #ccc;
 }
@@ -393,6 +393,7 @@ footer {
   border: none;
   display: block;
 }
+
 
 
 
