@@ -8,7 +8,8 @@
 }
 
 body {
-  background: #0a0a0a;
+ background: url('profile.jpeg') no-repeat center center fixed;
+  background-size: cover;
   color: #ccc;
 }
 
@@ -392,5 +393,6 @@ footer {
   border: none;
   display: block;
 }
+
 
 
