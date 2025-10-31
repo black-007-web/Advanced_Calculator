@@ -6,7 +6,6 @@
   <title>MIPS Assembly Converter</title>
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   <style>
-/* Reset + base */
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
   font-family: 'Inter', system-ui, Arial, sans-serif;
@@ -42,12 +41,19 @@ body {
 .grid { display:grid; grid-template-columns: 1fr 1fr; gap:18px; }
 
 .card { background:#0b0b0b; padding:18px; border-radius:14px; border:1px solid rgba(255,255,255,0.02); }
-.card h3 { margin-bottom:10px; font-size:1.05rem; }
+.card h3 { margin-bottom:10px; font-size:1.05rem; display:flex; align-items:center; justify-content:space-between; }
 
+/* input area */
 .input-area { display:flex; flex-direction:column; gap:10px; }
 textarea.input { width:100%; min-height:86px; resize:vertical; padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:#070707; color:#fff; font-size:0.98rem; }
+textarea.input:focus { outline:none; border-color:#7c4dff; box-shadow:0 0 8px rgba(124,77,255,0.4); }
 .row { display:flex; gap:10px; align-items:center; }
-.select, .small-btn, .home-btn { padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:linear-gradient(90deg,#141414,#1b1b1b); color:#fff; cursor:pointer; font-weight:700; }
+
+.select, .small-btn, .home-btn, .clear-btn { padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:linear-gradient(90deg,#141414,#1b1b1b); color:#fff; cursor:pointer; font-weight:700; }
+.select { background:#0a0a0a; color:#fff; }
+.select option { background:#0a0a0a; color:#fff; }
+
+/* small text */
 .small { font-size:0.9rem; color:#9aa0a6; }
 .switch-row { display:flex; gap:8px; align-items:center; }
 .manual-area { display:none; flex-direction:column; gap:8px; }
@@ -57,41 +63,48 @@ textarea.input { width:100%; min-height:86px; resize:vertical; padding:12px; bor
 .convert-btn { margin-top:8px; background:linear-gradient(90deg,#7c4dff,#ff6b6b); border:none; color:white; padding:12px; border-radius:10px; font-weight:800; cursor:pointer; }
 .copy-btn { background:transparent; border:1px dashed rgba(255,255,255,0.06); color:#cfcfcf; padding:8px 10px; border-radius:8px; font-weight:700; cursor:pointer; }
 
-/* output styling */
-.output { min-height:200px; padding:12px; border-radius:12px; background:#060606; border:1px solid rgba(255,255,255,0.03); color:#dff; font-family: monospace; font-weight:600; position:relative; overflow:auto; white-space:pre-wrap; }
-.output .line { padding:6px 8px; border-radius:8px; margin:6px 0; opacity:0; transform:translateY(8px); }
-.output.show .line { animation: slideIn .28s ease forwards; }
+.output { min-height:200px; padding:12px; border-radius:12px; background:#060606; border:1px solid rgba(255,255,255,0.03); color:#dff; font-family: monospace; font-weight:600; position:relative; overflow:auto; white-space: pre; }
+.output[aria-live] { outline:none; }
+
+.output .line { 
+  padding:6px 8px; 
+  border-radius:8px; 
+  margin:6px 0; 
+  opacity:0; 
+  transform:translateY(8px); 
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.output.show .line { 
+  opacity:1 !important; 
+  transform:none !important; 
+  animation: slideIn .28s ease forwards; 
+}
 @keyframes slideIn { to { opacity:1; transform:none; } }
+.output.force-visible .line {
+  opacity: 1 !important;
+  transform: none !important;
+}
 
-/* token colors for JS-injected elements */
-.token-mnemonic { font-weight:900; color:#ffd87a; } /* mnemonic / instruction names */
-.token-keyword { font-weight:900; color:#00ffd5; }   /* keywords like ADD, MOV for formats */
-.token-reg { color:#9ae6b4; }                         /* registers $t0 etc */
-.token-var { color:#dcdcdc; }                         /* variables / user names */
-.token-comment { color:#9aa0a6; font-weight:700; }   /* comments */
-.token-binary { color:#7fffd4; font-weight:800; }     /* binary fields / machine code */
+.token-mnemonic { font-weight:900; color:#ffd87a; }
+.token-reg { color:#9ae6b4; }
+.token-comment { color:#9aa0a6; font-weight:700; }
+.token-keyword { font-weight:900; color:#00ffd5; }
+.token-var { color:#dcdcdc; }
 
-/* small table-like breakdown */
-.breakdown { display:block; margin-top:8px; background:rgba(255,255,255,0.01); padding:10px; border-radius:8px; }
-.break-row { display:flex; gap:12px; align-items:center; padding:4px 0; }
-.break-field { width:120px; color:#ffd700; font-weight:800; }
-.break-bits  { width:48px; color:#9aa0a6; text-align:center; }
-.break-bin   { color:#7fffd4; font-family:monospace; }
+.mips-table { width:100%; border-collapse:collapse; margin-top:12px; }
+.mips-table th, .mips-table td { border:1px solid rgba(255,255,255,0.05); padding:6px; text-align:center; }
+.mips-table th { background: linear-gradient(90deg,#7c4dff,#ff6b6b); color:white; }
 
-/* controls */
 .controls { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:10px; }
 
-/* footer */
 .site-footer { text-align:center; color:#9aa0a6; margin-top:12px; font-size:0.9rem; }
 
-/* responsiveness */
 @media (max-width:900px) {
   .grid { grid-template-columns:1fr; }
 }
 
-/* home button */
-.home-btn { display: inline-block; text-decoration: none; text-align: center; font-weight: 700; font-size: 0.92rem; padding: 10px 14px; border-radius: 10px; background: linear-gradient(90deg, #7c4dff, #ff6b6b); color: #fff; box-shadow: 0 4px 15px rgba(124, 77, 255, 0.12); }
-
+.home-btn, .clear-btn { display: inline-block; text-decoration: none; text-align: center; font-weight: 700; font-size: 0.92rem; padding: 10px 14px; border-radius: 10px; background: linear-gradient(90deg, #7c4dff, #ff6b6b); color: #fff; box-shadow: 0 4px 15px rgba(124, 77, 255, 0.12); margin-left:6px; }
+.clear-btn:hover, .home-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(124, 77, 255, 0.5); background: linear-gradient(90deg, #ff6b6b, #7c4dff); }
   </style>
 </head>
 <body>
@@ -103,6 +116,7 @@ textarea.input { width:100%; min-height:86px; resize:vertical; padding:12px; bor
       </div>
       <div class="header-right">
         <a class="home-btn" href="index.html">Home</a>
+        <button type="button" id="clear-btn" class="clear-btn">Clear</button>
       </div>
     </header>
 
@@ -113,20 +127,15 @@ textarea.input { width:100%; min-height:86px; resize:vertical; padding:12px; bor
         <div class="input-area">
           <label class="small">Choose target assembly</label>
           <div class="row">
-            <!-- keep same id asm-select but add third option -->
             <select id="asm-select" class="select" aria-label="Select assembly">
-              <option value="mips">MIPS</option>
-              <option value="mipsFormat">MIPS Formats</option>
+              <option value="mips">MIPS Formats</option>
+              <option value="mipsFormat">MIPS</option>
               <option value="simple">Simple Assembly</option>
             </select>
-            <button id="example-btn" class="small-btn">Insert example</button>
           </div>
 
           <label class="small">Enter equation or instruction</label>
-          <textarea id="expr-input" class="input" placeholder="Examples:
- - Equation: A = (i + j) - (k + m)
- - MIPS: add $t0, $t1, $t2
- - Simple: add a, b"></textarea>
+          <textarea id="expr-input" class="input" placeholder="Enter algebraic expression or assembly instruction"></textarea>
 
           <div class="switch-row">
             <label class="small">Manual register mapping?</label>
@@ -138,7 +147,7 @@ textarea.input { width:100%; min-height:86px; resize:vertical; padding:12px; bor
             <div class="map-grid" id="map-grid"></div>
           </div>
 
-          <button id="convert-btn" class="convert-btn">Convert to Assembly</button>
+          <button type="button" id="convert-btn" class="convert-btn">Convert to Assembly</button>
         </div>
       </section>
 
@@ -150,20 +159,73 @@ textarea.input { width:100%; min-height:86px; resize:vertical; padding:12px; bor
         <div class="controls">
           <div class="small" id="status">Ready</div>
           <div style="display:flex;gap:8px;">
-            <button id="copy-btn" class="copy-btn">Copy Output</button>
-            <button id="download-btn" class="copy-btn">Download Result</button>
+            <button type="button" id="copy-btn" class="copy-btn">Copy Code</button>
+            <button type="button" id="download-btn" class="copy-btn">Download .s</button>
           </div>
         </div>
 
         <div class="site-footer">
-          <div class="designer">Designed by <strong>Your Name</strong></div>
+          <div class="designer">Designed by <strong>Mohammad Farial</strong></div>
           <div class="university">Converter • MIPS / Simple Assembly</div>
         </div>
       </section>
     </main>
-
   </div>
+
+  <script>
+  // Clear input/output
+  document.getElementById('clear-btn').addEventListener('click', () => {
+    document.getElementById('expr-input').value = '';
+    const output = document.getElementById('output');
+    output.textContent = '';
+    output.classList.remove('show', 'force-visible');
+    document.getElementById('status').textContent = 'Ready';
+  });
+
+  // Conversion button
+  document.getElementById('convert-btn').addEventListener('click', () => {
+    const expr = document.getElementById('expr-input').value.trim();
+    if(!expr) {
+      document.getElementById('status').textContent = 'Please enter an expression first.';
+      return;
+    }
+    document.getElementById('status').textContent = 'Processing...';
+    // Call your Mips.js logic here
+    if(typeof convertExpression === 'function') {
+      convertExpression(expr);
+    }
+  });
+
+  // Helper for Mips.js visibility fix
+  window.showOutput = function() {
+    const output = document.getElementById('output');
+    output.classList.add('show', 'force-visible');
+  };
+
+  // Ctrl+Enter shortcut to convert
+  document.addEventListener('keydown', e => {
+    if(e.ctrlKey && e.key === "Enter") {
+      document.getElementById('convert-btn').click();
+    }
+  });
+
+  // Copy and download
+  document.getElementById('copy-btn').addEventListener('click', () => {
+    const text = document.getElementById('output').textContent;
+    navigator.clipboard.writeText(text).then(()=>{ document.getElementById('status').textContent = 'Copied!'; });
+  });
+  document.getElementById('download-btn').addEventListener('click', () => {
+    const text = document.getElementById('output').textContent;
+    const blob = new Blob([text], {type:'text/plain'});
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'output.s';
+    link.click();
+    URL.revokeObjectURL(link.href);
+  });
+  </script>
 
   <script src="Mips.js"></script>
 </body>
 </html>
+
