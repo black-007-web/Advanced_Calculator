@@ -226,18 +226,20 @@ exportPngBtn.addEventListener("click", async () => {
     await new Promise(r => setTimeout(r, 100));
 
     // Full capture
-    const canvas = await html2canvas(el, {
-      scale: 2,
-      backgroundColor: "#0b0b0b",
-      useCORS: true,
-      scrollX: 0,
-      scrollY: 0,
-      width: el.scrollWidth,
-      height: el.scrollHeight,
-      windowWidth: el.scrollWidth,
-      windowHeight: el.scrollHeight
-    });
+    
+const rect = el.getBoundingClientRect();
 
+const canvas = await html2canvas(el, {
+  scale: 2,
+  backgroundColor: "#0b0b0b",
+  useCORS: true,
+  scrollX: 0,
+  scrollY: 0,
+  width: rect.width,
+  height: rect.height,
+  windowWidth: document.documentElement.scrollWidth,
+  windowHeight: document.documentElement.scrollHeight
+});
     const imgData = canvas.toDataURL("image/png");
     const pageFormat = "a4";
     const pdf = new jsPDF({
@@ -342,6 +344,7 @@ renderTable();
 </script>
 </body>
 </html>
+
 
 
 
