@@ -145,3 +145,7 @@ input[type="text"], input[type="number"], select {
   transform: translate(-50%, -50%) scale(1);
   pointer-events: auto;
 }
+#tableWrap {
+  display: block;
+  min-height: 200px;
+}
