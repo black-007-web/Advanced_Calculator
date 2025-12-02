@@ -138,3 +138,16 @@ button:hover {
   color: #a9a9a9;
   font-size: 0.9rem;
 }
+.home-btn {
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #7c4dff, #ff6b6b);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(124, 77, 255, 0.3);
+  transition: all 0.3s ease;
+}
