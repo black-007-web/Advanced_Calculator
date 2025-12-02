@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <link rel="stylesheet" href="barcode.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2 class="title">URL → QR Code Generator</h2>
+
+    <div class="input-group">
+        <input id="urlInput" type="text" placeholder="Enter any URL (example: https://google.com)">
+        <button onclick="generateQR()">Generate QR Code</button>
+    </div>
+
+    <!-- QR Code under the button (centered) -->
+    <div id="qrcode"></div>
+
+    <!-- NOTICE right below QR -->
+    <div class="notice">
+        <h3>Suggestion</h3>
+        <p>Use Google Scanner for better Experience. Thank you!</p>
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="barcode.js"></script>
+
+</body>
+</html>
