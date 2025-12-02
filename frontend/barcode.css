@@ -1,0 +1,140 @@
+/* Reset + Base */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', system-ui, Arial, sans-serif;
+  background: linear-gradient(180deg, #070707 0%, #0b0b0b 100%);
+  color: #e8e8e8;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: 520px;
+  background: linear-gradient(180deg, rgba(20,20,20,0.9), rgba(16,16,16,0.95));
+  border-radius: 20px;
+  padding: 32px 28px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.02);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Title */
+.title {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  background: linear-gradient(90deg, #7c4dff, #ff6b6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  color: #a9a9a9;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+/* Input Group */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Input */
+input[type="text"] {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.05);
+  background: #0b0b0b;
+  color: #fff;
+  font-size: 1rem;
+  box-shadow: inset 0 3px 18px rgba(0,0,0,0.6);
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="text"]:focus {
+  border-color: #7c4dff;
+  box-shadow: 0 0 12px rgba(124,77,255,0.4) inset;
+  outline: none;
+}
+
+/* Button */
+button {
+  padding: 14px 0;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #fff;
+  background: linear-gradient(90deg, #7c4dff, #ff6b6b);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(124, 77, 255, 0.3);
+}
+
+/* QR container */
+#qrcode {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: #060606;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: inset 0 0 14px rgba(0,0,0,0.6);
+  min-height: 250px;   /* stable vertical space */
+  transition: all 0.2s ease;
+}
+
+/* Make QR scale nicely inside container */
+#qrcode canvas {
+  max-width: 100%;
+  height: auto !important;
+}
+
+/* Footer (optional) */
+.footer {
+  margin-top: 18px;
+  font-size: 0.85rem;
+  color: #888;
+}
+
+/* Responsive tweaks */
+@media (max-width: 520px) {
+  .container { padding: 24px 20px; border-radius: 16px; }
+  input[type="text"] { font-size: 0.95rem; padding: 12px 14px; }
+  button { font-size: 0.95rem; padding: 12px 0; }
+  #qrcode { min-height: 200px; padding: 18px; }
+}
+/* Notice block formatting */
+.notice {
+  display: block;
+  text-align: center;
+  margin-top: 18px;
+}
+
+.notice h3 {
+  margin-bottom: 6px;
+  color: rgb(43, 35, 43);
+}
+
+.notice p {
+  color: #a9a9a9;
+  font-size: 0.9rem;
+}
