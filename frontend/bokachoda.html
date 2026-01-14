@@ -156,7 +156,7 @@ function yesPage() {
     // Inner YES button logic
     document.getElementById("yesBtn").addEventListener("click", () => {
         // Play audio immediately upon click (Browser allowed)
-        playSafeAudio("fokir.mp3", 1);
+        playSafeAudio("./fokir.mp3", 1);
 
         app.innerHTML = `
         <div class="bangla-font text-4xl text-red-600 fade-in mb-6">
@@ -309,4 +309,5 @@ homePage();
 
 </body>
 </html>
+
 
