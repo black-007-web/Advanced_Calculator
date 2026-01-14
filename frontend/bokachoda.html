@@ -93,7 +93,7 @@ body {
 
 /* Blood cursor */
 * {
-    cursor: url("blood-cursor.png"), auto;
+    cursor: url("./frontend/blood-cursor.png"), auto;
 }
 </style>
 </head>
@@ -102,11 +102,11 @@ body {
 
 <!-- AUDIO -->
 <audio id="heartbeat" loop>
-  <source src="heartbeat.mp3" type="audio/mpeg">
+  <source src="./frontend/heartbeat.mp3" type="audio/mpeg">
 </audio>
 
 <audio id="glitchSound">
-  <source src="glitch.mp3" type="audio/mpeg">
+  <source src="./frontend/glitch.mp3" type="audio/mpeg">
 </audio>
 
 <!-- MAIN CONTAINER -->
@@ -164,7 +164,7 @@ function yesPage() {
             Press ENTER to accept my words
         </div>
         <audio id="yesAudio" autoplay>
-            <source src="fokir.mp3" type="audio/mpeg">
+            <source src="./frontend/fokir.mp3" type="audio/mpeg">
         </audio>
         `;
 
@@ -175,9 +175,9 @@ function yesPage() {
                 // Redirect to the image page with download button
                 app.innerHTML = `
                 <div class="popup bg-black flex flex-col justify-center items-center min-h-screen gap-4">
-                    <img src="Class_Routine_Spring2026_Sec-3.png" class="mx-auto max-w-md rounded-xl shadow-2xl">
+                    <img src="./frontend/Class_Routine_Spring2026_Sec-3.png" class="mx-auto max-w-md rounded-xl shadow-2xl">
 
-                    <a id="downloadBtn" href="Class_Routine_Spring2026_Sec-3.png" download
+                    <a id="downloadBtn" href="./frontend/Class_Routine_Spring2026_Sec-3.png" download
                        class="px-6 py-3 bg-red-900 text-white rounded-xl hover:bg-red-700 transition">
                         Download Routine
                     </a>
@@ -188,7 +188,7 @@ function yesPage() {
                 const downloadBtn = document.getElementById("downloadBtn");
                 downloadBtn.addEventListener("click", () => {
                     const bgMusic = document.createElement("audio");
-                    bgMusic.src = "acp.mp3"; // add your mp3 here
+                    bgMusic.src = "./frontend/acp.mp3"; 
                     bgMusic.autoplay = true;
                     bgMusic.volume = 0.5;
                     document.body.appendChild(bgMusic);
@@ -196,28 +196,27 @@ function yesPage() {
             }
         });
     });
+
     // NO button logic
-document.getElementById("noBtn").addEventListener("click", () => {
-    app.innerHTML = `
-    <div class="relative min-h-screen flex justify-center items-center bg-black">
-        <img src="robodic.jpg" class="mx-auto max-w-lg rounded-xl shadow-2xl">
-        <audio id="noAudio" autoplay>
-            <source src="robodic_sound.mp3" type="audio/mpeg">
-        </audio>
-        <div class="absolute top-4 left-4 text-red-600 bangla-font text-2xl">
-            Beware...
+    document.getElementById("noBtn").addEventListener("click", () => {
+        app.innerHTML = `
+        <div class="relative min-h-screen flex justify-center items-center bg-black">
+            <img src="./frontend/robodic.jpg" class="mx-auto max-w-lg rounded-xl shadow-2xl">
+            <audio id="noAudio" autoplay>
+                <source src="./frontend/robodic_sound.mp3" type="audio/mpeg">
+            </audio>
+            <div class="absolute top-4 left-4 text-red-600 bangla-font text-2xl">
+                Beware...
+            </div>
         </div>
-    </div>
-    `;
+        `;
 
-    // Play the audio and redirect when it ends
-    const noAudio = document.getElementById("noAudio");
-    noAudio.addEventListener("ended", () => {
-        // Redirect back to YES page segment
-        yesPage();
+        // Play the audio and redirect when it ends
+        const noAudio = document.getElementById("noAudio");
+        noAudio.addEventListener("ended", () => {
+            yesPage();
+        });
     });
-});
-
 }
 
 /* NO PAGE */
@@ -228,26 +227,22 @@ function noPage() {
     setTimeout(() => {
         document.body.classList.remove("flash");
 
-        // Step 1: Show WTF text
         app.innerHTML = `
         <div class="flex flex-col items-center justify-center h-screen">
             <div class="text-6xl horror-font glitch shake mb-10">WTF</div>
         </div>
         `;
 
-        // Step 2: After 3s, show hidden video + dummy button
         setTimeout(() => {
             app.innerHTML = `
             <div class="relative flex justify-center items-center">
 
-                <!-- Hidden video -->
                 <video id="realVideo"
                        class="max-w-3xl mx-auto rounded-xl shadow-2xl opacity-0"
                        controls>
-                    <source src="nikallowde.mp4" type="video/mp4">
+                    <source src="./frontend/nikallowde.mp4" type="video/mp4">
                 </video>
 
-                <!-- Dummy overlay button -->
                 <button id="dummyBtn"
                         class="absolute px-8 py-4 bg-black border-2 border-red-700
                                text-red-600 text-2xl horror-font glitch
@@ -261,17 +256,15 @@ function noPage() {
             const btn = document.getElementById("dummyBtn");
             const vid = document.getElementById("realVideo");
 
-            // Step 3: Dummy button click → reveal video + play with sound
             btn.addEventListener("click", () => {
-                btn.remove();               // remove overlay
-                vid.classList.remove("opacity-0"); // make video visible
+                btn.remove();
+                vid.classList.remove("opacity-0");
                 vid.volume = 1;
                 vid.play();
             });
 
-            // Step 4: After video ends → redirect to main page
             vid.addEventListener("ended", () => {
-                homePage(); // goes back to main page
+                homePage();
             });
 
         }, 3000);
@@ -279,21 +272,16 @@ function noPage() {
     }, 200);
 }
 
-
 /* IDGF PAGE */
 function idgfPage() {
     app.innerHTML = `
     <div class="relative flex flex-col items-center justify-center min-h-screen bg-black gap-6">
 
-        <!-- Video -->
         <video id="idgfVideo" autoplay controls
                class="max-w-4xl mx-auto rounded-xl shadow-2xl fade-in scale-95 hover:scale-100 transition-all duration-1000">
-            <source src="backchodix.mp4" type="video/mp4">
+            <source src="./frontend/backchodix.mp4" type="video/mp4">
         </video>
 
-        
-
-        <!-- Optional aesthetic overlay text -->
         <div class="absolute top-4 left-4 text-red-600 bangla-font text-2xl">
             Nikal bsdk...
         </div>
@@ -301,13 +289,11 @@ function idgfPage() {
     </div>
     `;
 
-    // Redirect to home page after video ends
     const video = document.getElementById("idgfVideo");
     video.addEventListener("ended", () => {
         homePage();
     });
 }
-
 
 homePage();
 </script>
