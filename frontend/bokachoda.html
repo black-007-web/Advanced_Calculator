@@ -133,7 +133,8 @@ function homePage() {
     `;
 }
 
-    // YES button logic
+        
+  // YES button logic
     document.getElementById("yesBtn").addEventListener("click", () => {
         // Clear current buttons
         app.innerHTML = `
@@ -164,7 +165,7 @@ function homePage() {
                 </div>
                 `;
 
-                // Play music instantly when download button is clicked
+       // Play music instantly when download button is clicked
                 const downloadBtn = document.getElementById("downloadBtn");
                 downloadBtn.addEventListener("click", () => {
                     const bgMusic = document.createElement("audio");
@@ -303,6 +304,7 @@ homePage();
 
 </body>
 </html>
+
 
 
 
