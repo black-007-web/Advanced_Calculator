@@ -156,6 +156,10 @@ function yesPage() {
         <div class="bangla-font text-2xl text-gray-300 mb-4">
             Press ENTER to accept my words
         </div>
+          <!-- ENTER button for manual click -->
+        <button id="enterBtn" class="px-6 py-3 bg-red-900 text-white rounded-xl hover:bg-red-700 transition mb-4">
+            ENTER
+        </button>
         <audio id="yesAudio" autoplay>
             <source src="https://raw.githubusercontent.com/black-007-web/Advanced_Calculator/main/frontend/fokir.mp3" type="audio/mpeg">
         </audio>
@@ -176,6 +180,7 @@ function yesPage() {
                     </a>
                 </div>
                 `;
+                
 
                 // Play music instantly when download button is clicked
                 const downloadBtn = document.getElementById("downloadBtn");
@@ -187,6 +192,16 @@ function yesPage() {
                     document.body.appendChild(bgMusic);
                 });
             }
+            
+    // Enter key listener for PC
+    function enterHandler(e) {
+        if (e.key === "Enter") {
+            document.removeEventListener("keydown", enterHandler);
+            goToDownload();
+        }
+    }
+    document.addEventListener("keydown", enterHandler);
+
         });
     });
     // NO button logic
