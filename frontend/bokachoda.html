@@ -169,42 +169,32 @@ document.getElementById("yesBtn").addEventListener("click", () => {
             </div>
         `;
 
-
-                // Play music instantly when download button is clicked
-                const downloadBtn = document.getElementById("downloadBtn");
-                downloadBtn.addEventListener("click", () => {
-                    const bgMusic = document.createElement("audio");
-                    bgMusic.src = "https://raw.githubusercontent.com/black-007-web/Advanced_Calculator/main/frontend/acp.mp3"; // add your mp3 here
-                    bgMusic.autoplay = true;
-                    bgMusic.volume = 0.5;
-                    document.body.appendChild(bgMusic);
-                });
-            }
+        // Play music when download button is clicked
+        const downloadBtn = document.getElementById("downloadBtn");
+        downloadBtn.addEventListener("click", () => {
+            const bgMusic = document.createElement("audio");
+            bgMusic.src = "https://raw.githubusercontent.com/black-007-web/Advanced_Calculator/main/frontend/acp.mp3";
+            bgMusic.autoplay = true;
+            bgMusic.volume = 0.5;
+            document.body.appendChild(bgMusic);
         });
-    });
-    // NO button logic
-document.getElementById("noBtn").addEventListener("click", () => {
-    app.innerHTML = `
-    <div class="relative min-h-screen flex justify-center items-center bg-black">
-        <img src="robodic.jpg" class="mx-auto max-w-lg rounded-xl shadow-2xl">
-        <audio id="noAudio" autoplay>
-            <source src="https://raw.githubusercontent.com/black-007-web/Advanced_Calculator/main/frontend/robodic_sound.mp3" type="audio/mpeg">
-        </audio>
-        <div class="absolute top-4 left-4 text-red-600 bangla-font text-2xl">
-            Beware...
-        </div>
-    </div>
-    `;
+    }
 
-    // Play the audio and redirect when it ends
-    const noAudio = document.getElementById("noAudio");
-    noAudio.addEventListener("ended", () => {
-        // Redirect back to YES page segment
-        yesPage();
+    // Enter key listener for PC
+    function enterHandler(e) {
+        if (e.key === "Enter") {
+            document.removeEventListener("keydown", enterHandler);
+            goToDownload();
+        }
+    }
+    document.addEventListener("keydown", enterHandler);
+
+    // Click listener for mobile ENTER button
+    enterBtn.addEventListener("click", () => {
+        document.removeEventListener("keydown", enterHandler); // remove key listener
+        goToDownload();
     });
 });
-
-}
 
         /* NO PAGE */
 function noPage() {
@@ -308,6 +298,7 @@ homePage();
 
 </body>
 </html>
+
 
 
 
