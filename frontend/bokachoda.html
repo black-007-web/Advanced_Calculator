@@ -133,49 +133,42 @@ function homePage() {
     `;
 }
 
-/* YES PAGE */
-function yesPage() {
+// YES button logic
+document.getElementById("yesBtn").addEventListener("click", () => {
+    // Clear current buttons
     app.innerHTML = `
-    <div class="bangla-font text-3xl mb-8 fade-in">
-        কখনো কি ভেবেছো যে এই রুটিন কেন বিনামূল্যে পেতে যাচ্ছ?
-    </div>
-
-    <div class="flex justify-center gap-10 mb-8">
-        <button id="yesBtn" class="px-6 py-3 bg-red-900 rounded-xl">YES</button>
-        <button id="noBtn" class="px-6 py-3 bg-gray-800 rounded-xl">NO</button>
-    </div>
-    `;
-
-    // YES button logic
-    document.getElementById("yesBtn").addEventListener("click", () => {
-        // Clear current buttons
-        app.innerHTML = `
         <div class="bangla-font text-4xl text-red-600 fade-in mb-6">
             সময় থাকতে ভালো হবা তো?
         </div>
         <div class="bangla-font text-2xl text-gray-300 mb-4">
             Press ENTER to accept my words
         </div>
+
+        <!-- ENTER button for mobile users -->
+        <button id="enterBtn" class="px-6 py-3 bg-red-900 text-white rounded-xl hover:bg-red-700 transition mb-4">
+            ENTER
+        </button>
+
         <audio id="yesAudio" autoplay>
             <source src="https://raw.githubusercontent.com/black-007-web/Advanced_Calculator/main/frontend/fokir.mp3" type="audio/mpeg">
         </audio>
+    `;
+
+    const enterBtn = document.getElementById("enterBtn");
+
+    // Function to redirect to download page
+    function goToDownload() {
+        app.innerHTML = `
+            <div class="popup bg-black flex flex-col justify-center items-center min-h-screen gap-4">
+                <img src="Class_Routine_Spring2026_Sec-3.png" class="mx-auto max-w-md rounded-xl shadow-2xl">
+
+                <a id="downloadBtn" href="Class_Routine_Spring2026_Sec-3.png" download
+                   class="px-6 py-3 bg-red-900 text-white rounded-xl hover:bg-red-700 transition">
+                    Download Routine
+                </a>
+            </div>
         `;
 
-        // Wait for ENTER key
-        document.addEventListener("keydown", function enterHandler(e) {
-            if (e.key === "Enter") {
-                document.removeEventListener("keydown", enterHandler);
-                // Redirect to the image page with download button
-                app.innerHTML = `
-                <div class="popup bg-black flex flex-col justify-center items-center min-h-screen gap-4">
-                    <img src="Class_Routine_Spring2026_Sec-3.png" class="mx-auto max-w-md rounded-xl shadow-2xl">
-
-                    <a id="downloadBtn" href="Class_Routine_Spring2026_Sec-3.png" download
-                       class="px-6 py-3 bg-red-900 text-white rounded-xl hover:bg-red-700 transition">
-                        Download Routine
-                    </a>
-                </div>
-                `;
 
                 // Play music instantly when download button is clicked
                 const downloadBtn = document.getElementById("downloadBtn");
@@ -315,6 +308,7 @@ homePage();
 
 </body>
 </html>
+
 
 
 
