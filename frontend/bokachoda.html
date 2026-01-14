@@ -208,31 +208,30 @@ function yesPage() {
             goToDownload();
         });
     });
-}
 
-    // NO button logic
-document.getElementById("noBtn").addEventListener("click", () => {
-    app.innerHTML = `
-    <div class="relative min-h-screen flex justify-center items-center bg-black">
-        <img src="robodic.jpg" class="mx-auto max-w-lg rounded-xl shadow-2xl">
-        <audio id="noAudio" autoplay>
-            <source src="https://raw.githubusercontent.com/black-007-web/Advanced_Calculator/main/frontend/robodic_sound.mp3" type="audio/mpeg">
-        </audio>
-        <div class="absolute top-4 left-4 text-red-600 bangla-font text-2xl">
-            Beware...
+    // NO button logic (inside yesPage, after rendering the buttons)
+    document.getElementById("noBtn").addEventListener("click", () => {
+        app.innerHTML = `
+        <div class="relative min-h-screen flex justify-center items-center bg-black">
+            <img src="robodic.jpg" class="mx-auto max-w-lg rounded-xl shadow-2xl">
+            <audio id="noAudio" autoplay>
+                <source src="https://raw.githubusercontent.com/black-007-web/Advanced_Calculator/main/frontend/robodic_sound.mp3" type="audio/mpeg">
+            </audio>
+            <div class="absolute top-4 left-4 text-red-600 bangla-font text-2xl">
+                Beware...
+            </div>
         </div>
-    </div>
-    `;
+        `;
 
-    // Play the audio and redirect when it ends
-    const noAudio = document.getElementById("noAudio");
-    noAudio.addEventListener("ended", () => {
-        // Redirect back to YES page segment
-        yesPage();
+        // Play the audio and redirect when it ends
+        const noAudio = document.getElementById("noAudio");
+        noAudio.addEventListener("ended", () => {
+            // Redirect back to YES page segment
+            yesPage();
+        });
     });
-});
-
 }
+
 
 /* NO PAGE */
 function noPage() {
