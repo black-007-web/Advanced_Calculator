@@ -132,10 +132,10 @@ function homePage() {
     </div>
     `;
 }
-
-// YES button logic
-document.getElementById("yesBtn").addEventListener("click", () => {
-    // Clear current buttons
+<!-- YES PAGE FUNCTION -->
+<script>
+function yesPage() {
+    // Show the question and ENTER prompt
     app.innerHTML = `
         <div class="bangla-font text-4xl text-red-600 fade-in mb-6">
             সময় থাকতে ভালো হবা তো?
@@ -149,11 +149,13 @@ document.getElementById("yesBtn").addEventListener("click", () => {
             ENTER
         </button>
 
+        <!-- Autoplay audio -->
         <audio id="yesAudio" autoplay>
             <source src="https://raw.githubusercontent.com/black-007-web/Advanced_Calculator/main/frontend/fokir.mp3" type="audio/mpeg">
         </audio>
     `;
 
+    // Get the mobile ENTER button
     const enterBtn = document.getElementById("enterBtn");
 
     // Function to redirect to download page
@@ -180,7 +182,7 @@ document.getElementById("yesBtn").addEventListener("click", () => {
         });
     }
 
-    // Enter key listener for PC
+    // Listen for ENTER key on PC
     function enterHandler(e) {
         if (e.key === "Enter") {
             document.removeEventListener("keydown", enterHandler);
@@ -189,12 +191,14 @@ document.getElementById("yesBtn").addEventListener("click", () => {
     }
     document.addEventListener("keydown", enterHandler);
 
-    // Click listener for mobile ENTER button
+    // Listen for mobile ENTER button click
     enterBtn.addEventListener("click", () => {
-        document.removeEventListener("keydown", enterHandler); // remove key listener
+        document.removeEventListener("keydown", enterHandler); // remove PC listener
         goToDownload();
     });
-});
+}
+</script>
+
 
         /* NO PAGE */
 function noPage() {
@@ -298,6 +302,7 @@ homePage();
 
 </body>
 </html>
+
 
 
 
