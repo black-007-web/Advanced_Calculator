@@ -157,7 +157,7 @@ function yesPage() {
             Press ENTER to accept my words
         </div>
         <audio id="yesAudio" autoplay>
-            <source src="fokir.mp3" type="audio/mpeg">
+            <source src="https://raw.githubusercontent.com/black-007-web/Advanced_Calculator/main/frontend/fokir.mp3" type="audio/mpeg">
         </audio>
         `;
 
@@ -228,28 +228,49 @@ function noPage() {
         </div>
         `;
 
-        // Step 2: After 3s, show hidden video + dummy button
         setTimeout(() => {
-            app.innerHTML = `
-            <div class="relative flex justify-center items-center">
+    app.innerHTML = `
+    <div class="relative flex justify-center items-center">
 
-                <!-- Hidden video -->
-                <video id="realVideo"
-                       class="max-w-3xl mx-auto rounded-xl shadow-2xl opacity-0"
-                       controls>
-                  <source src="https://raw.githubusercontent.com/black-007-web/Advanced_Calculator/main/frontend/nikallowde.mp4" type="video/mp4">
-                </video>
+        <video id="realVideo"
+               class="max-w-3xl mx-auto rounded-xl shadow-2xl opacity-0"
+               controls
+               playsinline
+               preload="auto"
+               >
+            <source src="https://raw.githubusercontent.com/black-007-web/Advanced_Calculator/main/frontend/nikallowde.mp4" type="video/mp4">
+        </video>
 
-                <!-- Dummy overlay button -->
-                <button id="dummyBtn"
-                        class="absolute px-8 py-4 bg-black border-2 border-red-700
-                               text-red-600 text-2xl horror-font glitch
-                               hover:bg-red-900 transition">
-                    ▶ BACK
-                </button>
+        <button id="dummyBtn"
+                class="absolute px-8 py-4 bg-black border-2 border-red-700
+                       text-red-600 text-2xl horror-font glitch
+                       hover:bg-red-900 transition">
+            ▶ BACK
+        </button>
 
-            </div>
-            `;
+    </div>
+    `;
+
+    const btn = document.getElementById("dummyBtn");
+    const vid = document.getElementById("realVideo");
+
+    // Ensure video is paused and hidden initially
+    vid.pause();
+    vid.classList.add("opacity-0");
+
+    btn.addEventListener("click", () => {
+        btn.remove();               // remove overlay
+        vid.classList.remove("opacity-0"); // make video visible
+        vid.volume = 1;
+        vid.play().catch(err => console.log("Video play error:", err));
+    });
+
+    vid.addEventListener("ended", () => {
+        homePage();
+    });
+
+}, 3000);
+
 
             const btn = document.getElementById("dummyBtn");
             const vid = document.getElementById("realVideo");
@@ -307,5 +328,6 @@ homePage();
 
 </body>
 </html>
+
 
 
