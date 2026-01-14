@@ -1,11 +1,3 @@
-Got it, Mohammad 👍 — what you need is a **clean, complete HTML file** that will run on Vercel (or any static host) without the autoplay bugs and 404 errors. The two big fixes are:
-
-1. **File paths** → all your `.mp3`, `.mp4`, `.jpg`, `.png` must be deployed alongside your HTML (either in the same folder or in `/public`). Then reference them with root-relative paths (`/file.mp3`) so Vercel serves them correctly.  
-2. **Autoplay restrictions** → Chrome blocks `<audio autoplay>` and `<video autoplay>` unless triggered by a user gesture. So we replace autoplay with `.play()` inside click/keypress handlers.
-
-Here’s the **full corrected code** (no cutoffs, ready to run):
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,23 +17,84 @@ body {
     font-family: 'Orbitron', sans-serif;
     overflow: hidden;
 }
-.horror-font { font-family: 'Nosifer', cursive; }
-.bangla-font { font-family: 'Hind Siliguri', sans-serif; }
-.fade-in { animation: fadeIn 2s ease forwards; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: translateY(0);} }
-.glitch { animation: glitch 0.4s infinite; }
-@keyframes glitch { 0% { text-shadow: 2px 2px red;} 50% { text-shadow: -2px -2px cyan;} 100% { text-shadow: 2px -2px magenta;} }
-.popup { animation: popup 1s ease forwards; }
-@keyframes popup { from { transform: scale(0); opacity: 0;} to { transform: scale(1); opacity: 1;} }
-.typewriter { overflow: hidden; white-space: nowrap; border-right: 2px solid red; animation: typing 3s steps(25), blink 0.8s infinite; }
-@keyframes typing { from { width: 0;} to { width: 100%;} }
-@keyframes blink { 50% { border-color: transparent;} }
-.shake { animation: shake 0.15s infinite; }
-@keyframes shake { 0% { transform: translate(2px, 1px);} 25% { transform: translate(-2px, -1px);} 50% { transform: translate(2px, -1px);} 75% { transform: translate(-2px, 1px);} 100% { transform: translate(0);} }
-.flash { animation: flash 0.3s ease; }
-@keyframes flash { 0% { background: white;} 100% { background: black;} }
+
+.horror-font {
+    font-family: 'Nosifer', cursive;
+}
+
+.bangla-font {
+    font-family: 'Hind Siliguri', sans-serif;
+}
+
+.fade-in {
+    animation: fadeIn 2s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.glitch {
+    animation: glitch 0.4s infinite;
+}
+
+@keyframes glitch {
+    0% { text-shadow: 2px 2px red; }
+    50% { text-shadow: -2px -2px cyan; }
+    100% { text-shadow: 2px -2px magenta; }
+}
+
+.popup {
+    animation: popup 1s ease forwards;
+}
+
+@keyframes popup {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.typewriter {
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid red;
+    animation: typing 3s steps(25), blink 0.8s infinite;
+}
+
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes blink {
+    50% { border-color: transparent; }
+}
+
+.shake {
+    animation: shake 0.15s infinite;
+}
+
+@keyframes shake {
+    0% { transform: translate(2px, 1px); }
+    25% { transform: translate(-2px, -1px); }
+    50% { transform: translate(2px, -1px); }
+    75% { transform: translate(-2px, 1px); }
+    100% { transform: translate(0); }
+}
+
+.flash {
+    animation: flash 0.3s ease;
+}
+
+@keyframes flash {
+    0% { background: white; }
+    100% { background: black; }
+}
+
 /* Blood cursor */
-* { cursor: url("/blood-cursor.png"), auto; }
+* {
+    cursor: url("blood-cursor.png"), auto;
+}
 </style>
 </head>
 
@@ -49,10 +102,11 @@ body {
 
 <!-- AUDIO -->
 <audio id="heartbeat" loop>
-  <source src="/heartbeat.mp3" type="audio/mpeg">
+  <source src="heartbeat.mp3" type="audio/mpeg">
 </audio>
+
 <audio id="glitchSound">
-  <source src="/glitch.mp3" type="audio/mpeg">
+  <source src="glitch.mp3" type="audio/mpeg">
 </audio>
 
 <!-- MAIN CONTAINER -->
@@ -75,13 +129,15 @@ function homePage() {
     <h1 class="horror-font text-4xl md:text-5xl mb-10 fade-in">
         Do you want the Spring 2026 9th semester Ultimate class routine for section 3?
     </h1>
+
     <div class="flex justify-center gap-10">
         <button onclick="yesPage()" class="px-6 py-3 bg-red-900 hover:bg-red-700 rounded-xl transition">YES</button>
         <button onclick="noPage()" class="px-6 py-3 bg-gray-800 hover:bg-gray-600 rounded-xl transition">No</button>
         <button onclick="idgfPage()" class="px-6 py-3 bg-black border border-red-700 hover:bg-red-900 rounded-xl transition">
             I don't give a Fuck
         </button>
-    </div>`;
+    </div>
+    `;
 }
 
 /* YES PAGE */
@@ -90,60 +146,78 @@ function yesPage() {
     <div class="bangla-font text-3xl mb-8 fade-in">
         কখনো কি ভেবেছো যে এই রুটিন কেন বিনামূল্যে পেতে যাচ্ছ?
     </div>
+
     <div class="flex justify-center gap-10 mb-8">
         <button id="yesBtn" class="px-6 py-3 bg-red-900 rounded-xl">YES</button>
         <button id="noBtn" class="px-6 py-3 bg-gray-800 rounded-xl">NO</button>
-    </div>`;
+    </div>
+    `;
 
     // YES button logic
     document.getElementById("yesBtn").addEventListener("click", () => {
+        // Clear current buttons
         app.innerHTML = `
         <div class="bangla-font text-4xl text-red-600 fade-in mb-6">
             সময় থাকতে ভালো হবা তো?
         </div>
         <div class="bangla-font text-2xl text-gray-300 mb-4">
             Press ENTER to accept my words
-        </div>`;
+        </div>
+        <audio id="yesAudio" autoplay>
+            <source src="fokir.mp3" type="audio/mpeg">
+        </audio>
+        `;
 
-        // Play audio only when user presses ENTER
+        // Wait for ENTER key
         document.addEventListener("keydown", function enterHandler(e) {
             if (e.key === "Enter") {
                 document.removeEventListener("keydown", enterHandler);
-
-                const yesAudio = new Audio("/fokir.mp3");
-                yesAudio.play();
-
+                // Redirect to the image page with download button
                 app.innerHTML = `
                 <div class="popup bg-black flex flex-col justify-center items-center min-h-screen gap-4">
-                    <img src="/Class_Routine_Spring2026_Sec-3.png" class="mx-auto max-w-md rounded-xl shadow-2xl">
-                    <a id="downloadBtn" href="/Class_Routine_Spring2026_Sec-3.png" download
+                    <img src="Class_Routine_Spring2026_Sec-3.png" class="mx-auto max-w-md rounded-xl shadow-2xl">
+
+                    <a id="downloadBtn" href="Class_Routine_Spring2026_Sec-3.png" download
                        class="px-6 py-3 bg-red-900 text-white rounded-xl hover:bg-red-700 transition">
                         Download Routine
                     </a>
-                </div>`;
+                </div>
+                `;
 
+                // Play music instantly when download button is clicked
                 const downloadBtn = document.getElementById("downloadBtn");
                 downloadBtn.addEventListener("click", () => {
-                    const bgMusic = new Audio("/acp.mp3");
+                    const bgMusic = document.createElement("audio");
+                    bgMusic.src = "acp.mp3"; // add your mp3 here
+                    bgMusic.autoplay = true;
                     bgMusic.volume = 0.5;
-                    bgMusic.play();
+                    document.body.appendChild(bgMusic);
                 });
             }
         });
     });
-
     // NO button logic
-    document.getElementById("noBtn").addEventListener("click", () => {
-        app.innerHTML = `
-        <div class="relative min-h-screen flex justify-center items-center bg-black">
-            <img src="/robodic.jpg" class="mx-auto max-w-lg rounded-xl shadow-2xl">
-            <div class="absolute top-4 left-4 text-red-600 bangla-font text-2xl">Beware...</div>
-        </div>`;
+document.getElementById("noBtn").addEventListener("click", () => {
+    app.innerHTML = `
+    <div class="relative min-h-screen flex justify-center items-center bg-black">
+        <img src="robodic.jpg" class="mx-auto max-w-lg rounded-xl shadow-2xl">
+        <audio id="noAudio" autoplay>
+            <source src="robodic_sound.mp3" type="audio/mpeg">
+        </audio>
+        <div class="absolute top-4 left-4 text-red-600 bangla-font text-2xl">
+            Beware...
+        </div>
+    </div>
+    `;
 
-        const noAudio = new Audio("/robodic_sound.mp3");
-        noAudio.play();
-        noAudio.addEventListener("ended", () => { yesPage(); });
+    // Play the audio and redirect when it ends
+    const noAudio = document.getElementById("noAudio");
+    noAudio.addEventListener("ended", () => {
+        // Redirect back to YES page segment
+        yesPage();
     });
+});
+
 }
 
 /* NO PAGE */
@@ -153,58 +227,88 @@ function noPage() {
 
     setTimeout(() => {
         document.body.classList.remove("flash");
-        app.innerHTML = `<div class="flex flex-col items-center justify-center h-screen">
-            <div class="text-6xl horror-font glitch shake mb-10">WTF</div>
-        </div>`;
 
+        // Step 1: Show WTF text
+        app.innerHTML = `
+        <div class="flex flex-col items-center justify-center h-screen">
+            <div class="text-6xl horror-font glitch shake mb-10">WTF</div>
+        </div>
+        `;
+
+        // Step 2: After 3s, show hidden video + dummy button
         setTimeout(() => {
             app.innerHTML = `
             <div class="relative flex justify-center items-center">
-                <video id="realVideo" class="max-w-3xl mx-auto rounded-xl shadow-2xl opacity-0" controls>
-                    <source src="/nikallowde.mp4" type="video/mp4">
+
+                <!-- Hidden video -->
+                <video id="realVideo"
+                       class="max-w-3xl mx-auto rounded-xl shadow-2xl opacity-0"
+                       controls>
+                    <source src="nikallowde.mp4" type="video/mp4">
                 </video>
+
+                <!-- Dummy overlay button -->
                 <button id="dummyBtn"
-                        class="absolute px-8 py-4 bg-black border-2 border-red-700 text-red-600 text-2xl horror-font glitch hover:bg-red-900 transition">
+                        class="absolute px-8 py-4 bg-black border-2 border-red-700
+                               text-red-600 text-2xl horror-font glitch
+                               hover:bg-red-900 transition">
                     ▶ BACK
                 </button>
-            </div>`;
+
+            </div>
+            `;
 
             const btn = document.getElementById("dummyBtn");
             const vid = document.getElementById("realVideo");
 
+            // Step 3: Dummy button click → reveal video + play with sound
             btn.addEventListener("click", () => {
-                btn.remove();
-                vid.classList.remove("opacity-0");
+                btn.remove();               // remove overlay
+                vid.classList.remove("opacity-0"); // make video visible
+                vid.volume = 1;
                 vid.play();
             });
 
-            vid.addEventListener("ended", () => { homePage(); });
+            // Step 4: After video ends → redirect to main page
+            vid.addEventListener("ended", () => {
+                homePage(); // goes back to main page
+            });
+
         }, 3000);
+
     }, 200);
 }
+
 
 /* IDGF PAGE */
 function idgfPage() {
     app.innerHTML = `
     <div class="relative flex flex-col items-center justify-center min-h-screen bg-black gap-6">
+
         <!-- Video -->
-        <video id="idgfVideo" class="max-w-4xl mx-auto rounded-xl shadow-2xl fade-in scale-95 hover:scale-100 transition-all duration-1000" controls>
-            <source src="/backchodix.mp4" type="video/mp4">
+        <video id="idgfVideo" autoplay controls
+               class="max-w-4xl mx-auto rounded-xl shadow-2xl fade-in scale-95 hover:scale-100 transition-all duration-1000">
+            <source src="backchodix.mp4" type="video/mp4">
         </video>
+
+        
+
         <!-- Optional aesthetic overlay text -->
         <div class="absolute top-4 left-4 text-red-600 bangla-font text-2xl">
             Nikal bsdk...
         </div>
-    </div>`;
 
-    // Play video only when user clicks play (Chrome policy allows controls)
+    </div>
+    `;
+
+    // Redirect to home page after video ends
     const video = document.getElementById("idgfVideo");
     video.addEventListener("ended", () => {
         homePage();
     });
 }
 
-/* Initialize the app */
+
 homePage();
 </script>
 
