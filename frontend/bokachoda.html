@@ -213,85 +213,72 @@ document.getElementById("noBtn").addEventListener("click", () => {
 
 }
 
-/* NO PAGE */
+        /* NO PAGE */
 function noPage() {
+    // Flash effect
     document.body.classList.add("flash");
-    glitchSound.play();
+
+    // Play glitch sound if it exists
+    if (glitchSound) glitchSound.play().catch(() => {});
 
     setTimeout(() => {
         document.body.classList.remove("flash");
 
         // Step 1: Show WTF text
         app.innerHTML = `
-        <div class="flex flex-col items-center justify-center h-screen">
-            <div class="text-6xl horror-font glitch shake mb-10">WTF</div>
-        </div>
+            <div class="flex flex-col items-center justify-center h-screen">
+                <div class="text-6xl horror-font glitch shake mb-10">WTF</div>
+            </div>
         `;
 
+        // Step 2: After 3s, show hidden video + dummy button
         setTimeout(() => {
-    app.innerHTML = `
-    <div class="relative flex justify-center items-center">
+            app.innerHTML = `
+                <div class="relative flex justify-center items-center">
 
-        <video id="realVideo"
-               class="max-w-3xl mx-auto rounded-xl shadow-2xl opacity-0"
-               controls
-               playsinline
-               preload="auto"
-               >
-            <source src="https://raw.githubusercontent.com/black-007-web/Advanced_Calculator/main/frontend/nikallowde.mp4" type="video/mp4">
-        </video>
+                    <video id="realVideo"
+                           class="max-w-3xl mx-auto rounded-xl shadow-2xl opacity-0"
+                           controls
+                           playsinline
+                           preload="auto">
+                        <source src="https://raw.githubusercontent.com/black-007-web/Advanced_Calculator/main/frontend/nikallowde.mp4" type="video/mp4">
+                    </video>
 
-        <button id="dummyBtn"
-                class="absolute px-8 py-4 bg-black border-2 border-red-700
-                       text-red-600 text-2xl horror-font glitch
-                       hover:bg-red-900 transition">
-            ▶ BACK
-        </button>
+                    <button id="dummyBtn"
+                            class="absolute px-8 py-4 bg-black border-2 border-red-700
+                                   text-red-600 text-2xl horror-font glitch
+                                   hover:bg-red-900 transition">
+                        ▶ BACK
+                    </button>
 
-    </div>
-    `;
-
-    const btn = document.getElementById("dummyBtn");
-    const vid = document.getElementById("realVideo");
-
-    // Ensure video is paused and hidden initially
-    vid.pause();
-    vid.classList.add("opacity-0");
-
-    btn.addEventListener("click", () => {
-        btn.remove();               // remove overlay
-        vid.classList.remove("opacity-0"); // make video visible
-        vid.volume = 1;
-        vid.play().catch(err => console.log("Video play error:", err));
-    });
-
-    vid.addEventListener("ended", () => {
-        homePage();
-    });
-
-}, 3000);
-
+                </div>
+            `;
 
             const btn = document.getElementById("dummyBtn");
             const vid = document.getElementById("realVideo");
 
-            // Step 3: Dummy button click → reveal video + play with sound
+            // Ensure video is paused and hidden initially
+            vid.pause();
+            vid.classList.add("opacity-0");
+
+            // Step 3: Dummy button click → reveal video + play
             btn.addEventListener("click", () => {
-                btn.remove();               // remove overlay
-                vid.classList.remove("opacity-0"); // make video visible
+                btn.remove();
+                vid.classList.remove("opacity-0");
                 vid.volume = 1;
-                vid.play();
+                vid.play().catch(err => console.log("Video play error:", err));
             });
 
-            // Step 4: After video ends → redirect to main page
+            // Step 4: After video ends → redirect to home
             vid.addEventListener("ended", () => {
-                homePage(); // goes back to main page
+                homePage();
             });
 
-        }, 3000);
+        }, 3000); // Wait 3s before showing video
 
-    }, 200);
+    }, 200); // End flash removal
 }
+
 
 
 /* IDGF PAGE */
@@ -328,6 +315,7 @@ homePage();
 
 </body>
 </html>
+
 
 
 
