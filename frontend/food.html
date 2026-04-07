@@ -1,13 +1,8 @@
 <!DOCTYPE html>
-<html lang="bn" translate="no">
+<html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="google" content="notranslate">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#060608">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ProPOS — Business Edition</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
@@ -32,7 +27,7 @@
     --font-bengali: 'Noto Sans Bengali', sans-serif;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
   html, body {
     height: 100%;
@@ -40,117 +35,72 @@
     color: var(--text-primary);
     font-family: var(--font-bengali);
     overflow: hidden;
-    -webkit-font-smoothing: antialiased;
   }
 
   /* ─── Scrollbar ─── */
   ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 99px; }
-  ::-webkit-scrollbar-thumb { background: rgba(0,229,255,0.35); border-radius: 99px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(0,229,255,0.6); }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(0,229,255,0.3); border-radius: 99px; }
 
   /* ─── Header ─── */
   #header {
-    height: 64px;
+    height: 62px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 18px;
-    background: rgba(6,6,8,0.95);
+    padding: 0 20px;
+    background: rgba(6,6,8,0.9);
     backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
     position: sticky; top: 0; z-index: 100;
-    flex-shrink: 0;
   }
   .logo-mark {
     display: flex; align-items: center; gap: 10px;
   }
   .logo-icon {
-    width: 38px; height: 38px;
+    width: 36px; height: 36px;
     background: var(--accent);
-    border-radius: 11px;
+    border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
     box-shadow: 0 0 20px rgba(0,229,255,0.4);
-    flex-shrink: 0;
   }
-  .logo-icon i { color: #000; font-size: 16px; }
+  .logo-icon i { color: #000; font-size: 15px; }
   .logo-text {
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: 17px;
-    letter-spacing: -0.3px;
-    white-space: nowrap;
+    font-size: 18px;
+    letter-spacing: -0.5px;
   }
   .logo-text span { color: var(--accent); }
 
-  /* Three-dot menu button */
-  .menu-trigger {
-    width: 42px; height: 42px;
-    border-radius: 12px;
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+
+  .hbtn {
+    height: 38px;
+    padding: 0 16px;
+    border-radius: 10px;
     border: 1px solid var(--border);
     background: var(--bg-card);
     color: var(--text-primary);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    font-size: 18px;
-    transition: all 0.2s;
-    flex-shrink: 0;
-  }
-  .menu-trigger:active { opacity: 0.65; background: rgba(0,229,255,0.08); border-color: var(--border-accent); }
-
-  /* Dropdown menu */
-  .dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 70px; right: 14px;
-    background: var(--bg-card);
-    border: 1px solid rgba(0,229,255,0.2);
-    border-radius: 16px;
-    overflow: hidden;
-    z-index: 300;
-    min-width: 200px;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.6);
-    animation: popIn 0.2s cubic-bezier(0.34,1.56,0.64,1);
-  }
-  .dropdown-menu.open { display: block; }
-  @keyframes popIn {
-    from { transform: scale(0.88) translateY(-8px); opacity: 0; }
-    to   { transform: scale(1) translateY(0); opacity: 1; }
-  }
-  .dropdown-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 15px 18px;
-    font-size: 14px; font-weight: 600;
     font-family: var(--font-bengali);
+    font-size: 13px;
+    font-weight: 600;
     cursor: pointer;
-    color: var(--text-primary);
-    border-bottom: 1px solid var(--border);
-    transition: background 0.15s;
-    -webkit-tap-highlight-color: transparent;
+    display: flex; align-items: center; gap: 7px;
+    transition: all 0.2s;
   }
-  .dropdown-item:last-child { border-bottom: none; }
-  .dropdown-item:active { background: rgba(255,255,255,0.05); }
-  .dropdown-item i { width: 18px; text-align: center; font-size: 14px; }
-  .dropdown-item.add i { color: var(--accent); }
-  .dropdown-item.danger { color: var(--red); }
-  .dropdown-item.danger i { color: var(--red); }
-  /* overlay to close dropdown on outside tap */
-  #dropdownBackdrop {
-    display: none;
-    position: fixed; inset: 0; z-index: 250;
-  }
-  #dropdownBackdrop.open { display: block; }
+  .hbtn:hover { border-color: var(--accent); color: var(--accent); }
+  .hbtn.danger:hover { border-color: var(--red); color: var(--red); }
+  .hbtn i { font-size: 12px; }
 
   /* ─── Layout ─── */
   #layout {
+    height: calc(100vh - 62px - 70px);
     display: flex;
     overflow: hidden;
-    /* height = 100vh - header(64px) - footer(70px) */
-    height: calc(100dvh - 64px - 70px);
   }
 
-  /* ─── Sidebar Summary — hidden on mobile ─── */
+  /* ─── Sidebar Summary ─── */
   #sidebar {
     width: 260px;
     min-width: 260px;
@@ -162,7 +112,6 @@
   .sidebar-header {
     padding: 18px 18px 14px;
     border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
   }
   .sidebar-header h3 {
     font-family: var(--font-display);
@@ -176,7 +125,6 @@
     padding: 16px 18px;
     border-bottom: 1px solid var(--border);
     background: linear-gradient(135deg, rgba(0,229,255,0.05), transparent);
-    flex-shrink: 0;
   }
   .grand-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
   .grand-amount {
@@ -191,12 +139,11 @@
   #storeList {
     flex: 1;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
     padding: 10px;
     display: flex; flex-direction: column; gap: 6px;
   }
   .store-pill {
-    padding: 12px 14px;
+    padding: 10px 12px;
     border-radius: 10px;
     background: var(--bg-card2);
     border: 1px solid var(--border);
@@ -221,23 +168,17 @@
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
-    padding: 16px;
-    display: flex; flex-direction: column; gap: 20px;
-    /* force scrollbar always visible when content overflows */
-    scrollbar-width: thin;
-    scrollbar-color: rgba(0,229,255,0.35) rgba(255,255,255,0.03);
+    padding: 20px;
+    display: flex; flex-direction: column; gap: 22px;
   }
 
   .empty-state {
     flex: 1; display: flex; flex-direction: column;
     align-items: center; justify-content: center; gap: 16px;
     color: var(--text-muted);
-    min-height: 260px;
   }
-  .empty-state i { font-size: 52px; opacity: 0.25; }
-  .empty-state p { font-size: 14px; text-align: center; line-height: 1.6; }
+  .empty-state i { font-size: 48px; opacity: 0.3; }
+  .empty-state p { font-size: 14px; }
 
   /* ─── Store Card ─── */
   .store-card {
@@ -253,7 +194,7 @@
     to   { opacity: 1; transform: translateY(0); }
   }
   .store-card-accent {
-    position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+    position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
     background: var(--accent);
     box-shadow: 0 0 12px var(--accent);
   }
@@ -263,141 +204,103 @@
 
   .card-header {
     display: flex; align-items: flex-start; justify-content: space-between;
-    padding: 16px 16px 14px 22px;
+    padding: 16px 18px 14px 22px;
     border-bottom: 1px solid var(--border);
-    gap: 8px;
   }
-  .card-title { font-family: var(--font-display); font-weight: 700; font-size: 17px; line-height: 1.2; }
-  .card-desc { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+  .card-title { font-family: var(--font-display); font-weight: 700; font-size: 17px; }
+  .card-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 
-  .card-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .card-actions { display: flex; gap: 6px; }
   .card-btn {
-    height: 34px; padding: 0 12px; border-radius: 9px;
+    height: 30px; padding: 0 12px; border-radius: 8px;
     border: 1px solid var(--border); background: transparent;
-    font-size: 12px; font-weight: 600; cursor: pointer;
+    font-size: 11px; font-weight: 600; cursor: pointer;
     color: var(--text-sub); transition: all 0.2s;
     display: flex; align-items: center; gap: 5px;
     font-family: var(--font-bengali);
-    -webkit-tap-highlight-color: transparent;
   }
-  .card-btn:active { opacity: 0.6; }
   .card-btn:hover { border-color: var(--accent2); color: var(--accent2); }
   .card-btn.del:hover { border-color: var(--red); color: var(--red); }
 
   /* ─── Receipt ─── */
   .receipt-zone {
-    padding: 12px 14px 12px 22px;
+    padding: 10px 18px 10px 22px;
     border-bottom: 1px solid var(--border);
   }
   .receipt-scroll {
-    max-height: 220px;
+    max-height: 200px;
     overflow-y: auto;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
     background: rgba(0,0,0,0.25);
     border: 1px dashed rgba(255,255,255,0.08);
     border-radius: 12px;
     padding: 10px;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(0,229,255,0.3) transparent;
   }
   .receipt-empty {
     text-align: center; padding: 18px;
-    font-size: 13px; color: var(--text-muted); font-style: italic;
+    font-size: 12px; color: var(--text-muted); font-style: italic;
   }
   .receipt-row {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 9px 0;
+    padding: 7px 0;
     border-bottom: 1px solid rgba(255,255,255,0.04);
     gap: 8px;
-    min-width: 0;
   }
   .receipt-row:last-child { border-bottom: none; }
   .rr-left { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
   .rr-remove {
-    width: 26px; height: 26px; border-radius: 7px;
+    width: 22px; height: 22px; border-radius: 6px;
     background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);
-    color: var(--red); cursor: pointer; font-size: 10px;
+    color: var(--red); cursor: pointer; font-size: 9px;
     display: flex; align-items: center; justify-content: center;
     transition: all 0.2s; flex-shrink: 0;
   }
-  .rr-remove:active { background: rgba(239,68,68,0.3); }
-  .rr-name { font-size: 14px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rr-remove:hover { background: rgba(239,68,68,0.25); }
+  .rr-name { font-size: 13px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .rr-qty {
-    font-family: var(--font-mono); font-size: 11px;
+    font-family: var(--font-mono); font-size: 10px;
     color: var(--accent); background: rgba(0,229,255,0.1);
     border: 1px solid rgba(0,229,255,0.2);
-    padding: 2px 7px; border-radius: 5px; white-space: nowrap;
+    padding: 1px 6px; border-radius: 5px; white-space: nowrap;
     flex-shrink: 0;
   }
   .rr-price {
-    font-family: var(--font-mono); font-size: 14px; font-weight: 700;
-    white-space: nowrap; flex-shrink: 0;
+    font-family: var(--font-mono); font-size: 13px; font-weight: 700;
+    white-space: nowrap;
   }
 
   /* ─── Store Total ─── */
   .store-total-bar {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 12px 16px 12px 22px;
+    padding: 10px 18px 10px 22px;
     border-bottom: 1px solid var(--border);
     background: rgba(0,229,255,0.03);
   }
   .st-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
   .st-amount {
     font-family: var(--font-mono);
-    font-size: 22px; font-weight: 700; color: var(--accent);
+    font-size: 20px; font-weight: 700; color: var(--accent);
   }
 
   /* ─── Food Buttons Zone ─── */
-  .food-zone { padding: 14px 14px 18px 22px; }
+  .food-zone { padding: 14px 18px 18px 22px; }
   .food-zone-title {
     font-size: 10px; color: var(--text-muted); text-transform: uppercase;
-    letter-spacing: 1.5px; margin-bottom: 12px; font-family: var(--font-display);
+    letter-spacing: 1.5px; margin-bottom: 10px; font-family: var(--font-display);
   }
-  /* horizontal scroll wrapper for food grid */
-  .food-grid-wrapper {
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(0,229,255,0.25) transparent;
-    padding-bottom: 6px;
-  }
-  .food-grid-wrapper::-webkit-scrollbar { height: 4px; }
-  .food-grid-wrapper::-webkit-scrollbar-thumb { background: rgba(0,229,255,0.3); border-radius: 99px; }
   .food-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 9px;
-    /* allow horizontal scroll when items overflow */
-    min-width: max-content;
-    width: 100%;
+    gap: 8px;
   }
-  /* on mobile: fixed 3-col grid that wraps vertically */
-  @media (max-width: 680px) {
-    .food-grid {
-      grid-template-columns: repeat(3, 1fr);
-      min-width: unset;
-      width: 100%;
-    }
-  }
-
   .food-btn {
     background: var(--bg-card2);
     border: 1px solid var(--border);
-    border-radius: 13px;
-    padding: 13px 8px;
+    border-radius: 12px;
+    padding: 10px 8px;
     cursor: pointer;
     transition: all 0.18s;
-    display: flex; flex-direction: column; align-items: center; gap: 5px;
-    min-height: 64px; justify-content: center;
-    -webkit-user-select: none; user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .food-btn:active {
-    transform: scale(0.93);
-    background: rgba(0,229,255,0.1);
-    border-color: rgba(0,229,255,0.35);
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    position: relative; overflow: hidden;
   }
   .food-btn:hover {
     border-color: rgba(0,229,255,0.3);
@@ -405,73 +308,63 @@
     transform: translateY(-1px);
     box-shadow: 0 6px 18px rgba(0,0,0,0.4);
   }
-  .food-btn-name { font-size: 12px; font-weight: 700; text-align: center; line-height: 1.3; }
+  .food-btn:active { transform: scale(0.95); }
+  .food-btn-name { font-size: 11px; font-weight: 700; text-align: center; line-height: 1.3; }
   .food-btn-price {
     font-family: var(--font-mono);
-    font-size: 11px; color: var(--accent); font-weight: 600;
+    font-size: 10px; color: var(--accent); font-weight: 600;
   }
+  .food-btn.custom { border-color: rgba(167,139,250,0.3); }
+  .food-btn.custom .food-btn-price { color: var(--accent3); }
 
   .add-food-btn {
     background: transparent;
     border: 1px dashed rgba(255,255,255,0.12);
-    border-radius: 13px;
-    padding: 13px 8px;
+    border-radius: 12px;
+    padding: 10px 8px;
     cursor: pointer;
     transition: all 0.18s;
-    display: flex; flex-direction: column; align-items: center; gap: 5px;
-    color: var(--text-muted); font-size: 12px;
-    min-height: 64px; justify-content: center;
-    -webkit-tap-highlight-color: transparent;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    color: var(--text-muted); font-size: 11px;
   }
-  .add-food-btn:active { border-color: var(--accent); color: var(--accent); }
   .add-food-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .add-food-btn i { font-size: 16px; }
+  .add-food-btn i { font-size: 14px; }
 
   /* ─── Footer ─── */
   #footer {
     height: 70px;
-    background: rgba(6,6,8,0.96);
+    background: rgba(6,6,8,0.95);
     border-top: 1px solid var(--border);
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0 20px;
+    padding: 0 24px;
     backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    flex-shrink: 0;
   }
   .footer-stat { display: flex; flex-direction: column; }
   .footer-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 2px; }
   .footer-val {
-    font-family: var(--font-mono); font-size: 21px; font-weight: 700; color: var(--accent);
+    font-family: var(--font-mono); font-size: 22px; font-weight: 700; color: var(--accent);
   }
   .footer-val.secondary { font-size: 18px; color: var(--text-primary); }
 
   /* ─── Modals ─── */
   .modal-overlay {
-    display: none; position: fixed; inset: 0; z-index: 400;
-    background: rgba(0,0,0,0.88); backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    align-items: flex-end; justify-content: center;
-    padding: 0;
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
+    align-items: center; justify-content: center; padding: 20px;
   }
   .modal-overlay.open { display: flex; }
   .modal-box {
     background: var(--bg-card);
     border: 1px solid rgba(0,229,255,0.2);
-    border-bottom: none;
-    border-radius: 24px 24px 0 0;
-    padding: 10px 24px 36px;
-    width: 100%; max-width: 520px;
+    border-radius: 22px;
+    padding: 28px;
+    width: 100%; max-width: 400px;
     box-shadow: 0 0 60px rgba(0,229,255,0.1);
-    animation: sheetUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
   }
-  @keyframes sheetUp {
-    from { transform: translateY(60px); opacity: 0; }
-    to   { transform: translateY(0); opacity: 1; }
-  }
-  .sheet-handle {
-    width: 40px; height: 4px; border-radius: 2px;
-    background: rgba(255,255,255,0.12);
-    margin: 14px auto 20px;
+  @keyframes popIn {
+    from { transform: scale(0.88); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
   }
   .modal-title {
     font-family: var(--font-display); font-weight: 700; font-size: 20px;
@@ -485,13 +378,13 @@
     width: 100%;
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.1);
-    padding: 14px 16px;
-    border-radius: 13px;
+    padding: 12px 15px;
+    border-radius: 12px;
     color: var(--text-primary);
     outline: none;
     transition: 0.2s;
     font-family: var(--font-bengali);
-    font-size: 15px;
+    font-size: 14px;
   }
   .form-input:focus {
     border-color: var(--accent);
@@ -502,131 +395,87 @@
 
   .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
   .btn-cancel {
-    flex: 1; padding: 14px; border-radius: 13px;
+    flex: 1; padding: 12px; border-radius: 12px;
     background: rgba(255,255,255,0.05); border: 1px solid var(--border);
     color: var(--text-sub); cursor: pointer; font-family: var(--font-bengali);
-    font-weight: 600; font-size: 15px; transition: all 0.2s;
-    -webkit-tap-highlight-color: transparent;
+    font-weight: 600; font-size: 14px; transition: all 0.2s;
   }
-  .btn-cancel:active { opacity: 0.7; }
+  .btn-cancel:hover { background: rgba(255,255,255,0.08); }
   .btn-confirm {
-    flex: 1.4; padding: 14px; border-radius: 13px;
+    flex: 1; padding: 12px; border-radius: 12px;
     background: var(--accent); border: none;
     color: #000; cursor: pointer; font-family: var(--font-bengali);
-    font-weight: 700; font-size: 15px; transition: all 0.2s;
+    font-weight: 700; font-size: 14px; transition: all 0.2s;
     box-shadow: 0 0 20px rgba(0,229,255,0.3);
-    -webkit-tap-highlight-color: transparent;
   }
-  .btn-confirm:active { opacity: 0.8; transform: scale(0.97); }
-
-  /* desktop: modal centered */
-  @media (min-width: 640px) {
-    .modal-overlay { align-items: center; padding: 20px; }
-    .modal-box {
-      border-bottom: 1px solid rgba(0,229,255,0.2);
-      border-radius: 22px; padding: 28px;
-      animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
-    }
-    @keyframes popIn {
-      from { transform: scale(0.88); opacity: 0; }
-      to   { transform: scale(1); opacity: 1; }
-    }
-    .sheet-handle { display: none; }
-  }
+  .btn-confirm:hover { box-shadow: 0 0 30px rgba(0,229,255,0.5); transform: translateY(-1px); }
 
   /* ─── Quantity Popup ─── */
   #qtyOverlay {
-    display: none; position: fixed; inset: 0; z-index: 500;
-    background: rgba(0,0,0,0.92); backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    align-items: flex-end; justify-content: center;
+    display: none; position: fixed; inset: 0; z-index: 300;
+    background: rgba(0,0,0,0.9); backdrop-filter: blur(12px);
+    align-items: center; justify-content: center; padding: 20px;
   }
   #qtyOverlay.open { display: flex; }
   .qty-box {
     background: var(--bg-card);
     border: 1px solid var(--border-accent);
-    border-bottom: none;
-    border-radius: 24px 24px 0 0;
-    padding: 10px 24px 36px;
-    width: 100%; max-width: 480px;
+    border-radius: 22px; padding: 28px;
+    width: 100%; max-width: 340px;
     text-align: center;
-    animation: sheetUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .qty-sheet-handle {
-    width: 40px; height: 4px; border-radius: 2px;
-    background: rgba(255,255,255,0.12);
-    margin: 14px auto 18px;
+    animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
   }
   .qty-item-name {
-    font-family: var(--font-display); font-size: 20px; font-weight: 700;
+    font-family: var(--font-display); font-size: 18px; font-weight: 700;
     margin-bottom: 6px;
   }
   .qty-price {
     font-family: var(--font-mono); color: var(--accent);
-    font-size: 14px; margin-bottom: 22px;
+    font-size: 13px; margin-bottom: 20px;
   }
-  .qty-controls { display: flex; align-items: center; gap: 14px; justify-content: center; margin-bottom: 22px; }
+  .qty-controls { display: flex; align-items: center; gap: 12px; justify-content: center; margin-bottom: 20px; }
   .qty-dec, .qty-inc {
-    width: 52px; height: 52px; border-radius: 14px;
+    width: 44px; height: 44px; border-radius: 12px;
     border: 1px solid var(--border);
     background: var(--bg-card2); color: var(--text-primary);
-    font-size: 24px; cursor: pointer; transition: all 0.2s;
-    display: flex; align-items: center; justify-content: center;
-    -webkit-tap-highlight-color: transparent;
+    font-size: 20px; cursor: pointer; transition: all 0.2s;
   }
-  .qty-dec:active { background: rgba(239,68,68,0.2); border-color: var(--red); color: var(--red); }
-  .qty-inc:active { background: rgba(0,229,255,0.2); border-color: var(--accent); color: var(--accent); }
+  .qty-dec:hover { border-color: var(--red); color: var(--red); }
+  .qty-inc:hover { border-color: var(--accent); color: var(--accent); }
   .qty-display {
-    font-family: var(--font-mono); font-size: 40px; font-weight: 700;
-    width: 90px; text-align: center;
+    font-family: var(--font-mono); font-size: 36px; font-weight: 700;
+    width: 80px; text-align: center;
     background: transparent; border: none;
     border-bottom: 2px solid var(--border-accent);
     color: var(--text-primary); outline: none;
     padding-bottom: 4px;
   }
-  .qty-display::-webkit-inner-spin-button,
-  .qty-display::-webkit-outer-spin-button { -webkit-appearance: none; }
   .qty-actions { display: flex; gap: 10px; }
-
-  /* desktop: qty centered */
-  @media (min-width: 640px) {
-    #qtyOverlay { align-items: center; padding: 20px; }
-    .qty-box {
-      border-bottom: 1px solid var(--border-accent);
-      border-radius: 22px; padding: 28px;
-    }
-    .qty-sheet-handle { display: none; }
-  }
 
   /* ─── Toast ─── */
   #toast {
-    position: fixed; bottom: 82px; left: 50%; transform: translateX(-50%);
+    position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
     background: var(--bg-card); border: 1px solid var(--border-accent);
-    padding: 10px 22px; border-radius: 30px;
+    padding: 10px 20px; border-radius: 30px;
     font-size: 13px; font-weight: 600; color: var(--accent);
     box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-    z-index: 600; opacity: 0; pointer-events: none;
+    z-index: 500; opacity: 0; pointer-events: none;
     transition: opacity 0.3s;
     white-space: nowrap;
   }
   #toast.show { opacity: 1; }
 
-  /* ─── Mobile hide sidebar ─── */
+  /* ─── Color Accents cycling ─── */
+  .accent-colors { --c: var(--accent); }
+
+  /* ─── Mobile ─── */
   @media (max-width: 680px) {
     #sidebar { display: none; }
-  }
-
-  /* ─── Whole app wrapper ─── */
-  #app-wrapper {
-    display: flex;
-    flex-direction: column;
-    height: 100dvh;
-    height: 100vh; /* fallback */
+    .food-grid { grid-template-columns: repeat(3, 1fr); }
   }
 </style>
 </head>
 <body>
-<div id="app-wrapper">
 
 <!-- ══ HEADER ══ -->
 <header id="header">
@@ -634,30 +483,20 @@
     <div class="logo-icon"><i class="fas fa-utensils"></i></div>
     <div class="logo-text">SYEDA<span> BULBUL AKTER</span></div>
   </div>
-
-  <!-- Three-dot menu button -->
-  <button class="menu-trigger" onclick="toggleMenu()" aria-label="মেনু">
-    <i class="fas fa-ellipsis-vertical"></i>
-  </button>
-
-  <!-- Dropdown -->
-  <div class="dropdown-menu" id="dropdownMenu">
-    <div class="dropdown-item add" onclick="dropdownAction('addSegment')">
+  <div class="header-actions">
+    <button class="hbtn" onclick="openStoreModal()">
       <i class="fas fa-plus"></i> নতুন সেগমেন্ট
-    </div>
-    <div class="dropdown-item danger" onclick="dropdownAction('clearAll')">
+    </button>
+    <button class="hbtn danger" onclick="clearAllData()">
       <i class="fas fa-trash"></i> সব মুছুন
-    </div>
+    </button>
   </div>
 </header>
-
-<!-- backdrop to close dropdown -->
-<div id="dropdownBackdrop" onclick="closeMenu()"></div>
 
 <!-- ══ LAYOUT ══ -->
 <div id="layout">
 
-  <!-- Sidebar (desktop only) -->
+  <!-- Sidebar -->
   <aside id="sidebar">
     <div class="sidebar-header">
       <h3>সারসংক্ষেপ</h3>
@@ -689,12 +528,9 @@
   </div>
 </footer>
 
-</div><!-- end app-wrapper -->
-
 <!-- ══ STORE MODAL ══ -->
 <div class="modal-overlay" id="storeModal">
   <div class="modal-box">
-    <div class="sheet-handle"></div>
     <div class="modal-title"><i class="fas fa-store"></i> নতুন সেগমেন্ট তৈরি</div>
     <div class="form-group">
       <label class="form-label">সেগমেন্ট নাম</label>
@@ -714,7 +550,6 @@
 <!-- ══ ADD FOOD ITEM MODAL ══ -->
 <div class="modal-overlay" id="foodModal">
   <div class="modal-box">
-    <div class="sheet-handle"></div>
     <div class="modal-title"><i class="fas fa-hamburger"></i> নতুন আইটেম যোগ</div>
     <div class="form-group">
       <label class="form-label">আইটেমের নাম</label>
@@ -722,7 +557,7 @@
     </div>
     <div class="form-group">
       <label class="form-label">একক মূল্য (৳)</label>
-      <input id="foodPrice" class="form-input" type="number" inputmode="numeric" placeholder="যেমন: 120" min="0">
+      <input id="foodPrice" class="form-input" type="number" placeholder="যেমন: 120" min="0">
     </div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeFoodModal()">বাতিল</button>
@@ -734,12 +569,11 @@
 <!-- ══ QUANTITY POPUP ══ -->
 <div id="qtyOverlay">
   <div class="qty-box">
-    <div class="qty-sheet-handle"></div>
     <div class="qty-item-name" id="qtyItemName">—</div>
     <div class="qty-price" id="qtyItemPrice">৳0</div>
     <div class="qty-controls">
       <button class="qty-dec" onclick="changeQty(-1)">−</button>
-      <input class="qty-display" id="qtyInput" type="number" inputmode="numeric" value="1" min="1">
+      <input class="qty-display" id="qtyInput" type="number" value="1" min="1">
       <button class="qty-inc" onclick="changeQty(1)">+</button>
     </div>
     <div class="qty-actions">
@@ -768,31 +602,6 @@ function saveDB() {
 }
 
 /* ═══════════════════════════════════════════════
-   THREE-DOT DROPDOWN
-═══════════════════════════════════════════════ */
-function toggleMenu() {
-  const menu = document.getElementById('dropdownMenu');
-  const backdrop = document.getElementById('dropdownBackdrop');
-  const isOpen = menu.classList.contains('open');
-  if (isOpen) {
-    menu.classList.remove('open');
-    backdrop.classList.remove('open');
-  } else {
-    menu.classList.add('open');
-    backdrop.classList.add('open');
-  }
-}
-function closeMenu() {
-  document.getElementById('dropdownMenu').classList.remove('open');
-  document.getElementById('dropdownBackdrop').classList.remove('open');
-}
-function dropdownAction(action) {
-  closeMenu();
-  if (action === 'addSegment') openStoreModal();
-  if (action === 'clearAll') clearAllData();
-}
-
-/* ═══════════════════════════════════════════════
    ACCENT COLORS (cycling per store)
 ═══════════════════════════════════════════════ */
 const ACCENT_CLASSES = ['', 'orange', 'purple', 'green'];
@@ -814,7 +623,7 @@ function render() {
     container.innerHTML = `
       <div class="empty-state">
         <i class="fas fa-store-slash"></i>
-        <p>কোনো সেগমেন্ট নেই।<br>উপরের ⋮ মেনু থেকে নতুন সেগমেন্ট যোগ করুন।</p>
+        <p>কোনো সেগমেন্ট নেই। উপরে "+ নতুন সেগমেন্ট" ক্লিক করুন।</p>
       </div>`;
   }
 
@@ -883,15 +692,13 @@ function render() {
 
       <div class="food-zone">
         <div class="food-zone-title">মেনু আইটেম</div>
-        ${store.menu.length === 0 ? `<p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;font-style:italic;">কোনো আইটেম নেই — নিচের বোতামে যোগ করুন</p>` : ''}
-        <div class="food-grid-wrapper">
-          <div class="food-grid">
-            ${foodBtns}
-            <button class="add-food-btn" onclick="openFoodModal(${sIdx})">
-              <i class="fas fa-plus"></i>
-              <span>নতুন আইটেম</span>
-            </button>
-          </div>
+        ${store.menu.length === 0 ? `<p style="font-size:12px;color:var(--text-muted);margin-bottom:10px;font-style:italic;">কোনো আইটেম নেই — নিচের বোতামে যোগ করুন</p>` : ''}
+        <div class="food-grid">
+          ${foodBtns}
+          <button class="add-food-btn" onclick="openFoodModal(${sIdx})">
+            <i class="fas fa-plus"></i>
+            <span>নতুন আইটেম</span>
+          </button>
         </div>
       </div>
     `;
@@ -913,15 +720,8 @@ function render() {
 ═══════════════════════════════════════════════ */
 const DEFAULT_MENU = [];
 
-function openStoreModal() {
-  document.getElementById('storeModal').classList.add('open');
-  setTimeout(() => document.getElementById('storeName').focus(), 350);
-}
-function closeStoreModal() {
-  document.getElementById('storeModal').classList.remove('open');
-  document.getElementById('storeName').value = '';
-  document.getElementById('storeDesc').value = '';
-}
+function openStoreModal() { document.getElementById('storeModal').classList.add('open'); setTimeout(()=>document.getElementById('storeName').focus(),100); }
+function closeStoreModal() { document.getElementById('storeModal').classList.remove('open'); document.getElementById('storeName').value=''; document.getElementById('storeDesc').value=''; }
 
 function saveStore() {
   const name = document.getElementById('storeName').value.trim();
@@ -961,7 +761,7 @@ let _activeFoodStore = null;
 function openFoodModal(sIdx) {
   _activeFoodStore = sIdx;
   document.getElementById('foodModal').classList.add('open');
-  setTimeout(() => document.getElementById('foodName').focus(), 350);
+  setTimeout(()=>document.getElementById('foodName').focus(), 100);
 }
 function closeFoodModal() {
   document.getElementById('foodModal').classList.remove('open');
@@ -995,7 +795,7 @@ function openQty(sIdx, mIdx) {
   document.getElementById('qtyItemPrice').textContent = `প্রতি পিস: ৳${m.p}`;
   document.getElementById('qtyInput').value = 1;
   document.getElementById('qtyOverlay').classList.add('open');
-  setTimeout(() => document.getElementById('qtyInput').select(), 100);
+  setTimeout(()=>document.getElementById('qtyInput').select(), 100);
 }
 
 function closeQty() {
@@ -1040,7 +840,7 @@ function showToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   clearTimeout(_toastTimer);
-  _toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+  _toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
 }
 
 /* ═══════════════════════════════════════════════
@@ -1048,7 +848,7 @@ function showToast(msg) {
 ═══════════════════════════════════════════════ */
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
-    closeStoreModal(); closeFoodModal(); closeQty(); closeMenu();
+    closeStoreModal(); closeFoodModal(); closeQty();
   }
   if (e.key === 'Enter') {
     if (document.getElementById('storeModal').classList.contains('open')) saveStore();
