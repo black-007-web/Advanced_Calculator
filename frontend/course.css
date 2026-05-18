@@ -15,6 +15,19 @@ body {
   justify-content: center;
   padding: 20px;
 }
+.home-btn {
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #7c4dff, #ff6b6b);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(124, 77, 255, 0.3);
+  transition: all 0.3s ease;
+}
 
 .container {
   width: 100%;
@@ -187,4 +200,8 @@ input[type="text"] {
 .prereq-link:hover {
   color: #ff6b6b;
   text-shadow: 0 0 8px rgba(124, 77, 255, 0.5);
+}
+.links {
+  text-align: center;
+  margin-top: 20px;
 }
