@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>East Delta University Course Search</title>
+
+    <link rel="icon" href="course.png" type="image/png" />
+    <meta name="theme-color" content="#00ffd5" />
+
+  <link rel="stylesheet" href="course.css" />
+</head>
+<body>
+
+  <div class="container">
+
+    <header class="site-header">
+      <h1 class="app-title">East Delta University</h1>
+
+      <p class="app-quote">
+        Smart Course Search Platform
+      </p>
+    </header>
+
+
+    <div class="stage">
+
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search by course code (Example: CSE311)"
+      />
+
+      <button class="calc-button" id="searchBtn">
+        Search Course
+      </button>
+
+    </div>
+
+
+    <div id="liveResults"></div>
+
+
+    <footer class="site-footer">
+      <p class="designer">
+        <strong></strong>
+      </p>
+
+      <p class="university">
+        EDU Course Search System
+      </p>
+    </footer>
+
+  </div>
+
+
+  <!-- Modal -->
+
+  <div class="modal-overlay" id="modalOverlay">
+
+    <div class="course-modal">
+
+      <h2 id="modalCode"></h2>
+
+      <p id="modalTitle"></p>
+
+
+      <div class="modal-section">
+        <strong>Credit:</strong>
+        <span id="modalCredit"></span>
+      </div>
+
+
+      <div class="modal-section">
+        <strong>Prerequisite:</strong>
+        <div id="modalPrerequisite"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script src="course.js"></script>
+</body>
+</html>

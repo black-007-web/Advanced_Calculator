@@ -1,0 +1,190 @@
+/* Reset + base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, Arial, sans-serif;
+  background: linear-gradient(180deg,#070707 0%, #0b0b0b 100%);
+  color: #e8e8e8;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 520px;
+  background: linear-gradient(180deg, rgba(20,20,20,0.9), rgba(16,16,16,0.95));
+  border-radius: 20px;
+  padding: 26px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+}
+
+.site-header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.app-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(90deg,#7c4dff,#ff6b6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.app-quote {
+  color: #a9a9a9;
+  font-size: 0.95rem;
+  margin-top: 6px;
+}
+
+.stage {
+  margin-bottom: 12px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.04);
+  background: #0b0b0b;
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.calc-button {
+  width: 100%;
+  background: linear-gradient(90deg,#7c4dff,#ff6b6b);
+  border: none;
+  color: white;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.calc-button:hover {
+  transform: translateY(-3px);
+}
+
+.live-item {
+  padding: 14px;
+  border-radius: 12px;
+  background: #111;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+.live-item:hover {
+  transform: translateY(-3px);
+  border-color: rgba(124,77,255,0.3);
+}
+
+.live-code {
+  font-weight: 700;
+  color: #fff;
+}
+
+.live-title {
+  color: #9aa0a6;
+  margin-top: 4px;
+  font-size: 0.9rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  backdrop-filter: blur(5px);
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.course-modal {
+  width: 92%;
+  max-width: 420px;
+  background: linear-gradient(180deg,#111,#0a0a0a);
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid rgba(255,255,255,0.04);
+  animation: popup 0.25s ease;
+}
+
+.course-modal h2 {
+  font-size: 1.6rem;
+  margin-bottom: 8px;
+  background: linear-gradient(90deg,#7c4dff,#ff6b6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.course-modal p {
+  color: #d6d6d6;
+  margin-bottom: 16px;
+}
+
+.modal-section {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+}
+
+#modalPrerequisite {
+  margin-top: 8px;
+  color: #7ef4ff;
+}
+
+.site-footer {
+  margin-top: 30px;
+  text-align: center;
+  color: #9aa0a6;
+}
+
+@keyframes popup {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 520px) {
+  .container {
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .course-modal {
+    width: 95%;
+    padding: 18px;
+  }
+}
+.prereq-link {
+  transition: 0.2s ease;
+}
+
+.prereq-link:hover {
+  color: #ff6b6b;
+  text-shadow: 0 0 8px rgba(124, 77, 255, 0.5);
+}
